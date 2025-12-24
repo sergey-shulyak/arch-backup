@@ -9,6 +9,7 @@ bluez
 bluez-utils
 brightnessctl
 btop
+calcure
 catppuccin-gtk-theme-mocha
 claude-code
 cliphist

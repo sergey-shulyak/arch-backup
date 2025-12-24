@@ -38,6 +38,9 @@ configs/home/.config/firefox/
 configs/home/.config/vivaldi/
 configs/home/.config/Microsoft/
 
+# Calendar
+configs/home/.config/calcure/*.csv
+
 # Cache directories
 **/Cache/
 **/cache/

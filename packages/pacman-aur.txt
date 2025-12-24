@@ -1,5 +1,6 @@
 1password
 bluetuith
+calcure
 catppuccin-gtk-theme-mocha
 claude-code
 yay
