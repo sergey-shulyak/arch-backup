@@ -1,0 +1,59 @@
+window {
+  background-color: rgba(30, 30, 46, 0.9);
+  border: 2px solid #89b4fa;
+  border-radius: 10px;
+  margin: 0;
+  padding: 0;
+  backdrop-filter: blur(10px);
+}
+
+#input {
+  padding: 12px 15px;
+  background-color: rgba(49, 50, 68, 0.7);
+  color: #cdd6f4;
+  border: 2px solid #89b4fa;
+  border-radius: 6px;
+  margin: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "JetBrains Mono", monospace;
+}
+
+#input:focus {
+  outline: none;
+  background-color: rgba(69, 71, 90, 0.8);
+  border: 2px solid #89b4fa;
+}
+
+#scroll {
+  background-color: transparent;
+}
+
+#inner-box {
+  padding: 8px;
+  background-color: transparent;
+}
+
+#entry {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #cdd6f4;
+  border: none;
+  margin: 4px 0;
+}
+
+#entry:hover {
+  background-color: rgba(49, 50, 68, 0.5);
+}
+
+#entry:selected {
+  background-color: #89b4fa;
+  color: #1e1e2e;
+}
+
+#text {
+  color: #cdd6f4;
+  font-size: 16px;
+  font-family: "JetBrains Mono", monospace;
+}

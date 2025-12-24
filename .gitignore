@@ -1,0 +1,75 @@
+# Backup files created during restore
+*.bak.*
+
+# Temporary files
+*.tmp
+*~
+
+# SSH keys (should never be backed up)
+configs/home/.ssh/id_*
+configs/home/.ssh/*.pub
+configs/home/.ssh/known_hosts
+configs/home/.ssh/authorized_keys
+
+# GPG keys
+configs/home/.gnupg/
+
+# Sensitive credential files
+*.pem
+*.key
+credentials*
+secrets*
+.env
+**/token*
+**/*secret*
+
+# Password managers
+configs/home/.config/1Password/
+configs/home/.config/Bitwarden/
+configs/home/.config/KeePassXC/
+
+# Browsers (large + sensitive)
+configs/home/.config/google-chrome/
+configs/home/.config/google-chrome-beta/
+configs/home/.config/google-chrome-unstable/
+configs/home/.config/chromium/
+configs/home/.config/BraveSoftware/
+configs/home/.config/firefox/
+configs/home/.config/vivaldi/
+configs/home/.config/Microsoft/
+
+# Cache directories
+**/Cache/
+**/cache/
+**/CacheStorage/
+**/GPUCache/
+**/Code Cache/
+**/*.log
+**/logs/
+
+# Database files that may contain sensitive data
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+**/leveldb/
+**/IndexedDB/
+**/Local Storage/
+**/Session Storage/
+
+# Native messaging hosts (1Password, etc)
+**/NativeMessagingHosts/
+
+# Cookies and auth tokens
+**/cookie
+**/cookies
+**/.credentials
+
+# Game save data (large, not config)
+configs/home/.config/unity3d/
+
+# Telemetry and usage data
+**/telemetry/
+configs/home/.config/go/
+
+# Pulse audio cookie
+configs/home/.config/pulse/

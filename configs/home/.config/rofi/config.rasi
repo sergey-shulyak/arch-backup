@@ -1,0 +1,57 @@
+window {
+  background-color: #1e1e2e;
+  border:           2px solid #89b4fa;
+  border-radius:    12px;
+  padding:          20px;
+  width:            400px;
+}
+
+inputbar {
+  children:  [ prompt, entry ];
+  spacing:   10px;
+  margin:    0 0 20px 0;
+}
+
+prompt {
+  text-color: #89b4fa;
+  font:       "Noto Sans 16";
+  padding:    0 10px;
+}
+
+entry {
+  background-color: #313244;
+  text-color:       #cdd6f4;
+  border-radius:    8px;
+  padding:          10px;
+  border:           1px solid #89b4fa;
+}
+
+listview {
+  lines:     6;
+  columns:   1;
+  spacing:   8px;
+  scrollbar: false;
+}
+
+element {
+  background-color: #313244;
+  text-color:       #cdd6f4;
+  border-radius:    6px;
+  padding:          10px;
+  border:           1px solid transparent;
+}
+
+element:hover {
+  background-color: #45475a;
+  border:           1px solid #89b4fa;
+}
+
+element selected {
+  background-color: #89b4fa;
+  text-color:       #1e1e2e;
+  font-weight:      bold;
+}
+
+element.text {
+  text-color: #cdd6f4;
+}

@@ -1,0 +1,14 @@
+[Unit]
+Description=Hyprland Single Display Mode with Auto Monitor Detection
+Documentation=man:hyprctl(1)
+PartOf=graphical-session.target
+After=graphical-session-pre.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/hyprland-single-display daemon
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

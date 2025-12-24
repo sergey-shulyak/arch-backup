@@ -1,0 +1,15 @@
+[Unit]
+Description=Arch Linux Configuration Backup
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+Environment="NON_INTERACTIVE=true"
+ExecStop=/home/sshuliak/Documents/arch-backup/backup.sh
+User=sshuliak
+Group=sshuliak
+
+[Install]
+WantedBy=multi-user.target

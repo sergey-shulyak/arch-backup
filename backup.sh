@@ -1,0 +1,374 @@
+#!/bin/bash
+#
+# Arch Linux Configuration Backup Script
+# Backs up system configuration files and commits to git repository
+#
+
+set -e
+
+# Support running as different user (for systemd service)
+if [ -n "$BACKUP_USER" ]; then
+    USER_HOME=$(getent passwd "$BACKUP_USER" | cut -d: -f6)
+else
+    USER_HOME="$HOME"
+fi
+
+BACKUP_DIR="$USER_HOME/Documents/arch-backup"
+CONFIG_DIR="$BACKUP_DIR/configs"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Non-interactive mode (for systemd service)
+NON_INTERACTIVE="${NON_INTERACTIVE:-false}"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+log_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Initialize git repository if not present
+init_git_repo() {
+    cd "$BACKUP_DIR"
+
+    if [ ! -d ".git" ]; then
+        if [ "$NON_INTERACTIVE" = "true" ]; then
+            log_warn "No git repository found and running in non-interactive mode"
+            log_warn "Please run backup.sh manually first to set up the repository"
+            exit 1
+        fi
+
+        log_warn "No git repository found in $BACKUP_DIR"
+        read -p "Enter git repository URL to clone (or press Enter to initialize new repo): " repo_url
+
+        if [ -n "$repo_url" ]; then
+            # Save current files temporarily
+            temp_dir=$(mktemp -d)
+            cp -r "$BACKUP_DIR"/* "$temp_dir/" 2>/dev/null || true
+
+            # Clone the repository
+            cd "$USER_HOME/Documents"
+            rm -rf "$BACKUP_DIR"
+            git clone "$repo_url" arch-backup
+            cd "$BACKUP_DIR"
+
+            # Restore scripts if they don't exist in cloned repo
+            if [ ! -f "backup.sh" ] && [ -f "$temp_dir/backup.sh" ]; then
+                cp "$temp_dir/backup.sh" .
+            fi
+            if [ ! -f "restore.sh" ] && [ -f "$temp_dir/restore.sh" ]; then
+                cp "$temp_dir/restore.sh" .
+            fi
+
+            rm -rf "$temp_dir"
+            log_info "Repository cloned successfully"
+        else
+            git init
+            log_info "Initialized new git repository"
+            read -p "Enter remote repository URL (optional, press Enter to skip): " remote_url
+            if [ -n "$remote_url" ]; then
+                git remote add origin "$remote_url"
+                log_info "Added remote origin: $remote_url"
+            fi
+        fi
+    fi
+}
+
+# Create directory structure
+create_dirs() {
+    mkdir -p "$CONFIG_DIR"
+    mkdir -p "$BACKUP_DIR/packages"
+    mkdir -p "$BACKUP_DIR/systemd"
+    mkdir -p "$BACKUP_DIR/scripts"
+}
+
+# Backup function - copies file/directory if it exists
+backup_item() {
+    local src="$1"
+    local dest="$2"
+
+    if [ -e "$src" ]; then
+        mkdir -p "$(dirname "$dest")"
+        cp -r "$src" "$dest"
+        log_info "Backed up: $src"
+    else
+        log_warn "Not found, skipping: $src"
+    fi
+}
+
+# Directories and patterns to exclude from backup (sensitive/large/cache data)
+EXCLUDE_PATTERNS=(
+    # Sensitive data
+    ".gnupg"
+    ".ssh/id_*"
+    ".ssh/*.pem"
+    ".ssh/known_hosts"
+    ".ssh/authorized_keys"
+    ".pki"
+    ".cert"
+    ".password-store"
+
+    # Credentials and secrets
+    "**/credentials*"
+    "**/secrets*"
+    "**/.env"
+    "**/token*"
+    "**/auth*"
+    "**/*key*.json"
+    "**/*secret*"
+
+    # Cache and temporary files
+    ".cache"
+    ".local/share/Trash"
+    "**/Cache"
+    "**/cache"
+    "**/CacheStorage"
+    "**/*.log"
+    "**/logs"
+    "**/.npm"
+    "**/.cargo/registry"
+    "**/.rustup"
+    "**/node_modules"
+    "**/__pycache__"
+    "**/*.pyc"
+    "**/venv"
+    "**/.venv"
+
+    # Browser data (large and contains sensitive info)
+    ".mozilla"
+    "google-chrome"
+    "google-chrome-beta"
+    "google-chrome-unstable"
+    "chromium"
+    "BraveSoftware"
+    "firefox"
+    "vivaldi"
+    "Microsoft/Edge"
+
+    # Password managers and sensitive apps
+    "1Password"
+    "Bitwarden"
+    "KeePassXC"
+
+    # Application data (large/regenerable)
+    ".local/share/Steam"
+    ".steam"
+    ".wine"
+    ".local/share/lutris"
+    ".var"
+    ".local/share/flatpak"
+    "snap"
+
+    # IDE/Editor data and extensions
+    ".vscode/extensions"
+    ".config/Code/CachedData"
+    ".config/Code/CachedExtensions"
+    ".config/Code/User/workspaceStorage"
+    ".config/Code/logs"
+    ".local/share/JetBrains"
+
+    # History files (can contain sensitive commands)
+    ".bash_history"
+    ".zsh_history"
+    ".histfile"
+    ".python_history"
+    ".lesshst"
+    ".wget-hsts"
+)
+
+# Build rsync exclude arguments
+build_exclude_args() {
+    local args=""
+    for pattern in "${EXCLUDE_PATTERNS[@]}"; do
+        args="$args --exclude=$pattern"
+    done
+    echo "$args"
+}
+
+# Backup entire .config directory
+backup_config_dir() {
+    log_info "Backing up ~/.config directory..."
+
+    local exclude_args=$(build_exclude_args)
+
+    mkdir -p "$CONFIG_DIR/home/.config"
+
+    # Use rsync with exclusions
+    eval rsync -a --delete $exclude_args "$USER_HOME/.config/" "$CONFIG_DIR/home/.config/"
+
+    log_info "Backed up ~/.config"
+}
+
+# Backup home directory dotfiles
+backup_home_dotfiles() {
+    log_info "Backing up home directory dotfiles..."
+
+    # List of dotfiles to backup (files only, not directories)
+    local dotfiles=(
+        ".bashrc"
+        ".bash_profile"
+        ".zshrc"
+        ".zprofile"
+        ".profile"
+        ".gitconfig"
+        ".gitignore_global"
+        ".vimrc"
+        ".tmux.conf"
+        ".xinitrc"
+        ".Xresources"
+        ".xprofile"
+        ".gtkrc-2.0"
+        ".inputrc"
+        ".editorconfig"
+    )
+
+    for file in "${dotfiles[@]}"; do
+        if [ -f "$USER_HOME/$file" ]; then
+            backup_item "$USER_HOME/$file" "$CONFIG_DIR/home/$file"
+        fi
+    done
+
+    # SSH config only (not keys)
+    if [ -f "$USER_HOME/.ssh/config" ]; then
+        mkdir -p "$CONFIG_DIR/home/.ssh"
+        cp "$USER_HOME/.ssh/config" "$CONFIG_DIR/home/.ssh/config"
+        log_info "Backed up: $USER_HOME/.ssh/config"
+    fi
+
+    # Fish shell data (functions, completions - but not history)
+    if [ -d "$USER_HOME/.local/share/fish" ]; then
+        mkdir -p "$CONFIG_DIR/home/.local/share"
+        rsync -a --exclude='fish_history' "$USER_HOME/.local/share/fish/" "$CONFIG_DIR/home/.local/share/fish/"
+        log_info "Backed up: $USER_HOME/.local/share/fish"
+    fi
+}
+
+# Backup configuration files
+backup_configs() {
+    log_info "Backing up configuration files..."
+
+    backup_config_dir
+    backup_home_dotfiles
+
+    # System configs (require sudo to read some)
+    log_info "Backing up system configs..."
+    if [ -r "/etc/pacman.conf" ]; then
+        backup_item "/etc/pacman.conf" "$CONFIG_DIR/etc/pacman.conf"
+    fi
+    if [ -r "/etc/makepkg.conf" ]; then
+        backup_item "/etc/makepkg.conf" "$CONFIG_DIR/etc/makepkg.conf"
+    fi
+    if [ -r "/etc/fstab" ]; then
+        backup_item "/etc/fstab" "$CONFIG_DIR/etc/fstab"
+    fi
+    if [ -r "/etc/hostname" ]; then
+        backup_item "/etc/hostname" "$CONFIG_DIR/etc/hostname"
+    fi
+    if [ -r "/etc/locale.conf" ]; then
+        backup_item "/etc/locale.conf" "$CONFIG_DIR/etc/locale.conf"
+    fi
+    if [ -r "/etc/vconsole.conf" ]; then
+        backup_item "/etc/vconsole.conf" "$CONFIG_DIR/etc/vconsole.conf"
+    fi
+    if [ -d "/etc/X11/xorg.conf.d" ]; then
+        backup_item "/etc/X11/xorg.conf.d" "$CONFIG_DIR/etc/X11/xorg.conf.d"
+    fi
+    if [ -d "/etc/environment.d" ]; then
+        backup_item "/etc/environment.d" "$CONFIG_DIR/etc/environment.d"
+    fi
+}
+
+# Backup package lists
+backup_packages() {
+    log_info "Backing up package lists..."
+
+    # Explicitly installed packages
+    pacman -Qqe > "$BACKUP_DIR/packages/pacman-explicit.txt"
+    log_info "Saved explicit packages list"
+
+    # Explicitly installed native packages (from official repos)
+    pacman -Qqen > "$BACKUP_DIR/packages/pacman-native.txt"
+    log_info "Saved native packages list"
+
+    # AUR packages (foreign)
+    pacman -Qqem > "$BACKUP_DIR/packages/pacman-aur.txt"
+    log_info "Saved AUR packages list"
+
+    # All packages with versions
+    pacman -Q > "$BACKUP_DIR/packages/pacman-all-versions.txt"
+    log_info "Saved all packages with versions"
+}
+
+# Backup enabled systemd services
+backup_systemd() {
+    log_info "Backing up systemd service list..."
+
+    # User services
+    systemctl --user list-unit-files --state=enabled --no-legend | awk '{print $1}' > "$BACKUP_DIR/systemd/user-services.txt"
+    log_info "Saved user systemd services"
+
+    # System services (just the list, not the actual files)
+    systemctl list-unit-files --state=enabled --no-legend | awk '{print $1}' > "$BACKUP_DIR/systemd/system-services.txt"
+    log_info "Saved system systemd services"
+}
+
+# Commit and push changes
+commit_and_push() {
+    cd "$BACKUP_DIR"
+
+    # Add all changes
+    git add -A
+
+    # Check if there are changes to commit
+    if git diff --cached --quiet; then
+        log_info "No changes to commit"
+        return
+    fi
+
+    # Commit with timestamp
+    local commit_msg="Backup $(date '+%Y-%m-%d %H:%M:%S')"
+    git commit -m "$commit_msg"
+    log_info "Committed changes: $commit_msg"
+
+    # Push if remote exists
+    if git remote | grep -q "origin"; then
+        log_info "Pushing to remote..."
+        if git push origin "$(git branch --show-current)" 2>/dev/null; then
+            log_info "Pushed successfully"
+        else
+            log_warn "Push failed - you may need to set up the remote branch"
+            log_warn "Try: git push -u origin $(git branch --show-current)"
+        fi
+    else
+        log_warn "No remote configured. Changes committed locally only."
+        log_warn "Add a remote with: git remote add origin <url>"
+    fi
+}
+
+# Main execution
+main() {
+    log_info "Starting Arch Linux configuration backup..."
+    log_info "Backup directory: $BACKUP_DIR"
+
+    create_dirs
+    init_git_repo
+    backup_configs
+    backup_packages
+    backup_systemd
+    commit_and_push
+
+    log_info "Backup completed!"
+}
+
+main "$@"
