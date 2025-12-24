@@ -260,7 +260,37 @@ else
     log_warn "Could not find fish executable"
 fi
 
-# Step 9: Install the backup service
+# Step 9: Set up firewall
+log_section "Setting Up Firewall (UFW)"
+
+if ! command -v ufw &>/dev/null; then
+    log_info "Installing UFW firewall..."
+    sudo pacman -S --needed --noconfirm ufw
+fi
+
+# Enable UFW service to start on boot
+sudo systemctl enable ufw
+
+# Set default policies
+log_info "Configuring firewall policies..."
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow SSH (critical for remote access)
+sudo ufw allow ssh
+
+# Allow HTTP and HTTPS
+log_info "Allowing HTTP and HTTPS..."
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Enable the firewall
+log_info "Enabling firewall..."
+sudo ufw enable
+
+log_info "Firewall configuration complete"
+
+# Step 10: Install the backup service
 log_section "Installing Backup Service"
 
 read -p "Install automatic backup service (runs before shutdown)? (y/N): " confirm

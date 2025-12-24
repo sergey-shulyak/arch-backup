@@ -83,6 +83,7 @@ trash-cli
 ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 udiskie
+ufw
 unrar
 unzip
 uwsm
