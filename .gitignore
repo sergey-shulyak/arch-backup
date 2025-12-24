@@ -76,3 +76,35 @@ configs/home/.config/go/
 
 # Pulse audio cookie
 configs/home/.config/pulse/
+
+# Neomutt sensitive data
+configs/home/.config/neomutt/neomuttrc.local
+**/.neomutt_cache/
+configs/home/.cache/neomutt/
+
+# Mail-related sensitive files
+**/imap_pass*
+**/smtp_pass*
+**/oauth_token*
+configs/home/.mail/
+configs/home/.maildir/
+
+# Browser profiles (Edge, Vivaldi, Mozilla, etc)
+configs/home/.config/microsoft-edge-dev/
+configs/home/.config/vivaldi/
+configs/home/.config/vivaldi-snapshot/
+configs/home/.config/mozilla/
+
+# Vault/Pass password store (local copy should never be synced)
+configs/home/.password-store/
+configs/home/.config/gopass/
+
+# Systemd secrets
+configs/home/.config/systemd/user-secrets/
+
+# Local system configuration (machine-specific)
+configs/etc/machine-id
+configs/etc/hostname
+configs/home/.ssh/config.local
+configs/home/.config/*/local.conf
+configs/home/.config/*/private.*

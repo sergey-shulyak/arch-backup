@@ -8,13 +8,14 @@ margin=16,16,8,8
 padding=12,12
 border-size=2
 border-radius=8
-background-color=#1e1e2e99
+# Reduced opacity to allow blur effect to show through better
+background-color=#1e1e2e80
 text-color=#cdd6f4
 font=JetBrains Mono 11
 icon-path=/usr/share/icons/Papirus-Dark
 
 # Default notification style
-border-color=#45475a
+border-color=#45475a66
 anchor=top-right
 
 # Animations
@@ -22,18 +23,18 @@ progress-color=over #89b4fa
 
 # Low urgency notifications
 [urgency=low]
-background-color=#1e1e2e99
-border-color=#94e2d5
+background-color=#1e1e2e80
+border-color=#94e2d580
 text-color=#94e2d5
 
 # Normal urgency notifications (yellow)
 [urgency=normal]
-background-color=#1e1e2e99
-border-color=#f9e2af
+background-color=#1e1e2e80
+border-color=#f9e2af80
 text-color=#f9e2af
 
 # Critical urgency notifications (red)
 [urgency=critical]
-background-color=#1e1e2e99
-border-color=#f38ba8
+background-color=#1e1e2e80
+border-color=#f38ba880
 text-color=#f38ba8

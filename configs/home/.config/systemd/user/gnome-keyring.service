@@ -1,0 +1,11 @@
+[Unit]
+Description=GNOME Keyring daemon
+PartOf=graphical-session.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/gnome-keyring-daemon --daemonize --login
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target

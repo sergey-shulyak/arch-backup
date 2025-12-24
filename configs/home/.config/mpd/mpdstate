@@ -1,0 +1,49 @@
+sw_volume: 50
+audio_device_state:1:ALSA Device
+state: stop
+random: 0
+repeat: 0
+single: 0
+consume: 0
+crossfade: 0
+mixrampdb: 0
+mixrampdelay: -1
+lastloadedplaylist: 
+playlist_begin
+0:Library/Arctic Monkeys/AM/02 R U Mine_.m4a
+1:Library/Arctic Monkeys/AM/01 Do I Wanna Know_.m4a
+2:Library/Arctic Monkeys/AM/09 Why'd You Only Call Me When You're High_.m4a
+3:Library/Arctic Monkeys/AM/03 One for the Road.m4a
+4:Library/Arctic Monkeys/AM/04 Arabella.m4a
+5:Library/Arctic Monkeys/AM/05 I Want It All.m4a
+6:Library/Arctic Monkeys/AM/06 No. 1 Party Anthem.m4a
+7:Library/Arctic Monkeys/AM/07 Mad Sounds.m4a
+8:Library/Arctic Monkeys/AM/08 Fireside.m4a
+9:Library/Arctic Monkeys/AM/10 Snap Out of It.m4a
+10:Library/Arctic Monkeys/AM/11 Knee Socks.m4a
+11:Library/Arctic Monkeys/AM/12 I Wanna Be Yours.m4a
+12:Library/blink-182/Enema of the State/01 Dumpweed.m4a
+13:Library/blink-182/Enema of the State/02 Don't Leave Me.m4a
+14:Library/blink-182/Enema of the State/03 Aliens Exist.m4a
+15:Library/blink-182/Enema of the State/04 Going Away to College.m4a
+16:Library/blink-182/Enema of the State/06 Dysentery Gary.m4a
+17:Library/blink-182/Enema of the State/07 Adam's Song.m4a
+18:Library/blink-182/Enema of the State/08 All the Small Things.m4a
+19:Library/blink-182/Enema of the State/09 The Party Song.m4a
+20:Library/blink-182/Enema of the State/10 Mutt.m4a
+21:Library/blink-182/Enema of the State/11 Wendy Clear.m4a
+22:Library/blink-182/Enema of the State/12 Anthem.m4a
+23:Library/Bob Marley & The Wailers/Kaya (2013 Remaster)/01 Easy Skanking.m4a
+24:Library/Adele/21/01 Rolling In the Deep.m4a
+25:Library/Bob Dylan/Highway 61 Revisited/09 Desolation Row.m4a
+26:Library/Bob Dylan/Highway 61 Revisited/01 Like a Rolling Stone.m4a
+27:Library/Bob Dylan/Highway 61 Revisited/01 Like a Rolling Stone.m4a
+28:Library/Bob Dylan/Highway 61 Revisited/02 Tombstone Blues.m4a
+29:Library/Bob Dylan/Highway 61 Revisited/03 It Takes a Lot to Laugh, It Takes a Train to Cry.m4a
+30:Library/Bob Dylan/Highway 61 Revisited/04 From a Buick 6.m4a
+31:Library/Bob Dylan/Highway 61 Revisited/05 Ballad of a Thin Man.m4a
+32:Library/Bob Dylan/Highway 61 Revisited/06 Queen Jane Approximately.m4a
+33:Library/Bob Dylan/Highway 61 Revisited/07 Highway 61 Revisited.m4a
+34:Library/Bob Dylan/Highway 61 Revisited/08 Just Like Tom Thumb's Blues.m4a
+35:Library/Bob Dylan/Highway 61 Revisited/09 Desolation Row.m4a
+playlist_end

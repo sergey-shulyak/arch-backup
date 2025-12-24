@@ -75,7 +75,7 @@
     "format": "🔊 {volume}%",
     "format-muted": "🔇 Muted",
     "scroll-step": 5,
-    "on-click": "pavucontrol"
+    "on-click": "kitty pulsemixer"
   },
 
   "bluetooth": {

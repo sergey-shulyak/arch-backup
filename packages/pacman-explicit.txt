@@ -1,4 +1,5 @@
 1password
+1password-cli
 7zip
 acpi
 acpid
@@ -11,6 +12,7 @@ brightnessctl
 btop
 calcure
 catppuccin-gtk-theme-mocha
+cava
 claude-code
 cliphist
 efibootmgr
@@ -22,6 +24,7 @@ fish
 fzf
 git
 glow
+gnome-keyring
 grim
 gst-plugin-pipewire
 hypridle
@@ -43,8 +46,10 @@ linux-zen
 mako
 man-db
 man-pages
+mpd
 nautilus
 ncdu
+ncmpcpp
 neovim
 network-manager-applet
 networkmanager
@@ -53,21 +58,23 @@ noto-fonts-cjk
 noto-fonts-emoji
 pamixer
 papirus-icon-theme
-pavucontrol
 pipewire
 pipewire-alsa
 pipewire-jack
 pipewire-pulse
 polkit-kde-agent
+pulsemixer
 qt5-wayland
 qt6-wayland
 reflector
 rsync
 satty
+secrets
 slurp
 smartmontools
 socat
 sof-firmware
+sshfs
 steam
 telegram-desktop
 tlp
@@ -81,6 +88,7 @@ unzip
 uwsm
 vlc
 vulkan-intel
+w3m
 waybar
 wf-recorder
 wget

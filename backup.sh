@@ -318,6 +318,55 @@ backup_systemd() {
     log_info "Saved system systemd services"
 }
 
+# Show summary of changed files
+show_changed_files() {
+    cd "$BACKUP_DIR"
+
+    local changed_files=$(git diff --cached --name-only)
+    local deleted_files=$(git diff --cached --diff-filter=D --name-only)
+    local added_files=$(git diff --cached --diff-filter=A --name-only)
+    local modified_files=$(git diff --cached --diff-filter=M --name-only)
+
+    if [ -z "$changed_files" ]; then
+        return
+    fi
+
+    echo ""
+    log_info "Changed files summary:"
+
+    if [ -n "$added_files" ]; then
+        echo -e "${GREEN}Added:${NC}"
+        echo "$added_files" | sed 's/^/  /'
+    fi
+
+    if [ -n "$modified_files" ]; then
+        echo -e "${YELLOW}Modified:${NC}"
+        echo "$modified_files" | sed 's/^/  /'
+    fi
+
+    if [ -n "$deleted_files" ]; then
+        echo -e "${RED}Deleted:${NC}"
+        echo "$deleted_files" | sed 's/^/  /'
+    fi
+    echo ""
+}
+
+# Show git diff preview
+show_diff_preview() {
+    cd "$BACKUP_DIR"
+
+    local num_changes=$(git diff --cached --stat | tail -1)
+    log_info "Changes: $num_changes"
+
+    # Show brief diff for each file (max 5 lines per file for readability)
+    log_info "Preview of changes:"
+    git diff --cached --no-color | head -100
+    if [ $(git diff --cached --no-color | wc -l) -gt 100 ]; then
+        echo "... (additional changes omitted for brevity)"
+    fi
+    echo ""
+}
+
 # Commit and push changes
 commit_and_push() {
     cd "$BACKUP_DIR"
@@ -329,6 +378,21 @@ commit_and_push() {
     if git diff --cached --quiet; then
         log_info "No changes to commit"
         return
+    fi
+
+    # Show changed files and diff in interactive mode
+    if [ "$NON_INTERACTIVE" = "false" ]; then
+        show_changed_files
+        show_diff_preview
+
+        read -p "Commit these changes? (y/n) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log_warn "Commit cancelled by user"
+            return
+        fi
+    else
+        log_info "Non-interactive mode: committing without confirmation"
     fi
 
     # Commit with timestamp
