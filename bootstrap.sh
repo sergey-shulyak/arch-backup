@@ -33,25 +33,23 @@ AUR_HELPER="yay"
 
 log_section "Arch Linux Bootstrap"
 
-# Step 0: Create standard home directory structure
+# Step 0: Create standard home directory structure using xdg-user-dirs
 create_home_dirs() {
     log_section "Creating Home Directory Structure"
 
-    local dirs=(
-        "Documents"
-        "Downloads"
-        "Developer"
-        "Music"
-        "Pictures"
-        "Videos"
-        "Desktop"
-        "Public"
-    )
+    # Install xdg-user-dirs if not present
+    if ! command -v xdg-user-dirs-update &>/dev/null; then
+        log_info "Installing xdg-user-dirs..."
+        sudo pacman -S --needed --noconfirm xdg-user-dirs
+    fi
 
-    for dir in "${dirs[@]}"; do
-        mkdir -p "$HOME/$dir"
-        log_info "Created: ~/$dir"
-    done
+    # Create XDG directories
+    xdg-user-dirs-update
+    log_info "Created XDG user directories"
+
+    # Create additional custom directories
+    mkdir -p "$HOME/Developer"
+    log_info "Created: ~/Developer"
 }
 
 create_home_dirs

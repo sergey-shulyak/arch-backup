@@ -1,4 +1,5 @@
 1password
+7zip
 acpi
 acpid
 base
@@ -10,7 +11,7 @@ brightnessctl
 btop
 catppuccin-gtk-theme-mocha
 claude-code
-dunst
+cliphist
 efibootmgr
 evince
 fastfetch
@@ -22,11 +23,11 @@ git
 glow
 grim
 gst-plugin-pipewire
-htop
 hypridle
 hyprland
 hyprlock
 hyprpaper
+imv
 intel-media-driver
 intel-ucode
 iwd
@@ -42,6 +43,7 @@ mako
 man-db
 man-pages
 nautilus
+ncdu
 neovim
 network-manager-applet
 networkmanager
@@ -69,12 +71,17 @@ steam
 telegram-desktop
 tlp
 tlp-rdw
+trash-cli
 ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
+udiskie
+unrar
+unzip
 uwsm
 vlc
 vulkan-intel
 waybar
+wf-recorder
 wget
 wireless_tools
 wireplumber
@@ -85,8 +92,6 @@ wofi
 xdg-desktop-portal-hyprland
 xdg-utils
 xorg-server
-xorg-xinit
 yay
-yay-debug
 yazi
 zram-generator

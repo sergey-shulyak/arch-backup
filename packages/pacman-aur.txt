@@ -3,4 +3,3 @@ bluetuith
 catppuccin-gtk-theme-mocha
 claude-code
 yay
-yay-debug
