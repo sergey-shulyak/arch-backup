@@ -261,7 +261,7 @@ backup_configs() {
     backup_config_dir
     backup_home_dotfiles
 
-    # System configs (require sudo to read some)
+    # System configs (device-agnostic only)
     log_info "Backing up system configs..."
     if [ -r "/etc/pacman.conf" ]; then
         backup_item "/etc/pacman.conf" "$CONFIG_DIR/etc/pacman.conf"
@@ -269,20 +269,15 @@ backup_configs() {
     if [ -r "/etc/makepkg.conf" ]; then
         backup_item "/etc/makepkg.conf" "$CONFIG_DIR/etc/makepkg.conf"
     fi
-    if [ -r "/etc/fstab" ]; then
-        backup_item "/etc/fstab" "$CONFIG_DIR/etc/fstab"
-    fi
-    if [ -r "/etc/hostname" ]; then
-        backup_item "/etc/hostname" "$CONFIG_DIR/etc/hostname"
-    fi
+    # Skipped device-specific configs:
+    # - /etc/fstab (disk/partition specific)
+    # - /etc/hostname (machine specific)
+    # - /etc/X11/xorg.conf.d (hardware specific)
     if [ -r "/etc/locale.conf" ]; then
         backup_item "/etc/locale.conf" "$CONFIG_DIR/etc/locale.conf"
     fi
     if [ -r "/etc/vconsole.conf" ]; then
         backup_item "/etc/vconsole.conf" "$CONFIG_DIR/etc/vconsole.conf"
-    fi
-    if [ -d "/etc/X11/xorg.conf.d" ]; then
-        backup_item "/etc/X11/xorg.conf.d" "$CONFIG_DIR/etc/X11/xorg.conf.d"
     fi
     if [ -d "/etc/environment.d" ]; then
         backup_item "/etc/environment.d" "$CONFIG_DIR/etc/environment.d"
