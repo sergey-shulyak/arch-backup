@@ -6,7 +6,7 @@
 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["clock"],
-  "modules-right": ["hyprland/language", "cpu", "memory", "temperature", "pulseaudio", "backlight", "network", "battery"],
+  "modules-right": ["hyprland/language", "cpu", "memory", "temperature", "pulseaudio", "bluetooth", "backlight", "network", "battery"],
 
   "hyprland/workspaces": {
     "format": "{id}",
@@ -78,6 +78,15 @@
     "on-click": "pavucontrol"
   },
 
+  "bluetooth": {
+    "format": "📡 On",
+    "format-disabled": "📡 Off",
+    "format-connected": "📡 {num_connections}",
+    "tooltip-format": "{controller_alias}",
+    "tooltip-format-connected": "{controller_alias}\n{num_connections} connected",
+    "on-click": "kitty bluetuith"
+  },
+
   "backlight": {
     "format": "☀️ {percent}%",
     "interval": 1,
@@ -109,6 +118,8 @@
     "format-plugged": "🔌 {capacity}%",
     "format-alt": "{time}",
     "tooltip-format": "{timeTo} - {power}W",
-    "interval": 1
+    "interval": 1,
+    "format-alt-click": "click",
+    "on-click-right": "~/.config/waybar/scripts/tlp-switcher.sh"
   }
 }

@@ -61,6 +61,7 @@ window#waybar > box {
 #cpu,
 #memory,
 #temperature,
+#bluetooth,
 #pulseaudio,
 #backlight,
 #network,
@@ -98,6 +99,10 @@ window#waybar > box {
   color: #1e1e2e;
 }
 
+#bluetooth {
+  color: #89b4fa;
+}
+
 #pulseaudio {
   color: #a6e3a1;
 }
@@ -128,6 +133,7 @@ window#waybar > box {
 #cpu:hover,
 #memory:hover,
 #temperature:hover,
+#bluetooth:hover,
 #pulseaudio:hover,
 #backlight:hover,
 #network:hover,
