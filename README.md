@@ -14,10 +14,11 @@ This will:
 1. Initialize git repository if not present (prompts for remote URL)
 2. Backup entire `~/.config` directory (with smart exclusions)
 3. Backup home directory dotfiles
-4. Backup system configs from `/etc`
-5. Export package lists (native, AUR, all with versions)
-6. Export enabled systemd services (user and system)
-7. Commit and push changes to git
+4. Backup user scripts in `~/.local/bin`
+5. Backup system configs from `/etc`
+6. Export package lists (native, AUR, all with versions)
+7. Export enabled systemd services (user and system)
+8. Commit and push changes to git
 
 ### Restore
 
@@ -70,7 +71,7 @@ The bootstrap process will:
 2. Install AUR helper (yay)
 3. Install all native packages from official repos
 4. Install all AUR packages
-5. Restore `~/.config` and dotfiles
+5. Restore `~/.config`, dotfiles, and user scripts (`~/.local/bin`)
 6. Restore system configs (optional)
 7. Enable systemd services
 8. Optionally install the automatic backup service
@@ -121,6 +122,9 @@ The entire `~/.config` directory is backed up using rsync, with smart exclusions
 - `.vimrc`, `.tmux.conf`
 - `.xinitrc`, `.Xresources`, `.xprofile`
 - `.ssh/config` (not keys)
+
+### User Scripts
+- `~/.local/bin` - Custom user scripts and executables
 
 ### System Configs
 - `/etc/pacman.conf`

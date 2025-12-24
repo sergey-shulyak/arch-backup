@@ -3,6 +3,7 @@
 7zip
 acpi
 acpid
+amd-ucode
 base
 base-devel
 bluetuith
@@ -15,6 +16,9 @@ catppuccin-gtk-theme-mocha
 cava
 claude-code
 cliphist
+dkms
+dolphin
+dunst
 efibootmgr
 evince
 fastfetch
@@ -26,7 +30,9 @@ git
 glow
 gnome-keyring
 grim
+grub
 gst-plugin-pipewire
+htop
 hypridle
 hyprland
 hyprlock
@@ -41,12 +47,15 @@ lazydocker
 lazygit
 libpulse
 libva-intel-driver
+libva-nvidia-driver
 linux-firmware
 linux-zen
+linux-zen-headers
 mako
 man-db
 man-pages
 mpd
+nano
 nautilus
 ncdu
 ncmpcpp
@@ -56,6 +65,8 @@ networkmanager
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
+nvidia-open-dkms
+nvtop
 pamixer
 papirus-icon-theme
 pipewire
@@ -69,6 +80,7 @@ qt6-wayland
 reflector
 rsync
 satty
+sddm
 secrets
 slurp
 smartmontools
@@ -87,6 +99,7 @@ ufw
 unrar
 unzip
 uwsm
+vim
 vlc
 vulkan-intel
 w3m
@@ -96,12 +109,14 @@ wget
 wireless_tools
 wireplumber
 wl-clip-persist
-wl-clipboard
 woff2-font-awesome
 wofi
 xdg-desktop-portal-hyprland
+xdg-user-dirs
 xdg-utils
 xorg-server
+xorg-xinit
 yay
+yay-debug
 yazi
 zram-generator

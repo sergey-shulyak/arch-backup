@@ -54,4 +54,3 @@ color15 #a6adc8
 # Url underline
 url_color #89b4fa
 url_style curly
-map shift+enter send_text all \e\r

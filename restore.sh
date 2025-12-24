@@ -243,6 +243,28 @@ restore_systemd() {
     fi
 }
 
+# Restore user scripts from ~/.local/bin
+restore_local_bin() {
+    log_section "Restoring User Scripts from ~/.local/bin"
+
+    local local_bin_backup="$BACKUP_DIR/local-bin"
+
+    if [ ! -d "$local_bin_backup" ]; then
+        log_warn "No user scripts found in backup"
+        return
+    fi
+
+    if [ ! "$(ls -A "$local_bin_backup")" ]; then
+        log_warn "local-bin directory is empty in backup"
+        return
+    fi
+
+    mkdir -p "$HOME/.local/bin"
+    cp -r "$local_bin_backup"/* "$HOME/.local/bin/"
+    chmod +x "$HOME/.local/bin"/* 2>/dev/null || true
+    log_info "Restored user scripts to: $HOME/.local/bin"
+}
+
 # Install AUR helper if not present
 install_aur_helper() {
     local aur_helper="yay"
@@ -275,7 +297,7 @@ show_menu() {
     echo "What would you like to restore?"
     echo "1) Full bootstrap (packages -> configs -> services) [recommended for fresh install]"
     echo "2) Everything (configs -> packages -> services)"
-    echo "3) Home directory configs only"
+    echo "3) Home directory configs and scripts only"
     echo "4) System configs only (/etc)"
     echo "5) Packages only"
     echo "6) Systemd services only"
@@ -290,17 +312,20 @@ show_menu() {
             install_aur_helper
             restore_packages
             restore_home_configs
+            restore_local_bin
             restore_system_configs
             restore_systemd
             ;;
         2)
             restore_home_configs
+            restore_local_bin
             restore_system_configs
             restore_packages
             restore_systemd
             ;;
         3)
             restore_home_configs
+            restore_local_bin
             ;;
         4)
             restore_system_configs

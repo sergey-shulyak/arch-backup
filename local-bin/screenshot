@@ -1,0 +1,21 @@
+#!/bin/bash
+# Screenshot tool that saves to file and copies to clipboard
+
+SCREENSHOT_DIR="$HOME/Pictures"
+mkdir -p "$SCREENSHOT_DIR"
+
+FILENAME="screenshot-$(date +%s).png"
+FILEPATH="$SCREENSHOT_DIR/$FILENAME"
+
+# Take screenshot based on argument
+if [[ "$1" == "region" ]]; then
+    grim -g "$(slurp)" "$FILEPATH"
+else
+    grim "$FILEPATH"
+fi
+
+# Copy to clipboard if successful
+if [[ $? -eq 0 ]]; then
+    cat "$FILEPATH" | wl-copy
+    echo "Screenshot saved to $FILEPATH and copied to clipboard"
+fi

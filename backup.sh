@@ -91,6 +91,7 @@ create_dirs() {
     mkdir -p "$BACKUP_DIR/packages"
     mkdir -p "$BACKUP_DIR/systemd"
     mkdir -p "$BACKUP_DIR/scripts"
+    mkdir -p "$BACKUP_DIR/local-bin"
 }
 
 # Backup function - copies file/directory if it exists
@@ -251,6 +252,19 @@ backup_home_dotfiles() {
         mkdir -p "$CONFIG_DIR/home/.local/share"
         rsync -a --exclude='fish_history' "$USER_HOME/.local/share/fish/" "$CONFIG_DIR/home/.local/share/fish/"
         log_info "Backed up: $USER_HOME/.local/share/fish"
+    fi
+}
+
+# Backup user scripts in ~/.local/bin
+backup_local_bin() {
+    log_info "Backing up ~/.local/bin directory..."
+
+    if [ -d "$USER_HOME/.local/bin" ]; then
+        mkdir -p "$BACKUP_DIR/local-bin"
+        cp -r "$USER_HOME/.local/bin"/* "$BACKUP_DIR/local-bin/" 2>/dev/null || true
+        log_info "Backed up: $USER_HOME/.local/bin"
+    else
+        log_warn "Not found, skipping: $USER_HOME/.local/bin"
     fi
 }
 
@@ -423,6 +437,7 @@ main() {
     create_dirs
     init_git_repo
     backup_configs
+    backup_local_bin
     backup_packages
     backup_systemd
     commit_and_push
