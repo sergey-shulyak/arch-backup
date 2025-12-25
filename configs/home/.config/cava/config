@@ -1,0 +1,81 @@
+# Colorful Histogram Cava Configuration
+
+[general]
+# Refresh rate of the visualizer (60+ for smooth animation)
+framerate = 60
+
+# Autosense will attempt to increase sensitivity if the bars do not reach top
+autosens = 1
+
+# Sensitivity level (70-85 for responsive, balanced feel)
+sensitivity = 75
+
+# Number of bars (0 = auto based on window width)
+bars = 0
+
+# Width of each bar in characters
+bar_width = 2
+
+# Space between bars
+bar_spacing = 1
+
+# Use full terminal height
+max_height = 100
+
+# Center align bars if space available
+center_align = 1
+
+# Lower cutoff frequency
+lower_cutoff_freq = 20
+
+# Higher cutoff frequency
+higher_cutoff_freq = 20000
+
+# Gravity effect on bars (1.0 = natural fall speed)
+gravity = 1.0
+
+[input]
+# Audio input method
+method = pulse
+
+# Source selection (auto = default)
+source = auto
+
+[output]
+# Ncurses for terminal visualization
+method = ncurses
+
+# Character to draw bars with
+character = █
+
+# Flip output vertically
+flip = 0
+
+[color]
+# Enable gradient coloring
+gradient = 1
+
+# Define pastel gradient colors - bottom to top
+# Pastel Cool to Warm: Light Blue → Light Cyan → Light Green → Light Yellow → Light Orange → Light Pink
+gradient_color_1 = "#7799ff"
+gradient_color_2 = "#88ccff"
+gradient_color_3 = "#88ffff"
+gradient_color_4 = "#88ff88"
+gradient_color_5 = "#ffff99"
+gradient_color_6 = "#ffcc88"
+gradient_color_7 = "#ff9999"
+gradient_color_8 = "#ff8899"
+
+[smoothing]
+# Noise reduction (0-100, balance: 70-80 for smooth+responsive)
+# Higher = smoother but less responsive, Lower = more responsive but jittery
+noise_reduction = 75
+
+# Enable monstercat smoothing (excellent for smooth bars without lag)
+monstercat = 1
+
+# Disable waves to avoid extra smoothing that reduces responsiveness
+waves = 0
+
+# Multiplier for smoothing effect
+multiplier = 1.0
