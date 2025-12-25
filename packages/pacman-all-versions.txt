@@ -209,6 +209,7 @@ hyprwayland-scanner 0.4.5-1
 iana-etc 20251120-1
 icu 78.1-1
 ijs 0.35-6
+imagemagick 7.1.2.11-1
 imlib2 1.12.5-1
 imv 5.0.1-1
 iniparser 4.2.6-2
@@ -444,6 +445,7 @@ liblc3 1.1.3-1
 libldac 2.0.2.3-2
 libldap 2.6.10-2
 libliftoff 0.5.0-1
+liblqr 0.4.3-1
 libluv 1.51.0-1
 libmad 0.15.1b-10
 libmakepkg-dropins 18-1
@@ -496,6 +498,7 @@ libportal-gtk4 0.9.1-2
 libproxy 0.5.12-1
 libpsl 0.21.5-2
 libpulse 17.0+r98+gb096704c0-1
+libraqm 0.10.3-1
 libraw1394 2.1.2-4
 librsvg 2:2.61.3-1
 librsync 1:2.3.4-2
@@ -506,6 +509,7 @@ libsecret 0.21.7-1
 libshout 1:2.4.6-5
 libsidplayfp 2.16.0-1
 libsigc++ 2.12.1-2
+libsixel 1.10.5-1
 libsm 1.2.6-1
 libsndfile 1.2.2-4
 libsodium 1.0.20-1
@@ -571,6 +575,7 @@ libxkbfile 1.1.3-1
 libxml2 2.15.1-4
 libxmlb 0.3.24-1
 libxmu 1.2.1-1
+libxpresent 1.0.2-1
 libxrandr 1.5.4-1
 libxrender 0.9.12-1
 libxshmfence 1.3.3-1
@@ -630,8 +635,10 @@ mpd 0.24.6-2
 mpdecimal 4.0.1-1
 mpfr 4.2.2-1
 mpg123 1.33.4-1
+mpv 1:0.40.0-7
 msgpack-c 6.1.0-2
 mtdev 1.1.7-1
+mujs 1.3.8-1
 nano 8.7-1
 nautilus 49.2-1
 ncdu 2.9.2-1
@@ -753,6 +760,7 @@ python-pykeepass 4.1.1.post1-1
 python-pyotp 2.9.0-3
 python-pyproject-hooks 1.2.0-3
 python-pyusb 1.3.1-1
+python-pywal 3.3.0-10
 python-pyxdg 0.28-4
 python-requests 2.32.5-1
 python-setuptools 1:80.9.0-2
@@ -797,7 +805,6 @@ rubberband 4.0.0-1
 satty 0.20.0-1
 sbc 2.1-1
 sdbus-cpp 2.2.1-1
-sddm 0.21.0-6
 sdl2-compat 2.32.60-1
 sdl3 3.2.28-1
 seatd 0.9.1-1
@@ -866,7 +873,6 @@ tzdata 2025c-1
 uchardet 0.0.8-3
 udiskie 2.5.8-1
 udisks2 2.11.0-1
-ufw 0.36.2-5
 unibilium 2.1.2-1
 unrar 1:7.2.3-1
 unzip 6.0-23

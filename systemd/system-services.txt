@@ -8,11 +8,9 @@ nvidia-hibernate.service
 nvidia-resume.service
 nvidia-suspend-then-hibernate.service
 nvidia-suspend.service
-sddm.service
 seatd.service
 systemd-timesyncd.service
 tlp.service
-ufw.service
 polkit-agent-helper.socket
 systemd-userdbd.socket
 remote-fs.target

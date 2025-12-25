@@ -134,12 +134,3 @@ require("lazy").setup({
 }, {
   defaults = { lazy = true },
 })
-
--- Apply hyprstyle colors after plugins and colorscheme load
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = function()
-    if pcall(require, "nvim-colors") then
-      require("nvim-colors").setup()
-    end
-  end,
-})

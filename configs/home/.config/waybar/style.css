@@ -10,7 +10,7 @@
 
 window#waybar {
   background-color: rgba(30, 30, 46, 0.6);
-  color: #cdd6f4;
+  color: #AABFE1;
   border-bottom: 2px solid rgba(49, 50, 68, 0.8);
 }
 
@@ -29,7 +29,7 @@ window#waybar > box {
   margin: 0 4px;
   border-radius: 8px;
   background-color: rgba(49, 50, 68, 0.6);
-  color: #89b4fa;
+  color: #585EA0;
   font-weight: bold;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -41,15 +41,15 @@ window#waybar > box {
 }
 
 #workspaces button.active {
-  background-color: #89b4fa;
-  color: #1e1e2e;
+  background-color: #585EA0;
+  color: #0A0B22;
 }
 
 #clock {
   padding: 4px 8px;
   background-color: rgba(49, 50, 68, 0.6);
   border-radius: 8px;
-  color: #89b4fa;
+  color: #585EA0;
   font-weight: bold;
   font-size: 16px;
   min-width: 120px;
@@ -70,7 +70,7 @@ window#waybar > box {
   margin: 0 4px;
   background-color: rgba(49, 50, 68, 0.6);
   border-radius: 8px;
-  color: #cdd6f4;
+  color: #AABFE1;
   min-width: 40px;
   font-size: 16px;
   font-weight: bold;
@@ -78,7 +78,7 @@ window#waybar > box {
 }
 
 #language {
-  color: #94e2d5;
+  color: #AABFE1;
   font-size: 16px;
 }
 
@@ -91,16 +91,16 @@ window#waybar > box {
 }
 
 #temperature {
-  color: #f38ba8;
+  color: #f9e2af;
 }
 
 #temperature.critical {
   background-color: #f38ba8;
-  color: #1e1e2e;
+  color: #0A0B22;
 }
 
 #bluetooth {
-  color: #89b4fa;
+  color: #585EA0;
 }
 
 #pulseaudio {
@@ -117,14 +117,14 @@ window#waybar > box {
 
 #battery.critical:not(.charging) {
   background-color: #f38ba8;
-  color: #1e1e2e;
+  color: #0A0B22;
   animation: blink 0.5s linear infinite;
 }
 
 @keyframes blink {
   to {
     background-color: rgba(49, 50, 68, 0.6);
-    color: #cdd6f4;
+    color: #AABFE1;
   }
 }
 

@@ -49,6 +49,7 @@ mako
 man-db
 man-pages
 mpd
+mpv
 nano
 nautilus
 ncdu
@@ -69,12 +70,12 @@ pipewire-jack
 pipewire-pulse
 polkit-kde-agent
 pulsemixer
+python-pywal
 qt5-wayland
 qt6-wayland
 reflector
 rsync
 satty
-sddm
 secrets
 slurp
 smartmontools
@@ -89,7 +90,6 @@ trash-cli
 ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 udiskie
-ufw
 unrar
 unzip
 uwsm

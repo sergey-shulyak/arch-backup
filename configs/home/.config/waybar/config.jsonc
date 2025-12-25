@@ -6,7 +6,7 @@
 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["clock"],
-  "modules-right": ["hyprland/language", "cpu", "memory", "temperature", "backlight", "pulseaudio", "bluetooth", "network", "battery"],
+  "modules-right": ["hyprland/language", "cpu", "memory", "temperature", "pulseaudio", "bluetooth", "backlight", "network", "battery"],
 
   "hyprland/workspaces": {
     "format": "{id}",
