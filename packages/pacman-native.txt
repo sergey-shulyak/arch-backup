@@ -1,6 +1,7 @@
 7zip
 acpi
 acpid
+aichat
 amd-ucode
 base
 base-devel
@@ -8,10 +9,10 @@ bluez
 bluez-utils
 brightnessctl
 btop
+capitaine-cursors
 cava
 cliphist
 dkms
-dolphin
 dunst
 efibootmgr
 evince
@@ -62,6 +63,7 @@ noto-fonts-cjk
 noto-fonts-emoji
 nvidia-open-dkms
 nvtop
+openrgb
 pamixer
 papirus-icon-theme
 pipewire

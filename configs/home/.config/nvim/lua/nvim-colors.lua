@@ -8,21 +8,21 @@ function M.setup()
   -- Terminal colors (ANSI color codes 0-15)
   -- Used by terminal UI and colorschemes that respect terminal colors
   vim.g.terminal_color_0 = '#000000'
-  vim.g.terminal_color_8 = '#0A0B22'
+  vim.g.terminal_color_8 = '#19171C'
   vim.g.terminal_color_1 = '#f38ba8'
   vim.g.terminal_color_9 = '#f38ba8'
   vim.g.terminal_color_2 = '#a6e3a1'
   vim.g.terminal_color_10 = '#a6e3a1'
   vim.g.terminal_color_3 = '#f9e2af'
   vim.g.terminal_color_11 = '#f9e2af'
-  vim.g.terminal_color_4 = '#AABFE1'
-  vim.g.terminal_color_12 = '#AABFE1'
-  vim.g.terminal_color_5 = '#585EA0'
-  vim.g.terminal_color_13 = '#585EA0'
-  vim.g.terminal_color_6 = '#AABFE1'
-  vim.g.terminal_color_14 = '#AABFE1'
-  vim.g.terminal_color_7 = '#AABFE1'
-  vim.g.terminal_color_15 = '#AABFE1'
+  vim.g.terminal_color_4 = '#DC985F'
+  vim.g.terminal_color_12 = '#DC985F'
+  vim.g.terminal_color_5 = '#A04E32'
+  vim.g.terminal_color_13 = '#A04E32'
+  vim.g.terminal_color_6 = '#DC985F'
+  vim.g.terminal_color_14 = '#DC985F'
+  vim.g.terminal_color_7 = '#DC985F'
+  vim.g.terminal_color_15 = '#DC985F'
 
   -- Ensure true color support is enabled
   vim.opt.termguicolors = true
@@ -32,48 +32,48 @@ function M.setup()
   local hl = vim.api.nvim_set_hl
 
   -- Basic UI colors
-  hl(0, "Normal", { fg = "#AABFE1", bg = "#0A0B22" })
-  hl(0, "NormalNC", { fg = "#AABFE1", bg = "#0A0B22" })
-  hl(0, "NormalFloat", { fg = "#AABFE1", bg = "#0A0B22" })
+  hl(0, "Normal", { fg = "#DC985F", bg = "#19171C" })
+  hl(0, "NormalNC", { fg = "#DC985F", bg = "#19171C" })
+  hl(0, "NormalFloat", { fg = "#DC985F", bg = "#19171C" })
 
   -- Cursor and selection
-  hl(0, "Cursor", { fg = "#0A0B22", bg = "#AABFE1" })
-  hl(0, "CursorLine", { bg = "#0f1027" })
-  hl(0, "CursorLineNr", { fg = "#AABFE1", bold = true })
-  hl(0, "Visual", { fg = "#0A0B22", bg = "#585EA0" })
+  hl(0, "Cursor", { fg = "#19171C", bg = "#DC985F" })
+  hl(0, "CursorLine", { bg = "#1e1c21" })
+  hl(0, "CursorLineNr", { fg = "#DC985F", bold = true })
+  hl(0, "Visual", { fg = "#19171C", bg = "#A04E32" })
 
   -- Line numbers and signs
-  hl(0, "LineNr", { fg = "#a0a0a0" })
-  hl(0, "SignColumn", { fg = "#a0a0a0", bg = "#0A0B22" })
+  hl(0, "LineNr", { fg = "#c0c0c0" })
+  hl(0, "SignColumn", { fg = "#c0c0c0", bg = "#19171C" })
 
   -- Syntax highlighting
-  hl(0, "Statement", { fg = "#AABFE1", bold = true })
+  hl(0, "Statement", { fg = "#DC985F", bold = true })
   hl(0, "String", { fg = "#a6e3a1" })
-  hl(0, "Comment", { fg = "#a0a0a0", italic = true })
-  hl(0, "Type", { fg = "#AABFE1" })
-  hl(0, "Function", { fg = "#AABFE1" })
-  hl(0, "Keyword", { fg = "#AABFE1", bold = true })
-  hl(0, "Constant", { fg = "#585EA0" })
+  hl(0, "Comment", { fg = "#c0c0c0", italic = true })
+  hl(0, "Type", { fg = "#DC985F" })
+  hl(0, "Function", { fg = "#DC985F" })
+  hl(0, "Keyword", { fg = "#DC985F", bold = true })
+  hl(0, "Constant", { fg = "#A04E32" })
 
   -- Error, Warning, Info
   hl(0, "Error", { fg = "#f38ba8", bold = true })
   hl(0, "Warning", { fg = "#f9e2af", bold = true })
   hl(0, "DiagnosticError", { fg = "#f38ba8" })
   hl(0, "DiagnosticWarn", { fg = "#f9e2af" })
-  hl(0, "DiagnosticInfo", { fg = "#AABFE1" })
-  hl(0, "DiagnosticHint", { fg = "#AABFE1" })
+  hl(0, "DiagnosticInfo", { fg = "#DC985F" })
+  hl(0, "DiagnosticHint", { fg = "#DC985F" })
 
   -- Search and diff
   hl(0, "Search", { bg = "#f9e2af" })
-  hl(0, "IncSearch", { bg = "#585EA0" })
+  hl(0, "IncSearch", { bg = "#A04E32" })
   hl(0, "DiffAdd", { bg = "#a6e3a1" })
   hl(0, "DiffDelete", { bg = "#f38ba8" })
-  hl(0, "DiffChange", { bg = "#AABFE1" })
+  hl(0, "DiffChange", { bg = "#DC985F" })
 
   -- Menu and completion
-  hl(0, "Pmenu", { fg = "#AABFE1", bg = "#a0a0a0" })
-  hl(0, "PmenuSel", { fg = "#0A0B22", bg = "#585EA0", bold = true })
-  hl(0, "PmenuBorder", { fg = "#585EA0" })
+  hl(0, "Pmenu", { fg = "#DC985F", bg = "#c0c0c0" })
+  hl(0, "PmenuSel", { fg = "#19171C", bg = "#A04E32", bold = true })
+  hl(0, "PmenuBorder", { fg = "#A04E32" })
 end
 
 return M

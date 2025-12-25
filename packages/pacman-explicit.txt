@@ -3,6 +3,7 @@
 7zip
 acpi
 acpid
+aichat
 amd-ucode
 base
 base-devel
@@ -12,12 +13,12 @@ bluez-utils
 brightnessctl
 btop
 calcure
+capitaine-cursors
 catppuccin-gtk-theme-mocha
 cava
 claude-code
 cliphist
 dkms
-dolphin
 dunst
 efibootmgr
 evince
@@ -68,6 +69,7 @@ noto-fonts-cjk
 noto-fonts-emoji
 nvidia-open-dkms
 nvtop
+openrgb
 pamixer
 papirus-icon-theme
 pipewire
@@ -89,6 +91,7 @@ socat
 sof-firmware
 sshfs
 steam
+tela-icon-theme
 telegram-desktop
 tlp
 tlp-rdw

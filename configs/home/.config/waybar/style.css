@@ -9,8 +9,8 @@
 }
 
 window#waybar {
-  background-color: rgba(22, 23, 46, 0);
-  color: #AABFE1;
+  background-color: rgba(37, 35, 40, 0);
+  color: #DC985F;
   border: none;
 }
 
@@ -28,28 +28,28 @@ window#waybar > box {
   padding: 4px 8px;
   margin: 0 4px;
   border-radius: 10px;
-  background-color: rgba(22, 23, 46, 0.5);
-  color: #AABFE1;
+  background-color: rgba(37, 35, 40, 0.5);
+  color: #DC985F;
   font-weight: bold;
   font-size: 12pt;
   transition: all 0.3s ease;
 }
 
 #workspaces button:hover {
-  background-color: rgba(22, 23, 46, 0.7);
-  color: #AABFE1;
+  background-color: rgba(37, 35, 40, 0.7);
+  color: #DC985F;
 }
 
 #workspaces button.active {
-  background-color: #585EA0;
-  color: #0A0B22;
+  background-color: #A04E32;
+  color: #19171C;
 }
 
 #clock {
   padding: 4px 8px;
-  background-color: rgba(22, 23, 46, 0.5);
+  background-color: rgba(37, 35, 40, 0.5);
   border-radius: 10px;
-  color: #AABFE1;
+  color: #DC985F;
   font-weight: bold;
   font-size: 12pt;
   min-width: 120px;
@@ -69,9 +69,9 @@ window#waybar > box {
 #battery {
   padding: 4px 8px;
   margin: 0 4px;
-  background-color: rgba(22, 23, 46, 0.5);
+  background-color: rgba(37, 35, 40, 0.5);
   border-radius: 10px;
-  color: #AABFE1;
+  color: #DC985F;
   min-width: 40px;
   font-size: 12pt;
   font-weight: bold;
@@ -79,7 +79,7 @@ window#waybar > box {
 }
 
 #language {
-  color: #AABFE1;
+  color: #DC985F;
   font-size: 12pt;
 }
 
@@ -92,7 +92,7 @@ window#waybar > box {
 }
 
 #custom-network-speed {
-  color: #AABFE1;
+  color: #DC985F;
 }
 
 #temperature {
@@ -101,11 +101,11 @@ window#waybar > box {
 
 #temperature.critical {
   background-color: #f38ba8;
-  color: #0A0B22;
+  color: #19171C;
 }
 
 #bluetooth {
-  color: #AABFE1;
+  color: #DC985F;
 }
 
 #pulseaudio {
@@ -122,14 +122,14 @@ window#waybar > box {
 
 #battery.critical:not(.charging) {
   background-color: #f38ba8;
-  color: #0A0B22;
+  color: #19171C;
   animation: blink 0.5s linear infinite;
 }
 
 @keyframes blink {
   to {
     background-color: rgba(49, 50, 68, 0.6);
-    color: #AABFE1;
+    color: #DC985F;
   }
 }
 
@@ -144,5 +144,5 @@ window#waybar > box {
 #backlight:hover,
 #network:hover,
 #battery:hover {
-  background-color: rgba(22, 23, 46, 0.8);
+  background-color: rgba(37, 35, 40, 0.8);
 }

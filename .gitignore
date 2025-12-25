@@ -14,6 +14,9 @@ configs/home/.ssh/authorized_keys
 # GPG keys
 configs/home/.gnupg/
 
+# API keys
+configs/home/.config/aichat/
+
 # Sensitive credential files
 *.pem
 *.key
