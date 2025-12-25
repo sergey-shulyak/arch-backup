@@ -4,18 +4,21 @@
 # General
 max-history=100
 sort=-time
+default-timeout=3000
 
 # Styling
-width=300
-height=100
-margin=10,20
+width=500
+height=150
+margin=20,20
 
 background-color=#0A0B2280
 text-color=#AABFE1
-border-color=#a0a0a066
+border-color=#AABFE166
 border-size=1
-padding=10
-border-radius=5
+padding=12
+border-radius=10
+font=JetBrains Mono 12
+format=<b>%s</b>\n\n%b
 
 # Progress bar
 progress-color=over #585EA0
@@ -24,13 +27,13 @@ progress-color=over #585EA0
 [urgency=low]
 background-color=#0A0B2280
 text-color=#AABFE1
-border-color=#a0a0a066
+border-color=#AABFE166
 
 # Normal priority notifications
 [urgency=normal]
 background-color=#0A0B2280
 text-color=#AABFE1
-border-color=#a0a0a066
+border-color=#AABFE166
 
 # Critical priority notifications
 [urgency=critical]

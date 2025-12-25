@@ -1,12 +1,12 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 48,
+  "height": 36,
   "spacing": 8,
 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["clock"],
-  "modules-right": ["hyprland/language", "cpu", "memory", "temperature", "pulseaudio", "bluetooth", "backlight", "network", "battery"],
+  "modules-right": ["hyprland/language", "cpu", "memory", "custom/network-speed", "temperature", "pulseaudio", "bluetooth", "backlight", "network", "battery"],
 
   "hyprland/workspaces": {
     "format": "{id}",
@@ -94,8 +94,14 @@
     "on-scroll-down": "brightnessctl s 5%-"
   },
 
+  "custom/network-speed": {
+    "exec": "~/.config/waybar/scripts/network-speed.sh",
+    "interval": 1
+  },
+
   "network": {
     "format": "{icon} {essid} ({signalStrength}%)",
+    "format-ethernet": "{icon} ETH",
     "format-alt": "{icon} {ipaddr}",
     "format-alt-click": "click-right",
     "format-icons": {
