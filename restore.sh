@@ -70,17 +70,6 @@ restore_item() {
         return
     fi
 
-    # Create backup of existing file
-    if [ -e "$dest" ]; then
-        local backup_name="${dest}.bak.$(date +%Y%m%d%H%M%S)"
-        if [ "$sudo_required" = "true" ]; then
-            sudo cp -r "$dest" "$backup_name"
-        else
-            cp -r "$dest" "$backup_name"
-        fi
-        log_info "Existing file backed up to: $backup_name"
-    fi
-
     # Ensure parent directory exists
     local parent_dir=$(dirname "$dest")
     if [ "$sudo_required" = "true" ]; then
