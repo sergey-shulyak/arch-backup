@@ -13,3 +13,4 @@ audio/x-wav=vlc.desktop
 audio/x-vorbis+ogg=vlc.desktop
 audio/x-opus+ogg=vlc.desktop
 audio/flac=vlc.desktop
+inode/directory=org.gnome.Nautilus.desktop
