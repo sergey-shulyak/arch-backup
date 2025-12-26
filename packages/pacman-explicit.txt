@@ -29,6 +29,7 @@ fzf
 git
 glow
 gnome-keyring
+gparted
 grim
 grub
 gst-plugin-pipewire
@@ -70,7 +71,7 @@ pipewire
 pipewire-alsa
 pipewire-jack
 pipewire-pulse
-polkit-kde-agent
+polkit-gnome
 pulsemixer
 python-pywal
 qt5-wayland
