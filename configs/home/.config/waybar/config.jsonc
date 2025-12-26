@@ -6,7 +6,7 @@
 
   "modules-left": ["hyprland/workspaces","cpu", "memory", "custom/network-speed", "temperature"],
   "modules-center": ["clock"],
-  "modules-right": ["hyprland/language", "pulseaudio", "bluetooth", "network", "backlight", "battery"],
+  "modules-right": ["tray", "hyprland/language", "pulseaudio", "bluetooth", "network", "backlight", "battery"],
 
   "hyprland/workspaces": {
     "format": "{id}",
@@ -126,5 +126,12 @@
     "interval": 1,
     "format-alt-click": "click",
     "on-click-right": "~/.config/waybar/scripts/tlp-switcher.sh"
+  },
+
+  "tray": {
+    "icon-size": 20,
+    "spacing": 10,
+    "show-passive-items": true,
+    "expand": true
   }
 }

@@ -45,7 +45,7 @@ configs/home/.config/Microsoft/
 configs/home/.config/calcure/*.csv
 
 # Media library
-configs/home/.config/mpd/mpdstate/
+configs/home/.config/mpd/mpdstate
 
 # Cache directories
 **/Cache/
