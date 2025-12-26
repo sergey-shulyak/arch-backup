@@ -184,7 +184,20 @@ monitor=DP-1,2560x1440@60,1920x0,1
 
 ---
 
-## Mirroring Workflow
+## Mirroring Workflow - Automatic Hardware-Aware Restoration
+
+The backup/restore system now automatically handles hardware-specific configuration based on hostname!
+
+### Hardware Mapping
+Services are automatically categorized by machine in `systemd/HARDWARE_MAPPING.conf`:
+- **Universal services** (all machines): 1password-agent, gnome-keyring, mako, pipewire, etc.
+- **Desktop-only** (rig): openrgb.service (LED controller)
+- **Laptop-only** (thinkpad): tlp.service, tlp-sleep.service (power management)
+
+When you restore on a new machine, the system automatically:
+✓ Enables universal services
+✓ Enables hardware-specific services applicable to that machine
+✗ Skips hardware-specific services for other machines
 
 ### From Desktop (rig) to Laptop (thinkpad)
 
@@ -192,6 +205,8 @@ monitor=DP-1,2560x1440@60,1920x0,1
 ┌─────────────────────────────────────┐
 │ On Desktop (rig):                   │
 │ 1. Run: ./backup.sh                 │
+│    (Creates state files with        │
+│     hardware applicability)          │
 │ 2. Commit and push to git remote    │
 └──────────────┬──────────────────────┘
                │
@@ -205,15 +220,57 @@ monitor=DP-1,2560x1440@60,1920x0,1
 │ 3. Run: ./restore.sh                 │
 │ 4. Select: "1) Full bootstrap"       │
 │ 5. Accept packages & configs         │
-│ 6. Per-service decisions:            │
-│    - Enable: waybar, 1password, etc. │
-│    - Enable: tlp.service, tlp-sleep  │
-│    - SKIP: openrgb.service           │
+│ 6. Review service changes:           │
+│    ✓ Enable: waybar, 1password, etc. │
+│    ✓ Enable: tlp.service (auto!)     │
+│    ✗ Skip: openrgb (auto!)           │
+│    → Single "Apply?" prompt          │
 │ 7. Configure monitors:               │
 │    - Edit monitors-thinkpad.conf     │
 │ 8. Restart Hyprland                  │
 └──────────────────────────────────────┘
 ```
+
+### What's Automatic Now
+
+**Before restore:**
+- You had to manually decide for each service
+- Easy to forget openrgb on thinkpad
+- Easy to miss tlp on thinkpad
+
+**After restore (with hardware mapping):**
+```
+Analyzing user services for 'thinkpad'...
+
+Summary of changes for 'thinkpad':
+Will apply:
+  ✓ 1password-agent.service (enable)
+  ✓ cliphist-wl-paste.service (enable)
+  ✓ gnome-keyring.service (enable)
+  ✓ mako.service (enable)
+  [... other universal services ...]
+
+Skipping (not applicable to this machine):
+  ○ openrgb.service (for rig)
+  ○ hyprland-single-display.service (if rig-specific)
+
+Apply these user service changes? (y/N): y
+```
+
+**Then for system services:**
+```
+Summary of system service changes for 'thinkpad':
+Will apply:
+  ✓ tlp.service (enable)
+  ✓ tlp-sleep.service (enable)
+
+Skipping (not applicable to this machine):
+  ○ openrgb.service (for rig)
+
+Apply these system service changes? (y/N): y
+```
+
+Done! Everything applicable to thinkpad is auto-enabled, everything rig-specific is auto-skipped.
 
 ### From Laptop (thinkpad) back to Desktop (rig)
 
