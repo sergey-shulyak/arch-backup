@@ -225,7 +225,7 @@ restore_packages() {
     fi
 }
 
-# Enable systemd services
+# Restore systemd services with individual prompts
 restore_systemd() {
     log_section "Restoring Systemd Services"
 
@@ -236,8 +236,162 @@ restore_systemd() {
         return
     fi
 
-    # Restore user services
-    if [ -f "$systemd_dir/user-services.txt" ]; then
+    # Helper function to prompt for each user service
+    prompt_user_service() {
+        local service=$1
+        local backup_state=$2
+        local service_type=$3
+        local current_state=$4
+        local current_exists=$5
+
+        echo ""
+        echo "Service: $service"
+        echo "  Type: $service_type"
+        echo "  Backup state: $backup_state"
+        echo "  Current state: $current_state"
+
+        # Check if service file exists
+        if [ "$current_exists" = "false" ]; then
+            log_warn "  Service file not found"
+            read -p "  Skip this service? (Y/n): " skip
+            if [[ ! "$skip" =~ ^[Nn]$ ]]; then
+                return
+            fi
+        fi
+
+        echo "  Actions: [e]nable, [d]isable, [s]kip"
+        read -p "  Choose action (default: skip): " action
+
+        case "$action" in
+            e|E|enable)
+                systemctl --user enable "$service" 2>/dev/null && \
+                    log_info "  Enabled: $service" || \
+                    log_warn "  Failed to enable: $service"
+
+                read -p "  Start service now? (y/N): " start_now
+                if [[ "$start_now" =~ ^[Yy]$ ]]; then
+                    systemctl --user start "$service" 2>/dev/null && \
+                        log_info "  Started: $service" || \
+                        log_warn "  Failed to start: $service"
+                fi
+                ;;
+            d|D|disable)
+                systemctl --user disable "$service" 2>/dev/null && \
+                    log_info "  Disabled: $service" || \
+                    log_warn "  Failed to disable: $service"
+
+                read -p "  Stop service now? (y/N): " stop_now
+                if [[ "$stop_now" =~ ^[Yy]$ ]]; then
+                    systemctl --user stop "$service" 2>/dev/null && \
+                        log_info "  Stopped: $service" || \
+                        log_warn "  Failed to stop: $service"
+                fi
+                ;;
+            s|S|skip|"")
+                log_info "  Skipped: $service"
+                ;;
+            *)
+                log_warn "  Invalid action, skipping: $service"
+                ;;
+        esac
+    }
+
+    # Helper function to prompt for each system service
+    prompt_system_service() {
+        local service=$1
+        local backup_state=$2
+        local service_type=$3
+        local current_state=$4
+        local current_exists=$5
+
+        echo ""
+        echo "Service: $service"
+        echo "  Type: $service_type"
+        echo "  Backup state: $backup_state"
+        echo "  Current state: $current_state"
+
+        if [ "$current_exists" = "false" ]; then
+            log_warn "  Service file not found"
+            read -p "  Skip this service? (Y/n): " skip
+            if [[ ! "$skip" =~ ^[Nn]$ ]]; then
+                return
+            fi
+        fi
+
+        echo "  Actions: [e]nable, [d]isable, [s]kip"
+        read -p "  Choose action (default: skip): " action
+
+        case "$action" in
+            e|E|enable)
+                sudo systemctl enable "$service" 2>/dev/null && \
+                    log_info "  Enabled: $service" || \
+                    log_warn "  Failed to enable: $service"
+
+                read -p "  Start service now? (y/N): " start_now
+                if [[ "$start_now" =~ ^[Yy]$ ]]; then
+                    sudo systemctl start "$service" 2>/dev/null && \
+                        log_info "  Started: $service" || \
+                        log_warn "  Failed to start: $service"
+                fi
+                ;;
+            d|D|disable)
+                sudo systemctl disable "$service" 2>/dev/null && \
+                    log_info "  Disabled: $service" || \
+                    log_warn "  Failed to disable: $service"
+
+                read -p "  Stop service now? (y/N): " stop_now
+                if [[ "$stop_now" =~ ^[Yy]$ ]]; then
+                    sudo systemctl stop "$service" 2>/dev/null && \
+                        log_info "  Stopped: $service" || \
+                        log_warn "  Failed to stop: $service"
+                fi
+                ;;
+            s|S|skip|"")
+                log_info "  Skipped: $service"
+                ;;
+            *)
+                log_warn "  Invalid action, skipping: $service"
+                ;;
+        esac
+    }
+
+    # Restore user services from detailed state file
+    if [ -f "$systemd_dir/user-services-state.txt" ]; then
+        log_info "Restoring user services..."
+        log_info "You will be prompted for each service individually."
+        echo ""
+
+        # Count services for progress
+        local total_services=$(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$" | wc -l)
+        local current_service=0
+
+        # Read state file
+        while IFS='|' read -r service backup_state service_type fragment_path; do
+            # Skip comments and empty lines
+            [[ "$service" =~ ^#.*$ ]] && continue
+            [[ -z "$service" ]] && continue
+
+            current_service=$((current_service + 1))
+
+            log_info "[$current_service/$total_services]"
+
+            # Get current state of service on this machine
+            local current_state=$(systemctl --user list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
+            local current_exists="true"
+
+            if [ -z "$current_state" ]; then
+                current_state="not found"
+                current_exists="false"
+            fi
+
+            # Prompt user for action
+            prompt_user_service "$service" "$backup_state" "$service_type" "$current_state" "$current_exists"
+
+        done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
+
+    elif [ -f "$systemd_dir/user-services.txt" ]; then
+        # Fallback to old format if new format not available
+        log_warn "Using legacy service list format"
         log_info "User services to enable:"
         cat "$systemd_dir/user-services.txt"
         read -p "Enable these user services? (y/N): " confirm
@@ -248,7 +402,6 @@ restore_systemd() {
                         log_info "Enabled user service: $service" || \
                         log_warn "Could not enable user service: $service"
 
-                    # Start the service immediately in the current session
                     systemctl --user start "$service" 2>/dev/null && \
                         log_info "Started user service: $service" || \
                         log_warn "Could not start user service: $service"
@@ -257,8 +410,48 @@ restore_systemd() {
         fi
     fi
 
-    # Restore system services
-    if [ -f "$systemd_dir/system-services.txt" ]; then
+    echo ""
+
+    # Restore system services from detailed state file
+    if [ -f "$systemd_dir/system-services-state.txt" ]; then
+        log_info "Restoring system services..."
+        log_info "Note: System service operations require sudo"
+        read -p "Do you want to restore system services? (y/N): " proceed
+
+        if [[ ! "$proceed" =~ ^[Yy]$ ]]; then
+            log_info "Skipping system services"
+            return
+        fi
+
+        log_info "You will be prompted for each service individually."
+        echo ""
+
+        local total_services=$(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$" | wc -l)
+        local current_service=0
+
+        while IFS='|' read -r service backup_state service_type fragment_path; do
+            [[ "$service" =~ ^#.*$ ]] && continue
+            [[ -z "$service" ]] && continue
+
+            current_service=$((current_service + 1))
+            log_info "[$current_service/$total_services]"
+
+            local current_state=$(systemctl list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
+            local current_exists="true"
+
+            if [ -z "$current_state" ]; then
+                current_state="not found"
+                current_exists="false"
+            fi
+
+            # Prompt user for action
+            prompt_system_service "$service" "$backup_state" "$service_type" "$current_state" "$current_exists"
+
+        done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
+
+    elif [ -f "$systemd_dir/system-services.txt" ]; then
+        # Fallback to old format
+        log_warn "Using legacy system service list format"
         log_info "System services to enable:"
         cat "$systemd_dir/system-services.txt"
         read -p "Enable these system services? (y/N): " confirm
@@ -269,7 +462,6 @@ restore_systemd() {
                         log_info "Enabled system service: $service" || \
                         log_warn "Could not enable system service: $service"
 
-                    # Start the service immediately
                     sudo systemctl start "$service" 2>/dev/null && \
                         log_info "Started system service: $service" || \
                         log_warn "Could not start system service: $service"
