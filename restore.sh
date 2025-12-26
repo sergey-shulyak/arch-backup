@@ -342,8 +342,32 @@ restore_systemd() {
 
         done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
 
+        # Check for non-applicable services that are currently enabled (cleanup)
+        declare -a services_to_disable
+        while IFS='|' read -r service backup_state service_type fragment_path applicable; do
+            [[ "$service" =~ ^#.*$ ]] && continue
+            [[ -z "$service" ]] && continue
+
+            # Skip if applicable to this machine
+            if service_applies_to_machine "$service"; then
+                continue
+            fi
+
+            # Skip if package not installed
+            if [ ! -e "$fragment_path" ]; then
+                continue
+            fi
+
+            # Check if service is currently enabled on this machine
+            local current_state=$(systemctl --user list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
+            if [ "$current_state" = "enabled" ]; then
+                services_to_disable+=("$service (not applicable to $current_hostname)")
+            fi
+
+        done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
+
         # Show summary
-        if [ ${#services_to_apply[@]} -gt 0 ] || [ ${#services_to_skip[@]} -gt 0 ] || [ ${#missing_packages[@]} -gt 0 ]; then
+        if [ ${#services_to_apply[@]} -gt 0 ] || [ ${#services_to_skip[@]} -gt 0 ] || [ ${#missing_packages[@]} -gt 0 ] || [ ${#services_to_disable[@]} -gt 0 ]; then
             echo "Summary of changes for '$current_hostname':"
             echo ""
 
@@ -355,8 +379,16 @@ restore_systemd() {
                 echo ""
             fi
 
+            if [ ${#services_to_disable[@]} -gt 0 ]; then
+                echo "Will disable (cleanup - not applicable to this machine):"
+                for item in "${services_to_disable[@]}"; do
+                    echo "  ⊘ $item"
+                done
+                echo ""
+            fi
+
             if [ ${#services_to_skip[@]} -gt 0 ]; then
-                echo "Skipping (not applicable to this machine):"
+                echo "Skipping (not in backup):"
                 for item in "${services_to_skip[@]}"; do
                     echo "  ○ $item"
                 done
@@ -374,6 +406,7 @@ restore_systemd() {
             # Single confirmation prompt
             read -p "Apply these user service changes? (y/N): " confirm
             if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                # Apply applicable services
                 while IFS='|' read -r service backup_state service_type fragment_path applicable; do
                     [[ "$service" =~ ^#.*$ ]] && continue
                     [[ -z "$service" ]] && continue
@@ -392,6 +425,29 @@ restore_systemd() {
                     if [ "$backup_state" = "enabled" ]; then
                         apply_user_service "$service" "enable"
                     else
+                        apply_user_service "$service" "disable"
+                    fi
+
+                done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
+
+                # Disable non-applicable services (cleanup)
+                while IFS='|' read -r service backup_state service_type fragment_path applicable; do
+                    [[ "$service" =~ ^#.*$ ]] && continue
+                    [[ -z "$service" ]] && continue
+
+                    # Skip if applicable to this machine
+                    if service_applies_to_machine "$service"; then
+                        continue
+                    fi
+
+                    # Skip if package not installed
+                    if [ ! -e "$fragment_path" ]; then
+                        continue
+                    fi
+
+                    # Check if currently enabled and disable if so
+                    local current_state=$(systemctl --user list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
+                    if [ "$current_state" = "enabled" ]; then
                         apply_user_service "$service" "disable"
                     fi
 
@@ -463,8 +519,32 @@ restore_systemd() {
 
         done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
 
+        # Check for non-applicable services that are currently enabled (cleanup)
+        declare -a sys_services_to_disable
+        while IFS='|' read -r service backup_state service_type fragment_path applicable; do
+            [[ "$service" =~ ^#.*$ ]] && continue
+            [[ -z "$service" ]] && continue
+
+            # Skip if applicable to this machine
+            if service_applies_to_machine "$service"; then
+                continue
+            fi
+
+            # Skip if package not installed
+            if [ ! -e "$fragment_path" ]; then
+                continue
+            fi
+
+            # Check if service is currently enabled on this machine
+            local current_state=$(systemctl list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
+            if [ "$current_state" = "enabled" ]; then
+                sys_services_to_disable+=("$service (not applicable to $current_hostname)")
+            fi
+
+        done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
+
         # Show summary
-        if [ ${#sys_services_to_apply[@]} -gt 0 ] || [ ${#sys_services_to_skip[@]} -gt 0 ] || [ ${#sys_missing_packages[@]} -gt 0 ]; then
+        if [ ${#sys_services_to_apply[@]} -gt 0 ] || [ ${#sys_services_to_skip[@]} -gt 0 ] || [ ${#sys_missing_packages[@]} -gt 0 ] || [ ${#sys_services_to_disable[@]} -gt 0 ]; then
             echo "Summary of system service changes for '$current_hostname':"
             echo "(Note: System service operations require sudo)"
             echo ""
@@ -477,8 +557,16 @@ restore_systemd() {
                 echo ""
             fi
 
+            if [ ${#sys_services_to_disable[@]} -gt 0 ]; then
+                echo "Will disable (cleanup - not applicable to this machine):"
+                for item in "${sys_services_to_disable[@]}"; do
+                    echo "  ⊘ $item"
+                done
+                echo ""
+            fi
+
             if [ ${#sys_services_to_skip[@]} -gt 0 ]; then
-                echo "Skipping (not applicable to this machine):"
+                echo "Skipping (not in backup):"
                 for item in "${sys_services_to_skip[@]}"; do
                     echo "  ○ $item"
                 done
@@ -496,6 +584,7 @@ restore_systemd() {
             # Single confirmation prompt
             read -p "Apply these system service changes? (y/N): " confirm
             if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                # Apply applicable services
                 while IFS='|' read -r service backup_state service_type fragment_path applicable; do
                     [[ "$service" =~ ^#.*$ ]] && continue
                     [[ -z "$service" ]] && continue
@@ -514,6 +603,29 @@ restore_systemd() {
                     if [ "$backup_state" = "enabled" ]; then
                         apply_system_service "$service" "enable"
                     else
+                        apply_system_service "$service" "disable"
+                    fi
+
+                done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
+
+                # Disable non-applicable services (cleanup)
+                while IFS='|' read -r service backup_state service_type fragment_path applicable; do
+                    [[ "$service" =~ ^#.*$ ]] && continue
+                    [[ -z "$service" ]] && continue
+
+                    # Skip if applicable to this machine
+                    if service_applies_to_machine "$service"; then
+                        continue
+                    fi
+
+                    # Skip if package not installed
+                    if [ ! -e "$fragment_path" ]; then
+                        continue
+                    fi
+
+                    # Check if currently enabled and disable if so
+                    local current_state=$(systemctl list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
+                    if [ "$current_state" = "enabled" ]; then
                         apply_system_service "$service" "disable"
                     fi
 
