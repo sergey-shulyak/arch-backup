@@ -12,9 +12,11 @@ capitaine-cursors
 cava
 cliphist
 dkms
+dosfstools
 dunst
 efibootmgr
 evince
+exfatprogs
 fastfetch
 feh
 firefox
@@ -22,8 +24,8 @@ fish
 fzf
 git
 glow
+gnome-disk-utility
 gnome-keyring
-gparted
 grim
 grub
 gst-plugin-pipewire
@@ -57,6 +59,7 @@ networkmanager
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
+ntfs-3g
 nvtop
 openrgb
 pamixer
@@ -92,6 +95,7 @@ ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 ttf-liberation
 udiskie
+ufw
 unrar
 unzip
 uwsm
