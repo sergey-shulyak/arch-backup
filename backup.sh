@@ -357,17 +357,76 @@ backup_packages() {
     log_info "Saved all packages with versions (GPU drivers excluded)"
 }
 
-# Backup enabled systemd services
+# Backup systemd services with detailed state information
 backup_systemd() {
-    log_info "Backing up systemd service list..."
+    log_info "Backing up systemd service state..."
 
-    # User services
-    systemctl --user list-unit-files --state=enabled --no-legend | awk '{print $1}' > "$BACKUP_DIR/systemd/user-services.txt"
-    log_info "Saved user systemd services"
+    local systemd_dir="$BACKUP_DIR/systemd"
 
-    # System services (just the list, not the actual files)
-    systemctl list-unit-files --state=enabled --no-legend | awk '{print $1}' > "$BACKUP_DIR/systemd/system-services.txt"
-    log_info "Saved system systemd services"
+    # Backup user services with state
+    log_info "Collecting user service states..."
+    {
+        echo "# Format: service_name|state|type|fragment_path"
+        echo "# state: enabled, disabled, masked, indirect"
+        echo "# type: custom (in ~/.config/systemd/user) or package (in /usr/lib/systemd/user)"
+        echo ""
+
+        # Get all services and sockets (excluding transient, generated, static, alias)
+        systemctl --user list-unit-files --type=service,socket --no-legend | \
+        while read -r unit state preset; do
+            # Skip unwanted states
+            case "$state" in
+                static|generated|transient|alias)
+                    continue
+                    ;;
+            esac
+
+            # Get fragment path to determine if custom or package
+            local fragment_path=$(systemctl --user show -p FragmentPath "$unit" | cut -d= -f2)
+
+            # Determine type based on path
+            local type="package"
+            if [[ "$fragment_path" == "$USER_HOME/.config/systemd/user/"* ]]; then
+                type="custom"
+            fi
+
+            # Output: service|state|type|path
+            echo "$unit|$state|$type|$fragment_path"
+        done
+    } > "$systemd_dir/user-services-state.txt"
+
+    log_info "Saved user systemd service states"
+
+    # Keep old format for backward compatibility (enabled services only)
+    systemctl --user list-unit-files --state=enabled --no-legend | \
+        awk '{print $1}' > "$systemd_dir/user-services.txt"
+
+    # Backup system services with state
+    log_info "Collecting system service states..."
+    {
+        echo "# Format: service_name|state|type|fragment_path"
+        echo "# state: enabled, disabled, masked, indirect"
+        echo "# type: always 'package' for system services"
+        echo ""
+
+        systemctl list-unit-files --type=service,socket --no-legend | \
+        while read -r unit state preset; do
+            case "$state" in
+                static|generated|transient|alias)
+                    continue
+                    ;;
+            esac
+
+            local fragment_path=$(systemctl show -p FragmentPath "$unit" | cut -d= -f2)
+            echo "$unit|$state|package|$fragment_path"
+        done
+    } > "$systemd_dir/system-services-state.txt"
+
+    log_info "Saved system systemd service states"
+
+    # Keep old format for backward compatibility
+    systemctl list-unit-files --state=enabled --no-legend | \
+        awk '{print $1}' > "$systemd_dir/system-services.txt"
 }
 
 # Show summary of changed files

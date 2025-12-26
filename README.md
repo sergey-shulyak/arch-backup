@@ -73,7 +73,7 @@ The bootstrap process will:
 4. Install all AUR packages
 5. Restore `~/.config`, dotfiles, and user scripts (`~/.local/bin`)
 6. Restore system configs (optional)
-7. Enable systemd services
+7. Enable and start systemd services (services start immediately without logout)
 8. Optionally install the automatic backup service
 
 ## Automatic Backup on Shutdown
@@ -145,6 +145,8 @@ The entire `~/.config` directory is backed up using rsync, with smart exclusions
 ### Systemd Services
 - `user-services.txt` - Enabled user services
 - `system-services.txt` - Enabled system services
+
+When restoring, services are both enabled (for auto-start on next boot) and started immediately in the current session, so they're active right away without requiring a logout/login.
 
 ## Excluded from Backup
 

@@ -247,6 +247,11 @@ restore_systemd() {
                     systemctl --user enable "$service" 2>/dev/null && \
                         log_info "Enabled user service: $service" || \
                         log_warn "Could not enable user service: $service"
+
+                    # Start the service immediately in the current session
+                    systemctl --user start "$service" 2>/dev/null && \
+                        log_info "Started user service: $service" || \
+                        log_warn "Could not start user service: $service"
                 fi
             done < "$systemd_dir/user-services.txt"
         fi
@@ -263,6 +268,11 @@ restore_systemd() {
                     sudo systemctl enable "$service" 2>/dev/null && \
                         log_info "Enabled system service: $service" || \
                         log_warn "Could not enable system service: $service"
+
+                    # Start the service immediately
+                    sudo systemctl start "$service" 2>/dev/null && \
+                        log_info "Started system service: $service" || \
+                        log_warn "Could not start system service: $service"
                 fi
             done < "$systemd_dir/system-services.txt"
         fi

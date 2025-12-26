@@ -1,0 +1,40 @@
+# Format: service_name|state|type|fragment_path
+# state: enabled, disabled, masked, indirect
+# type: custom (in ~/.config/systemd/user) or package (in /usr/lib/systemd/user)
+
+1password-agent.service|enabled|custom|/home/sshuliak/.config/systemd/user/1password-agent.service
+cliphist-wl-paste.service|enabled|custom|/home/sshuliak/.config/systemd/user/cliphist-wl-paste.service
+dbus-broker.service|disabled|package|/usr/lib/systemd/user/dbus-broker.service
+filter-chain.service|disabled|package|/usr/lib/systemd/user/filter-chain.service
+fluidsynth.service|disabled|package|/usr/lib/systemd/user/fluidsynth.service
+fumon.service|disabled|package|/usr/lib/systemd/user/fumon.service
+gcr-ssh-agent.service|disabled|package|/usr/lib/systemd/user/gcr-ssh-agent.service
+gnome-keyring-daemon.service|disabled|package|/usr/lib/systemd/user/gnome-keyring-daemon.service
+gnome-keyring.service|enabled|custom|/home/sshuliak/.config/systemd/user/gnome-keyring.service
+hypridle.service|disabled|package|/usr/lib/systemd/user/hypridle.service
+hyprland-single-display.service|enabled|custom|/home/sshuliak/.config/systemd/user/hyprland-single-display.service
+hyprpaper.service|disabled|package|/usr/lib/systemd/user/hyprpaper.service
+mako.service|enabled|package|/usr/lib/systemd/user/mako.service
+mpd.service|enabled|package|/usr/lib/systemd/user/mpd.service
+mpris-proxy.service|disabled|package|/usr/lib/systemd/user/mpris-proxy.service
+openrgb.service|enabled|custom|/home/sshuliak/.config/systemd/user/openrgb.service
+p11-kit-server.service|disabled|package|/usr/lib/systemd/user/p11-kit-server.service
+pipewire-pulse.service|enabled|package|/usr/lib/systemd/user/pipewire-pulse.service
+pipewire.service|enabled|package|/usr/lib/systemd/user/pipewire.service
+polkit-gnome.service|enabled|custom|/home/sshuliak/.config/systemd/user/polkit-gnome.service
+ssh-agent.service|indirect|package|/usr/lib/systemd/user/ssh-agent.service
+systemd-nspawn@.service|disabled|package|
+systemd-tmpfiles-setup.service|disabled|package|/usr/lib/systemd/user/systemd-tmpfiles-setup.service
+systemd-vmspawn@.service|disabled|package|
+waybar.service|disabled|package|/usr/lib/systemd/user/waybar.service
+wireplumber.service|enabled|package|/usr/lib/systemd/user/wireplumber.service
+wireplumber@.service|disabled|package|
+xdg-desktop-portal-rewrite-launchers.service|disabled|package|/usr/lib/systemd/user/xdg-desktop-portal-rewrite-launchers.service
+xdg-user-dirs.service|enabled|package|/usr/lib/systemd/user/xdg-user-dirs.service
+gcr-ssh-agent.socket|disabled|package|/usr/lib/systemd/user/gcr-ssh-agent.socket
+gnome-keyring-daemon.socket|enabled|package|/usr/lib/systemd/user/gnome-keyring-daemon.socket
+mpd.socket|enabled|package|/usr/lib/systemd/user/mpd.socket
+p11-kit-server.socket|enabled|package|/usr/lib/systemd/user/p11-kit-server.socket
+pipewire-pulse.socket|enabled|package|/usr/lib/systemd/user/pipewire-pulse.socket
+pipewire.socket|enabled|package|/usr/lib/systemd/user/pipewire.socket
+ssh-agent.socket|disabled|package|/usr/lib/systemd/user/ssh-agent.socket
