@@ -50,6 +50,7 @@ linux-zen-headers
 mako
 man-db
 man-pages
+mise
 mpd
 nano
 nautilus

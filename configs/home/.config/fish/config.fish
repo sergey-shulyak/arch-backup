@@ -54,3 +54,4 @@ if status is-interactive
     # Initialize Starship prompt
     starship init fish | source
 end
+mise activate fish | source
