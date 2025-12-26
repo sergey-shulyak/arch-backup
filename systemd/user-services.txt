@@ -1,9 +1,15 @@
+1password-agent.service
+cliphist-wl-paste.service
 gnome-keyring.service
+hypridle.service
 hyprland-single-display.service
+hyprpaper.service
 mako.service
 mpd.service
 pipewire-pulse.service
 pipewire.service
+polkit-gnome.service
+waybar.service
 wireplumber.service
 xdg-user-dirs.service
 gnome-keyring-daemon.socket

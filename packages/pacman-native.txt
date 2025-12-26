@@ -88,6 +88,7 @@ sshfs
 starship
 steam
 telegram-desktop
+testdisk
 tlp
 tlp-rdw
 trash-cli
@@ -110,6 +111,7 @@ wget
 wireless_tools
 wireplumber
 wl-clip-persist
+wl-clipboard
 woff2-font-awesome
 wofi
 xdg-desktop-portal-gtk

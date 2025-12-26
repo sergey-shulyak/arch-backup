@@ -97,6 +97,7 @@ starship
 steam
 tela-icon-theme
 telegram-desktop
+testdisk
 tlp
 tlp-rdw
 trash-cli
@@ -119,6 +120,7 @@ wget
 wireless_tools
 wireplumber
 wl-clip-persist
+wl-clipboard
 woff2-font-awesome
 wofi
 xdg-desktop-portal-gtk
@@ -128,6 +130,5 @@ xdg-utils
 xorg-server
 xorg-xinit
 yay
-yay-debug
 yazi
 zram-generator

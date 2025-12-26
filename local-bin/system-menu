@@ -17,7 +17,7 @@ trap "rm -f '$LOCK_FILE'" EXIT
 
 # Function to show main menu
 show_main_menu() {
-    echo -e "🏃 Run\n🚀 Applications\n📸 Screenshots\n🔊 Audio\n🖥️ Display\n🌐 Network\nℹ️ System Info\n🔴 Power"
+    echo -e "🏃 Run\n🚀 Applications\n📸 Screenshots\n🔊 Audio\n🖥️ Display\n🌐 Network\nℹ️ System Info\n☕ Caffeine\n🔴 Power"
 }
 
 # Function to show power submenu
@@ -48,6 +48,11 @@ show_system_info_menu() {
 # Function to show network submenu
 show_network_menu() {
     echo -e "⬅️ Back\n📡 Toggle WiFi\n🔵 Toggle Bluetooth"
+}
+
+# Function to show caffeine submenu
+show_caffeine_menu() {
+    echo -e "⬅️ Back\n☕ Caffeinate\n😴 Decaffeinate"
 }
 
 # Function to execute power commands
@@ -154,6 +159,20 @@ execute_network() {
     esac
 }
 
+# Function to execute caffeine commands
+execute_caffeine() {
+    case "$1" in
+        *"Caffeinate")
+            systemctl --user stop hypridle
+            notify-send "☕ Caffeinated" "Screen will stay awake"
+            ;;
+        *"Decaffeinate")
+            systemctl --user start hypridle
+            notify-send "😴 Decaffeinated" "Screen will lock on idle"
+            ;;
+    esac
+}
+
 # Function to execute search commands
 execute_search() {
     case "$1" in
@@ -174,6 +193,8 @@ execute_search() {
         *"Brightness Down") brightnessctl -e4 -n2 set 5%- ;;
         *"Toggle WiFi") nmcli radio wifi off && notify-send "WiFi disabled" || (nmcli radio wifi on && notify-send "WiFi enabled") ;;
         *"Toggle Bluetooth") rfkill list bluetooth | grep -q "Soft blocked: yes" && rfkill unblock bluetooth && notify-send "Bluetooth enabled" || (rfkill block bluetooth && notify-send "Bluetooth disabled") ;;
+        *"Caffeinate") systemctl --user stop hypridle; notify-send "☕ Caffeinated" "Screen will stay awake" ;;
+        *"Decaffeinate") systemctl --user start hypridle; notify-send "😴 Decaffeinated" "Screen will lock on idle" ;;
         *"1Password") 1password & ;;
         *"Telegram") Telegram & ;;
         *"Firefox") firefox & ;;
@@ -222,6 +243,9 @@ while true; do
                     ;;
                 *"System Info")
                     current_menu="sysinfo"
+                    ;;
+                *"Caffeine")
+                    current_menu="caffeine"
                     ;;
                 *"Power")
                     current_menu="power"
@@ -282,6 +306,15 @@ while true; do
                 current_menu="main"
             else
                 execute_network "$selected"
+                exit 0
+            fi
+            ;;
+        "caffeine")
+            selected=$(show_caffeine_menu | wofi --dmenu --prompt "Caffeine" -i)
+            if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
+                current_menu="main"
+            else
+                execute_caffeine "$selected"
                 exit 0
             fi
             ;;
