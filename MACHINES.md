@@ -238,7 +238,14 @@ When you restore on a new machine, the system automatically:
 - Easy to forget openrgb on thinkpad
 - Easy to miss tlp on thinkpad
 
-**After restore (with hardware mapping):**
+**After restore (with hardware mapping and automatic cleanup):**
+
+The restore script now:
+1. **Analyzes** services applicable to your machine
+2. **Detects** non-applicable services that are currently enabled (cleanup)
+3. **Shows summary** with all changes
+4. **Disables** hardware-specific services that don't belong
+
 ```
 Analyzing user services for 'thinkpad'...
 
@@ -250,11 +257,15 @@ Will apply:
   ✓ mako.service (enable)
   [... other universal services ...]
 
-Skipping (not applicable to this machine):
-  ○ openrgb.service (for rig)
+Will disable (cleanup - not applicable to this machine):
+  ⊘ openrgb.service (not applicable to thinkpad)
+
+Skipping (not in backup):
   ○ hyprland-single-display.service (if rig-specific)
 
 Apply these user service changes? (y/N): y
+  → Enables all universal services
+  → Disables openrgb (cleanup)
 ```
 
 **Then for system services:**
@@ -264,13 +275,19 @@ Will apply:
   ✓ tlp.service (enable)
   ✓ tlp-sleep.service (enable)
 
-Skipping (not applicable to this machine):
-  ○ openrgb.service (for rig)
+Will disable (cleanup - not applicable to this machine):
+  ⊘ openrgb.service (not applicable to thinkpad)
 
 Apply these system service changes? (y/N): y
+  → Enables tlp power management
+  → Disables openrgb system service (if installed)
 ```
 
-Done! Everything applicable to thinkpad is auto-enabled, everything rig-specific is auto-skipped.
+**Result**: True machine mirroring!
+- ✓ Universal services synced across all machines
+- ✓ Hardware-specific services automatically removed from other machines
+- ✓ Desktop won't have tlp running, laptop won't have openrgb
+- ✓ All changes shown and confirmed before applying
 
 ### From Laptop (thinkpad) back to Desktop (rig)
 
