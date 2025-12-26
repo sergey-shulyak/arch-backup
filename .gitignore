@@ -98,6 +98,9 @@ configs/home/.config/vivaldi/
 configs/home/.config/vivaldi-snapshot/
 configs/home/.config/mozilla/
 
+# IDEs
+configs/home/.config/Cursor/
+
 # Vault/Pass password store (local copy should never be synced)
 configs/home/.password-store/
 configs/home/.config/gopass/

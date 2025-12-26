@@ -17,6 +17,7 @@ catppuccin-gtk-theme-mocha
 cava
 claude-code
 cliphist
+cursor-bin
 dkms
 dosfstools
 dunst
