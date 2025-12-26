@@ -225,7 +225,7 @@ restore_packages() {
     fi
 }
 
-# Restore systemd services with individual prompts
+# Restore systemd services automatically based on hardware/hostname
 restore_systemd() {
     log_section "Restoring Systemd Services"
 
@@ -236,158 +236,172 @@ restore_systemd() {
         return
     fi
 
-    # Helper function to prompt for each user service
-    prompt_user_service() {
+    # Detect current hostname for hardware-specific decisions
+    local current_hostname=$(cat /etc/hostname 2>/dev/null || echo "unknown")
+    log_info "Current hostname: $current_hostname"
+
+    # Load hardware mapping
+    declare -A hardware_map
+    local hardware_map_file="$systemd_dir/HARDWARE_MAPPING.conf"
+    if [ -f "$hardware_map_file" ]; then
+        while IFS='|' read -r service machines desc; do
+            # Skip comments and empty lines
+            [[ "$service" =~ ^#.*$ ]] && continue
+            [[ -z "$service" ]] && continue
+            hardware_map["$service"]="$machines"
+        done < "$hardware_map_file"
+    fi
+
+    # Helper to check if service applies to current machine
+    service_applies_to_machine() {
         local service=$1
-        local backup_state=$2
-        local service_type=$3
-        local current_state=$4
-        local current_exists=$5
+        local applicable="${hardware_map[$service]:-all}"
 
-        echo ""
-        echo "Service: $service"
-        echo "  Type: $service_type"
-        echo "  Backup state: $backup_state"
-        echo "  Current state: $current_state"
+        # If "all", always applies
+        [[ "$applicable" == "all" ]] && return 0
 
-        # Check if service file exists
-        if [ "$current_exists" = "false" ]; then
-            log_warn "  Service file not found"
-            read -p "  Skip this service? (Y/n): " skip
-            if [[ ! "$skip" =~ ^[Nn]$ ]]; then
-                return
-            fi
-        fi
+        # Check if current hostname is in the comma-separated list
+        [[ ",$applicable," == *",$current_hostname,"* ]] && return 0
 
-        echo "  Actions: [e]nable, [d]isable, [s]kip"
-        read -p "  Choose action (default: skip): " action
+        # Doesn't apply
+        return 1
+    }
+
+    # Apply user service state
+    apply_user_service() {
+        local service=$1
+        local action=$2
 
         case "$action" in
-            e|E|enable)
+            enable)
                 systemctl --user enable "$service" 2>/dev/null && \
                     log_info "  Enabled: $service" || \
                     log_warn "  Failed to enable: $service"
-
-                read -p "  Start service now? (y/N): " start_now
-                if [[ "$start_now" =~ ^[Yy]$ ]]; then
-                    systemctl --user start "$service" 2>/dev/null && \
-                        log_info "  Started: $service" || \
-                        log_warn "  Failed to start: $service"
-                fi
                 ;;
-            d|D|disable)
+            disable)
                 systemctl --user disable "$service" 2>/dev/null && \
                     log_info "  Disabled: $service" || \
                     log_warn "  Failed to disable: $service"
-
-                read -p "  Stop service now? (y/N): " stop_now
-                if [[ "$stop_now" =~ ^[Yy]$ ]]; then
-                    systemctl --user stop "$service" 2>/dev/null && \
-                        log_info "  Stopped: $service" || \
-                        log_warn "  Failed to stop: $service"
-                fi
-                ;;
-            s|S|skip|"")
-                log_info "  Skipped: $service"
-                ;;
-            *)
-                log_warn "  Invalid action, skipping: $service"
                 ;;
         esac
     }
 
-    # Helper function to prompt for each system service
-    prompt_system_service() {
+    # Apply system service state
+    apply_system_service() {
         local service=$1
-        local backup_state=$2
-        local service_type=$3
-        local current_state=$4
-        local current_exists=$5
-
-        echo ""
-        echo "Service: $service"
-        echo "  Type: $service_type"
-        echo "  Backup state: $backup_state"
-        echo "  Current state: $current_state"
-
-        if [ "$current_exists" = "false" ]; then
-            log_warn "  Service file not found"
-            read -p "  Skip this service? (Y/n): " skip
-            if [[ ! "$skip" =~ ^[Nn]$ ]]; then
-                return
-            fi
-        fi
-
-        echo "  Actions: [e]nable, [d]isable, [s]kip"
-        read -p "  Choose action (default: skip): " action
+        local action=$2
 
         case "$action" in
-            e|E|enable)
+            enable)
                 sudo systemctl enable "$service" 2>/dev/null && \
                     log_info "  Enabled: $service" || \
                     log_warn "  Failed to enable: $service"
-
-                read -p "  Start service now? (y/N): " start_now
-                if [[ "$start_now" =~ ^[Yy]$ ]]; then
-                    sudo systemctl start "$service" 2>/dev/null && \
-                        log_info "  Started: $service" || \
-                        log_warn "  Failed to start: $service"
-                fi
                 ;;
-            d|D|disable)
+            disable)
                 sudo systemctl disable "$service" 2>/dev/null && \
                     log_info "  Disabled: $service" || \
                     log_warn "  Failed to disable: $service"
-
-                read -p "  Stop service now? (y/N): " stop_now
-                if [[ "$stop_now" =~ ^[Yy]$ ]]; then
-                    sudo systemctl stop "$service" 2>/dev/null && \
-                        log_info "  Stopped: $service" || \
-                        log_warn "  Failed to stop: $service"
-                fi
-                ;;
-            s|S|skip|"")
-                log_info "  Skipped: $service"
-                ;;
-            *)
-                log_warn "  Invalid action, skipping: $service"
                 ;;
         esac
     }
 
     # Restore user services from detailed state file
     if [ -f "$systemd_dir/user-services-state.txt" ]; then
-        log_info "Restoring user services..."
-        log_info "You will be prompted for each service individually."
+        log_info "Analyzing user services for $current_hostname..."
         echo ""
 
-        # Count services for progress
-        local total_services=$(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$" | wc -l)
-        local current_service=0
+        # Collect services that will be applied/skipped
+        declare -a services_to_apply
+        declare -a services_to_skip
+        declare -a missing_packages
 
-        # Read state file
-        while IFS='|' read -r service backup_state service_type fragment_path; do
+        # Parse state file and categorize services
+        while IFS='|' read -r service backup_state service_type fragment_path applicable; do
             # Skip comments and empty lines
             [[ "$service" =~ ^#.*$ ]] && continue
             [[ -z "$service" ]] && continue
 
-            current_service=$((current_service + 1))
-
-            log_info "[$current_service/$total_services]"
-
-            # Get current state of service on this machine
-            local current_state=$(systemctl --user list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
-            local current_exists="true"
-
-            if [ -z "$current_state" ]; then
-                current_state="not found"
-                current_exists="false"
+            # Check if service applies to current machine
+            if ! service_applies_to_machine "$service"; then
+                services_to_skip+=("$service (for $applicable)")
+                continue
             fi
 
-            # Prompt user for action
-            prompt_user_service "$service" "$backup_state" "$service_type" "$current_state" "$current_exists"
+            # Check if service file exists
+            if [ ! -e "$fragment_path" ]; then
+                missing_packages+=("$service (package not installed)")
+                continue
+            fi
+
+            # Add to apply list with action
+            if [ "$backup_state" = "enabled" ]; then
+                services_to_apply+=("$service (enable)")
+            else
+                services_to_apply+=("$service (disable)")
+            fi
 
         done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
+
+        # Show summary
+        if [ ${#services_to_apply[@]} -gt 0 ] || [ ${#services_to_skip[@]} -gt 0 ] || [ ${#missing_packages[@]} -gt 0 ]; then
+            echo "Summary of changes for '$current_hostname':"
+            echo ""
+
+            if [ ${#services_to_apply[@]} -gt 0 ]; then
+                echo "Will apply:"
+                for item in "${services_to_apply[@]}"; do
+                    echo "  ✓ $item"
+                done
+                echo ""
+            fi
+
+            if [ ${#services_to_skip[@]} -gt 0 ]; then
+                echo "Skipping (not applicable to this machine):"
+                for item in "${services_to_skip[@]}"; do
+                    echo "  ○ $item"
+                done
+                echo ""
+            fi
+
+            if [ ${#missing_packages[@]} -gt 0 ]; then
+                echo "Skipping (package not installed):"
+                for item in "${missing_packages[@]}"; do
+                    echo "  ✗ $item"
+                done
+                echo ""
+            fi
+
+            # Single confirmation prompt
+            read -p "Apply these user service changes? (y/N): " confirm
+            if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                while IFS='|' read -r service backup_state service_type fragment_path applicable; do
+                    [[ "$service" =~ ^#.*$ ]] && continue
+                    [[ -z "$service" ]] && continue
+
+                    # Skip if not applicable
+                    if ! service_applies_to_machine "$service"; then
+                        continue
+                    fi
+
+                    # Skip if package not installed
+                    if [ ! -e "$fragment_path" ]; then
+                        continue
+                    fi
+
+                    # Apply the state
+                    if [ "$backup_state" = "enabled" ]; then
+                        apply_user_service "$service" "enable"
+                    else
+                        apply_user_service "$service" "disable"
+                    fi
+
+                done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
+
+                log_info "User services updated"
+            else
+                log_info "Skipped user service changes"
+            fi
+        fi
 
     elif [ -f "$systemd_dir/user-services.txt" ]; then
         # Fallback to old format if new format not available
@@ -414,40 +428,102 @@ restore_systemd() {
 
     # Restore system services from detailed state file
     if [ -f "$systemd_dir/system-services-state.txt" ]; then
-        log_info "Restoring system services..."
-        log_info "Note: System service operations require sudo"
-        read -p "Do you want to restore system services? (y/N): " proceed
-
-        if [[ ! "$proceed" =~ ^[Yy]$ ]]; then
-            log_info "Skipping system services"
-            return
-        fi
-
-        log_info "You will be prompted for each service individually."
+        log_info "Analyzing system services for $current_hostname..."
         echo ""
 
-        local total_services=$(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$" | wc -l)
-        local current_service=0
+        # Collect services that will be applied/skipped
+        declare -a sys_services_to_apply
+        declare -a sys_services_to_skip
+        declare -a sys_missing_packages
 
-        while IFS='|' read -r service backup_state service_type fragment_path; do
+        # Parse state file and categorize services
+        while IFS='|' read -r service backup_state service_type fragment_path applicable; do
+            # Skip comments and empty lines
             [[ "$service" =~ ^#.*$ ]] && continue
             [[ -z "$service" ]] && continue
 
-            current_service=$((current_service + 1))
-            log_info "[$current_service/$total_services]"
-
-            local current_state=$(systemctl list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
-            local current_exists="true"
-
-            if [ -z "$current_state" ]; then
-                current_state="not found"
-                current_exists="false"
+            # Check if service applies to current machine
+            if ! service_applies_to_machine "$service"; then
+                sys_services_to_skip+=("$service (for $applicable)")
+                continue
             fi
 
-            # Prompt user for action
-            prompt_system_service "$service" "$backup_state" "$service_type" "$current_state" "$current_exists"
+            # Check if service file exists
+            if [ ! -e "$fragment_path" ]; then
+                sys_missing_packages+=("$service (package not installed)")
+                continue
+            fi
+
+            # Add to apply list with action
+            if [ "$backup_state" = "enabled" ]; then
+                sys_services_to_apply+=("$service (enable)")
+            else
+                sys_services_to_apply+=("$service (disable)")
+            fi
 
         done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
+
+        # Show summary
+        if [ ${#sys_services_to_apply[@]} -gt 0 ] || [ ${#sys_services_to_skip[@]} -gt 0 ] || [ ${#sys_missing_packages[@]} -gt 0 ]; then
+            echo "Summary of system service changes for '$current_hostname':"
+            echo "(Note: System service operations require sudo)"
+            echo ""
+
+            if [ ${#sys_services_to_apply[@]} -gt 0 ]; then
+                echo "Will apply:"
+                for item in "${sys_services_to_apply[@]}"; do
+                    echo "  ✓ $item"
+                done
+                echo ""
+            fi
+
+            if [ ${#sys_services_to_skip[@]} -gt 0 ]; then
+                echo "Skipping (not applicable to this machine):"
+                for item in "${sys_services_to_skip[@]}"; do
+                    echo "  ○ $item"
+                done
+                echo ""
+            fi
+
+            if [ ${#sys_missing_packages[@]} -gt 0 ]; then
+                echo "Skipping (package not installed):"
+                for item in "${sys_missing_packages[@]}"; do
+                    echo "  ✗ $item"
+                done
+                echo ""
+            fi
+
+            # Single confirmation prompt
+            read -p "Apply these system service changes? (y/N): " confirm
+            if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                while IFS='|' read -r service backup_state service_type fragment_path applicable; do
+                    [[ "$service" =~ ^#.*$ ]] && continue
+                    [[ -z "$service" ]] && continue
+
+                    # Skip if not applicable
+                    if ! service_applies_to_machine "$service"; then
+                        continue
+                    fi
+
+                    # Skip if package not installed
+                    if [ ! -e "$fragment_path" ]; then
+                        continue
+                    fi
+
+                    # Apply the state
+                    if [ "$backup_state" = "enabled" ]; then
+                        apply_system_service "$service" "enable"
+                    else
+                        apply_system_service "$service" "disable"
+                    fi
+
+                done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
+
+                log_info "System services updated"
+            else
+                log_info "Skipped system service changes"
+            fi
+        fi
 
     elif [ -f "$systemd_dir/system-services.txt" ]; then
         # Fallback to old format

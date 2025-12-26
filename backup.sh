@@ -362,13 +362,33 @@ backup_systemd() {
     log_info "Backing up systemd service state..."
 
     local systemd_dir="$BACKUP_DIR/systemd"
+    local hardware_map="$systemd_dir/HARDWARE_MAPPING.conf"
+
+    # Load hardware mapping into associative array
+    declare -A hardware_map_data
+    if [ -f "$hardware_map" ]; then
+        while IFS='|' read -r service machines desc; do
+            # Skip comments and empty lines
+            [[ "$service" =~ ^#.*$ ]] && continue
+            [[ -z "$service" ]] && continue
+            hardware_map_data["$service"]="$machines"
+        done < "$hardware_map"
+    fi
+
+    # Helper function to get applicability for a service
+    get_applicability() {
+        local service=$1
+        local machines="${hardware_map_data[$service]:-all}"
+        echo "$machines"
+    }
 
     # Backup user services with state
     log_info "Collecting user service states..."
     {
-        echo "# Format: service_name|state|type|fragment_path"
+        echo "# Format: service_name|state|type|fragment_path|applicable_machines"
         echo "# state: enabled, disabled, masked, indirect"
         echo "# type: custom (in ~/.config/systemd/user) or package (in /usr/lib/systemd/user)"
+        echo "# applicable_machines: all, rig, thinkpad, or comma-separated machine names"
         echo ""
 
         # Get all services and sockets (excluding transient, generated, static, alias)
@@ -391,8 +411,11 @@ backup_systemd() {
                 type="custom"
             fi
 
-            # Output: service|state|type|path
-            echo "$unit|$state|$type|$fragment_path"
+            # Get applicability
+            local applicability=$(get_applicability "$unit")
+
+            # Output: service|state|type|path|applicability
+            echo "$unit|$state|$type|$fragment_path|$applicability"
         done
     } > "$systemd_dir/user-services-state.txt"
 
@@ -405,9 +428,10 @@ backup_systemd() {
     # Backup system services with state
     log_info "Collecting system service states..."
     {
-        echo "# Format: service_name|state|type|fragment_path"
+        echo "# Format: service_name|state|type|fragment_path|applicable_machines"
         echo "# state: enabled, disabled, masked, indirect"
         echo "# type: always 'package' for system services"
+        echo "# applicable_machines: all, rig, thinkpad, or comma-separated machine names"
         echo ""
 
         systemctl list-unit-files --type=service,socket --no-legend | \
@@ -420,7 +444,11 @@ backup_systemd() {
 
             # Suppress errors for template units that can't be queried directly
             local fragment_path=$(systemctl show -p FragmentPath "$unit" 2>/dev/null | cut -d= -f2)
-            echo "$unit|$state|package|$fragment_path"
+
+            # Get applicability
+            local applicability=$(get_applicability "$unit")
+
+            echo "$unit|$state|package|$fragment_path|$applicability"
         done
     } > "$systemd_dir/system-services-state.txt"
 
