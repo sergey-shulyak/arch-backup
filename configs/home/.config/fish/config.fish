@@ -6,6 +6,8 @@ set -gx PATH $HOME/.local/bin $PATH
 set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx SYSTEMD_EDITOR nvim
+set -gx XDG_DATA_DIRS $XDG_DATA_DIRS /var/lib/flatpak/exports/share /home/$USER/.local/share/flatpak/exports/share
+
 
 ###################
 ### ALIASES ###

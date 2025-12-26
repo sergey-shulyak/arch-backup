@@ -44,6 +44,9 @@ configs/home/.config/Microsoft/
 # Calendar
 configs/home/.config/calcure/*.csv
 
+# Media library
+configs/home/.config/mpd/mpdstate/
+
 # Cache directories
 **/Cache/
 **/cache/

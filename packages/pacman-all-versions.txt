@@ -58,7 +58,10 @@ cava 0.10.6-1
 chromaprint 1.6.0-2
 claude-code 2.0.76-1
 cliphist 1:0.7.0-1
+cmake 4.2.1-1
+composefs 1.0.8-1
 coreutils 9.9-1
+cppdap 1.58.0-2
 cracklib 2.10.3-1
 cryptsetup 2.8.3-1
 curl 8.17.0-2
@@ -110,6 +113,7 @@ findutils 4.10.0-3
 firefox 146.0.1-1
 fish 4.2.1-1
 flac 1.5.0-1
+flatpak 1:1.16.2-1
 flex 2.6.4-5
 fluidsynth 2.5.1-1
 fmt 12.1.0-1
@@ -232,18 +236,12 @@ json-c 0.18-2
 json-glib 1.10.8-1
 jsoncpp 1.9.6-3
 kbd 2.9.0-1
-kconfig 6.21.0-1
 kcoreaddons 6.21.0-1
-kcrash 6.21.0-1
-kdbusaddons 6.21.0-1
 keyutils 1.6.3-3
-ki18n 6.21.0-1
-kirigami 6.21.0-2
 kitty 0.44.0-1
 kitty-shell-integration 0.44.0-1
 kitty-terminfo 0.44.0-1
 kmod 34.2-1
-knotifications 6.21.0-1
 krb5 1.21.3-2
 kwindowsystem 6.21.0-1
 l-smash 2.14.5-4
@@ -420,6 +418,7 @@ liblqr 0.4.3-1
 libluv 1.51.0-1
 libmad 0.15.1b-10
 libmakepkg-dropins 18-1
+libmalcontent 0.13.1-1
 libmd 1.1.0-2
 libmfx 23.2.2-5
 libmikmod 3.3.13-1
@@ -616,6 +615,7 @@ neovim 0.11.5-1
 nettle 3.10.2-1
 network-manager-applet 1.36.0-1
 networkmanager 1.54.3-1
+ninja 1.13.2-1
 nm-connection-editor 1.36.0-1
 nodejs 25.2.1-1
 noto-fonts 1:2025.12.01-2
@@ -641,6 +641,7 @@ openssl 3.6.0-1
 opus 1.6-1
 orc 0.4.41-1
 osinfo-db 20251212-1
+ostree 2025.7-1
 p11-kit 0.25.10-2
 pacman 7.1.0.r7.gb9f7d4a-1
 pacman-mirrorlist 20251021-1
@@ -672,7 +673,6 @@ pkgconf 2.5.1-1
 playerctl 2.4.1-5
 polkit 127-2
 polkit-gnome 0.105-12
-polkit-qt6 0.200.0-1
 poppler 25.12.0-1
 poppler-data 0.4.12-2
 poppler-glib 25.12.0-1
@@ -698,6 +698,7 @@ python-docopt 0.6.2-14
 python-gobject 3.54.5-1
 python-hijridate 2.5.0-2
 python-holidays 0.70-1
+python-html5lib 1.1-15
 python-icalendar 6.3.2-2
 python-idna 3.11-1
 python-jalali-core 1.0.0-1
@@ -728,6 +729,7 @@ python-setuptools 1:80.9.0-2
 python-six 1.17.0-1
 python-urllib3 2.6.2-1
 python-validators 0.28.3-1
+python-webencodings 0.5.1-12
 python-wheel 0.45.1-1
 python-yaml 6.0.3-1
 python-yubico 1.3.3-7
@@ -751,6 +753,7 @@ rav1e 0.8.1-2
 re2 2:2025.11.05-1
 readline 8.3.003-1
 reflector 2023-3
+rhash 1.4.6-1
 ripgrep 15.1.0-1
 rnnoise 1:0.2-1
 rsync 3.4.1-2
@@ -780,7 +783,6 @@ sord 0.16.20-1
 sound-theme-freedesktop 0.8-6
 spdlog 1.16.0-1
 speedtest-go 1.7.10-1
-speedtest-go-debug 1.7.10-1
 speex 1.2.1-2
 speexdsp 1.2.1-2
 spirv-tools 1:1.4.335.0-1
@@ -905,6 +907,7 @@ xcb-util-image 0.4.1-3
 xcb-util-keysyms 0.4.1-5
 xcb-util-renderutil 0.3.10-2
 xcb-util-wm 0.4.2-2
+xdg-dbus-proxy 0.1.6-1
 xdg-desktop-portal 1.20.3-2
 xdg-desktop-portal-gtk 1.15.3-1
 xdg-desktop-portal-hyprland 1.3.11-3

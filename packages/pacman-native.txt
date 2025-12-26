@@ -21,6 +21,7 @@ fastfetch
 feh
 firefox
 fish
+flatpak
 fzf
 git
 glow
