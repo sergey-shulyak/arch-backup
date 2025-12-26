@@ -1,0 +1,15 @@
+
+[Default Applications]
+video/mp4=vlc.desktop
+video/x-matroska=vlc.desktop
+video/x-msvideo=vlc.desktop
+video/quicktime=vlc.desktop
+video/x-flv=vlc.desktop
+video/x-ms-wmv=vlc.desktop
+video/mpeg=vlc.desktop
+audio/mpeg=vlc.desktop
+audio/x-flac=vlc.desktop
+audio/x-wav=vlc.desktop
+audio/x-vorbis+ogg=vlc.desktop
+audio/x-opus+ogg=vlc.desktop
+audio/flac=vlc.desktop

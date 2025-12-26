@@ -4,7 +4,6 @@
 acpi
 acpid
 aichat
-amd-ucode
 base
 base-devel
 bluetuith
@@ -39,16 +38,12 @@ hyprland
 hyprlock
 hyprpaper
 imv
-intel-media-driver
-intel-ucode
 iwd
 jq
 kitty
 lazydocker
 lazygit
 libpulse
-libva-intel-driver
-libva-nvidia-driver
 linux-firmware
 linux-zen
 linux-zen-headers
@@ -56,7 +51,6 @@ mako
 man-db
 man-pages
 mpd
-mpv
 nano
 nautilus
 ncdu
@@ -67,7 +61,6 @@ networkmanager
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
-nvidia-open-dkms
 nvtop
 openrgb
 pamixer
@@ -80,7 +73,9 @@ polkit-kde-agent
 pulsemixer
 python-pywal
 qt5-wayland
+qt5ct
 qt6-wayland
+qt6ct
 reflector
 rsync
 satty
@@ -90,6 +85,7 @@ smartmontools
 socat
 sof-firmware
 sshfs
+starship
 steam
 tela-icon-theme
 telegram-desktop
@@ -106,7 +102,7 @@ unzip
 uwsm
 vim
 vlc
-vulkan-intel
+vlc-plugin-ffmpeg
 w3m
 waybar
 wf-recorder

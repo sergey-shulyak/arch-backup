@@ -1,0 +1,65 @@
+# Starship configuration - minimal with no hardcoded colors
+# Colors are managed by hyprstyle
+
+format = """
+[┌─$username@$hostname $directory]($style)\
+$git_branch\
+$git_status
+[└─]($style)❯ """
+
+command_timeout = 500
+
+# Username
+[username]
+show_always = true
+format = "[$user]($style)"
+
+# Hostname
+[hostname]
+ssh_only = false
+format = "[$hostname]($style)"
+
+# Directory
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+format = "[$path]($style)[$read_only]($read_only_style)"
+read_only = " 🔒"
+home_symbol = "~"
+
+# Git branch
+[git_branch]
+symbol = "🌱 "
+format = " on [$symbol$branch]($style) "
+truncation_length = 20
+
+# Git status
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+ahead = "⇡$count"
+behind = "⇣$count"
+conflicted = "=$count"
+deleted = "✘$count"
+diverged = "⇕⇡$ahead_count⇣$behind_count"
+modified = "!$count"
+renamed = "»$count"
+staged = "+$count"
+stashed = "$count"
+untracked = "?$count"
+
+# Command duration
+[cmd_duration]
+min_time = 2000
+format = "took [$duration]($style) "
+disabled = false
+
+# Line break
+[line_break]
+disabled = false
+
+# Status module
+[status]
+disabled = false
+format = "[$symbol$status]($style) "
+symbol = "✖"
+success_symbol = ""

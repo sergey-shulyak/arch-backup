@@ -10,3 +10,4 @@ hide_scroll=true
 normal_window=false
 layer=overlay
 gtk_dark=true
+drun-sort_order=alphabetical

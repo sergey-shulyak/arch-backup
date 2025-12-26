@@ -96,6 +96,7 @@ fakeroot 1.37.1.2-1
 fastfetch 2.56.1-1
 feh 3.11.2-2
 ffmpeg 2:8.0.1-2
+ffmpeg4.4 4.4.6-3
 fftw 3.3.10-7
 file 5.46-5
 filesystem 2025.10.12-1
@@ -412,6 +413,7 @@ libluv 1.51.0-1
 libmad 0.15.1b-10
 libmakepkg-dropins 18-1
 libmd 1.1.0-2
+libmfx 23.2.2-5
 libmikmod 3.3.13-1
 libmm-glib 1.24.2-1
 libmms 0.6.4-5
@@ -470,7 +472,6 @@ libsecret 0.21.7-1
 libshout 1:2.4.6-5
 libsidplayfp 2.16.0-1
 libsigc++ 2.12.1-2
-libsixel 1.10.5-1
 libsm 1.2.6-1
 libsndfile 1.2.2-4
 libsodium 1.0.20-1
@@ -534,7 +535,6 @@ libxkbfile 1.1.3-1
 libxml2 2.15.1-4
 libxmlb 0.3.24-1
 libxmu 1.2.1-1
-libxpresent 1.0.2-1
 libxrandr 1.5.4-1
 libxrender 0.9.12-1
 libxshmfence 1.3.3-1
@@ -594,10 +594,8 @@ mpd 0.24.6-2
 mpdecimal 4.0.1-1
 mpfr 4.2.2-1
 mpg123 1.33.4-1
-mpv 1:0.40.0-7
 msgpack-c 6.1.0-2
 mtdev 1.1.7-1
-mujs 1.3.8-1
 nano 8.7-1
 nautilus 49.2-1
 ncdu 2.9.2-1
@@ -728,12 +726,14 @@ qt5-svg 5.15.18+kde+r5-1
 qt5-translations 5.15.18-1
 qt5-wayland 5.15.18+kde+r55-1
 qt5-x11extras 5.15.18-1
+qt5ct 1.9-1
 qt6-base 6.10.1-1
 qt6-declarative 6.10.1-2
 qt6-imageformats 6.10.1-1
 qt6-svg 6.10.1-1
 qt6-translations 6.10.1-1
 qt6-wayland 6.10.1-1
+qt6ct 0.11-3
 rav1e 0.8.1-2
 re2 2:2025.11.05-1
 readline 8.3.003-1
@@ -771,6 +771,7 @@ sqlite 3.51.1-1
 sratom 0.6.20-1
 srt 1.5.4-1
 sshfs 3.7.3-3
+starship 1.24.1-1
 steam 1.0.0.85-1
 sudo 1.9.17.p2-1
 svt-av1 3.1.2-1
@@ -832,6 +833,7 @@ vlc-plugin-dav1d 3.0.21-32
 vlc-plugin-dbus 3.0.21-32
 vlc-plugin-dbus-screensaver 3.0.21-32
 vlc-plugin-faad2 3.0.21-32
+vlc-plugin-ffmpeg 3.0.21-32
 vlc-plugin-flac 3.0.21-32
 vlc-plugin-gnutls 3.0.21-32
 vlc-plugin-inflate 3.0.21-32

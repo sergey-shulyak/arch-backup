@@ -1,0 +1,292 @@
+#!/bin/bash
+# Hierarchical system menu for Hyprland
+
+# Lock file to prevent multiple instances
+LOCK_FILE="/tmp/system-menu.lock"
+
+# Check if menu is already running
+if [ -f "$LOCK_FILE" ]; then
+    exit 0
+fi
+
+# Create lock file
+touch "$LOCK_FILE"
+
+# Trap to cleanup lock file on exit
+trap "rm -f '$LOCK_FILE'" EXIT
+
+# Function to show main menu
+show_main_menu() {
+    echo -e "🏃 Run\n🚀 Applications\n📸 Screenshots\n🔊 Audio\n🖥️ Display\n🌐 Network\nℹ️ System Info\n🔴 Power"
+}
+
+# Function to show power submenu
+show_power_menu() {
+    echo -e "⬅️ Back\n🔒 Lock\n🔴 Shutdown\n🔃 Reboot\n😴 Suspend\n🚪 Logout"
+}
+
+# Function to show screenshot submenu
+show_screenshot_menu() {
+    echo -e "⬅️ Back\n📸 Full Screenshot\n🔲 Region Screenshot\n🎥 Start Recording\n⏹️ Stop Recording"
+}
+
+# Function to show audio submenu
+show_audio_menu() {
+    echo -e "⬅️ Back\n🔊 Volume Up\n🔇 Volume Down\n🔕 Toggle Mute\n🎤 Toggle Mic Mute"
+}
+
+# Function to show display submenu
+show_display_menu() {
+    echo -e "⬅️ Back\n🌡️ Brightness Up\n❄️ Brightness Down"
+}
+
+# Function to show system info submenu
+show_system_info_menu() {
+    echo -e "⬅️ Back\n📊 System Stats\n🌍 IP Address\n⏱️ Uptime"
+}
+
+# Function to show network submenu
+show_network_menu() {
+    echo -e "⬅️ Back\n📡 Toggle WiFi\n🔵 Toggle Bluetooth"
+}
+
+# Function to execute power commands
+execute_power() {
+    case "$1" in
+        *"Lock")
+            hyprlock
+            ;;
+        *"Shutdown")
+            systemctl poweroff
+            ;;
+        *"Reboot")
+            systemctl reboot
+            ;;
+        *"Suspend")
+            systemctl suspend
+            ;;
+        *"Logout")
+            hyprctl dispatch exit
+            ;;
+    esac
+}
+
+# Function to execute screenshot commands
+execute_screenshot() {
+    case "$1" in
+        *"Full")
+            ~/.local/bin/screenshot
+            ;;
+        *"Region")
+            ~/.local/bin/screenshot region
+            ;;
+        *"Start")
+            notify-send "🎥 Recording started"
+            wf-recorder --audio=pulse --audio-source=@DEFAULT_SINK@ -f ~/Videos/rec_$(date +"%Y-%m-%d_%H-%M-%S").mp4 &
+            ;;
+        *"Stop")
+            pkill -SIGINT wf-recorder
+            notify-send "✅ Recording stopped"
+            ;;
+    esac
+}
+
+# Function to execute audio commands
+execute_audio() {
+    case "$1" in
+        *"Volume Up")
+            wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
+            ;;
+        *"Volume Down")
+            wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+            ;;
+        *"Toggle Mute")
+            wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+            ;;
+        *"Toggle Mic")
+            wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+            ;;
+    esac
+}
+
+# Function to execute display commands
+execute_display() {
+    case "$1" in
+        *"Brightness Up")
+            brightnessctl -e4 -n2 set 5%+
+            ;;
+        *"Brightness Down")
+            brightnessctl -e4 -n2 set 5%-
+            ;;
+    esac
+}
+
+# Function to execute system info commands
+execute_system_info() {
+    case "$1" in
+        *"System Stats")
+            if command -v btop &>/dev/null; then
+                kitty -e btop &
+            else
+                kitty -e htop &
+            fi
+            ;;
+        *"IP Address")
+            ip_addr=$(ip -4 addr show 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
+            notify-send "IP Address" "$ip_addr"
+            ;;
+        *"Uptime")
+            uptime_info=$(uptime -p)
+            notify-send "Uptime" "$uptime_info"
+            ;;
+    esac
+}
+
+# Function to execute network commands
+execute_network() {
+    case "$1" in
+        *"WiFi")
+            nmcli radio wifi off && notify-send "WiFi disabled" || (nmcli radio wifi on && notify-send "WiFi enabled")
+            ;;
+        *"Bluetooth")
+            rfkill list bluetooth | grep -q "Soft blocked: yes" && rfkill unblock bluetooth && notify-send "Bluetooth enabled" || (rfkill block bluetooth && notify-send "Bluetooth disabled")
+            ;;
+    esac
+}
+
+# Function to execute search commands
+execute_search() {
+    case "$1" in
+        *"Lock") hyprlock ;;
+        *"Shutdown") systemctl poweroff ;;
+        *"Reboot") systemctl reboot ;;
+        *"Suspend") systemctl suspend ;;
+        *"Logout") hyprctl dispatch exit ;;
+        *"Full Screenshot") ~/.local/bin/screenshot ;;
+        *"Region Screenshot") ~/.local/bin/screenshot region ;;
+        *"Start Recording") notify-send "🎥 Recording started"; wf-recorder --audio=pulse --audio-source=@DEFAULT_SINK@ -f ~/Videos/rec_$(date +"%Y-%m-%d_%H-%M-%S").mp4 & ;;
+        *"Stop Recording") pkill -SIGINT wf-recorder; notify-send "✅ Recording stopped" ;;
+        *"Volume Up") wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ ;;
+        *"Volume Down") wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- ;;
+        *"Toggle Mute") wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ;;
+        *"Toggle Mic") wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle ;;
+        *"Brightness Up") brightnessctl -e4 -n2 set 5%+ ;;
+        *"Brightness Down") brightnessctl -e4 -n2 set 5%- ;;
+        *"Toggle WiFi") nmcli radio wifi off && notify-send "WiFi disabled" || (nmcli radio wifi on && notify-send "WiFi enabled") ;;
+        *"Toggle Bluetooth") rfkill list bluetooth | grep -q "Soft blocked: yes" && rfkill unblock bluetooth && notify-send "Bluetooth enabled" || (rfkill block bluetooth && notify-send "Bluetooth disabled") ;;
+        *"1Password") 1password & ;;
+        *"Telegram") Telegram & ;;
+        *"Firefox") firefox & ;;
+        *"Neovim") kitty -e nvim & ;;
+        *"System Stats") ( command -v btop &>/dev/null && kitty -e btop || kitty -e htop ) & ;;
+        *"IP Address") ip_addr=$(ip -4 addr show 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1); notify-send "IP Address" "$ip_addr" ;;
+        *"Uptime") uptime_info=$(uptime -p); notify-send "Uptime" "$uptime_info" ;;
+    esac
+}
+
+# Main menu loop
+current_menu="main"
+while true; do
+    case "$current_menu" in
+        "main")
+            selected=$(show_main_menu | wofi --dmenu --prompt "System" -i)
+            case "$selected" in
+                *"Run")
+                    command=$(wofi --show run)
+                    if [ -z "$command" ]; then
+                        current_menu="main"
+                    else
+                        eval "$command"
+                        exit 0
+                    fi
+                    ;;
+                *"Applications")
+                    app=$(wofi --show drun)
+                    if [ -z "$app" ]; then
+                        current_menu="main"
+                    else
+                        exit 0
+                    fi
+                    ;;
+                *"Screenshots")
+                    current_menu="screenshot"
+                    ;;
+                *"Audio")
+                    current_menu="audio"
+                    ;;
+                *"Display")
+                    current_menu="display"
+                    ;;
+                *"Network")
+                    current_menu="network"
+                    ;;
+                *"System Info")
+                    current_menu="sysinfo"
+                    ;;
+                *"Power")
+                    current_menu="power"
+                    ;;
+                *)
+                    exit 0
+                    ;;
+            esac
+            ;;
+        "power")
+            selected=$(show_power_menu | wofi --dmenu --prompt "Power" -i)
+            if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
+                current_menu="main"
+            else
+                execute_power "$selected"
+                exit 0
+            fi
+            ;;
+        "screenshot")
+            selected=$(show_screenshot_menu | wofi --dmenu --prompt "Screenshots" -i)
+            if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
+                current_menu="main"
+            else
+                execute_screenshot "$selected"
+                exit 0
+            fi
+            ;;
+        "audio")
+            selected=$(show_audio_menu | wofi --dmenu --prompt "Audio" -i)
+            if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
+                current_menu="main"
+            else
+                execute_audio "$selected"
+                exit 0
+            fi
+            ;;
+        "display")
+            selected=$(show_display_menu | wofi --dmenu --prompt "Display" -i)
+            if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
+                current_menu="main"
+            else
+                execute_display "$selected"
+                exit 0
+            fi
+            ;;
+        "sysinfo")
+            selected=$(show_system_info_menu | wofi --dmenu --prompt "System Info" -i)
+            if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
+                current_menu="main"
+            else
+                execute_system_info "$selected"
+                exit 0
+            fi
+            ;;
+        "network")
+            selected=$(show_network_menu | wofi --dmenu --prompt "Network" -i)
+            if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
+                current_menu="main"
+            else
+                execute_network "$selected"
+                exit 0
+            fi
+            ;;
+        *)
+            exit 0
+            ;;
+    esac
+done
