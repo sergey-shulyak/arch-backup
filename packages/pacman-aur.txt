@@ -4,6 +4,7 @@ bluetuith
 calcure
 catppuccin-gtk-theme-mocha
 claude-code
+speedtest-go
 tela-icon-theme
 yay
 yay-debug

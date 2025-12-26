@@ -772,6 +772,8 @@ sof-firmware 2025.12-1
 sord 0.16.20-1
 sound-theme-freedesktop 0.8-6
 spdlog 1.16.0-1
+speedtest-go 1.7.10-1
+speedtest-go-debug 1.7.10-1
 speex 1.2.1-2
 speexdsp 1.2.1-2
 spirv-tools 1:1.4.335.0-1

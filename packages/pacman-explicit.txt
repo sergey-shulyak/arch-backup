@@ -89,6 +89,7 @@ slurp
 smartmontools
 socat
 sof-firmware
+speedtest-go
 sshfs
 starship
 steam
