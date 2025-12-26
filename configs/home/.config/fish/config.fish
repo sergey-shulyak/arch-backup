@@ -15,6 +15,7 @@ alias reload='source ~/.config/fish/config.fish'
 alias reload-waybar='pkill waybar; nohup waybar >/dev/null 2>&1 & disown'
 alias glow='glow -p'
 alias music='ncmpcpp'
+alias rm='rm -i'
 
 ###################
 ### ABBREVIATIONS ###
