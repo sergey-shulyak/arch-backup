@@ -143,11 +143,48 @@ restore_system_configs() {
     done
 }
 
+# GPU driver packages to exclude from backup/restore
+GPU_DRIVERS=(
+    "nvidia-open-dkms"
+    "nvidia-dkms"
+    "nvidia"
+    "nvidia-utils"
+    "nvidia-settings"
+    "libva-nvidia-driver"
+    "libxnvctrl"
+    "libnvidia-container"
+    "libnvidia-container-tools"
+    "amd-ucode"
+    "intel-ucode"
+    "intel-media-driver"
+    "libva-intel-driver"
+    "libva-mesa-driver"
+    "vulkan-intel"
+    "vulkan-radeon"
+    "vulkan-amd"
+    "lib32-vulkan-intel"
+    "lib32-vulkan-radeon"
+    "lib32-vulkan-amd"
+    "mesa"
+    "lib32-mesa"
+)
+
+# Build grep pattern for GPU drivers
+build_gpu_driver_pattern() {
+    local pattern="^("
+    for driver in "${GPU_DRIVERS[@]}"; do
+        pattern="${pattern}${driver}|"
+    done
+    pattern="${pattern%|})\$"
+    echo "$pattern"
+}
+
 # Install packages from backup lists
 restore_packages() {
     log_section "Restoring Packages"
 
     local pkg_dir="$BACKUP_DIR/packages"
+    local gpu_pattern=$(build_gpu_driver_pattern)
 
     if [ ! -d "$pkg_dir" ]; then
         log_warn "No package lists found in backup"
@@ -167,8 +204,8 @@ restore_packages() {
         log_info "Installing native packages from official repositories..."
         read -p "Install native packages? (y/N): " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
-            # Filter out already installed packages
-            local to_install=$(comm -23 <(sort "$pkg_dir/pacman-native.txt") <(pacman -Qqn | sort) | tr '\n' ' ')
+            # Filter out GPU drivers and already installed packages
+            local to_install=$(grep -vE "$gpu_pattern" "$pkg_dir/pacman-native.txt" | comm -23 <(sort) <(pacman -Qqn | sort) | tr '\n' ' ')
             if [ -n "$to_install" ]; then
                 sudo pacman -S --needed $to_install
             else
@@ -187,8 +224,8 @@ restore_packages() {
                 log_info "Install yay or paru first, then run this again"
                 log_info "AUR packages to install are listed in: $pkg_dir/pacman-aur.txt"
             else
-                # Filter out already installed packages
-                local to_install=$(comm -23 <(sort "$pkg_dir/pacman-aur.txt") <(pacman -Qqm | sort) | tr '\n' ' ')
+                # Filter out GPU drivers and already installed packages
+                local to_install=$(grep -vE "$gpu_pattern" "$pkg_dir/pacman-aur.txt" | comm -23 <(sort) <(pacman -Qqm | sort) | tr '\n' ' ')
                 if [ -n "$to_install" ]; then
                     $aur_helper -S --needed $to_install
                 else

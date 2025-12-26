@@ -298,25 +298,63 @@ backup_configs() {
     fi
 }
 
+# GPU driver packages to exclude from backup/restore
+GPU_DRIVERS=(
+    "nvidia-open-dkms"
+    "nvidia-dkms"
+    "nvidia"
+    "nvidia-utils"
+    "nvidia-settings"
+    "libva-nvidia-driver"
+    "libxnvctrl"
+    "libnvidia-container"
+    "libnvidia-container-tools"
+    "amd-ucode"
+    "intel-ucode"
+    "intel-media-driver"
+    "libva-intel-driver"
+    "libva-mesa-driver"
+    "vulkan-intel"
+    "vulkan-radeon"
+    "vulkan-amd"
+    "lib32-vulkan-intel"
+    "lib32-vulkan-radeon"
+    "lib32-vulkan-amd"
+    "mesa"
+    "lib32-mesa"
+)
+
+# Build grep pattern for GPU drivers
+build_gpu_driver_pattern() {
+    local pattern="^("
+    for driver in "${GPU_DRIVERS[@]}"; do
+        pattern="${pattern}${driver}|"
+    done
+    pattern="${pattern%|})\$"
+    echo "$pattern"
+}
+
 # Backup package lists
 backup_packages() {
     log_info "Backing up package lists..."
 
-    # Explicitly installed packages
-    pacman -Qqe > "$BACKUP_DIR/packages/pacman-explicit.txt"
-    log_info "Saved explicit packages list"
+    local gpu_pattern=$(build_gpu_driver_pattern)
 
-    # Explicitly installed native packages (from official repos)
-    pacman -Qqen > "$BACKUP_DIR/packages/pacman-native.txt"
-    log_info "Saved native packages list"
+    # Explicitly installed packages (excluding GPU drivers)
+    pacman -Qqe | grep -vE "$gpu_pattern" > "$BACKUP_DIR/packages/pacman-explicit.txt"
+    log_info "Saved explicit packages list (GPU drivers excluded)"
 
-    # AUR packages (foreign)
-    pacman -Qqem > "$BACKUP_DIR/packages/pacman-aur.txt"
-    log_info "Saved AUR packages list"
+    # Explicitly installed native packages (from official repos, excluding GPU drivers)
+    pacman -Qqen | grep -vE "$gpu_pattern" > "$BACKUP_DIR/packages/pacman-native.txt"
+    log_info "Saved native packages list (GPU drivers excluded)"
 
-    # All packages with versions
-    pacman -Q > "$BACKUP_DIR/packages/pacman-all-versions.txt"
-    log_info "Saved all packages with versions"
+    # AUR packages (foreign, excluding GPU drivers)
+    pacman -Qqem | grep -vE "$gpu_pattern" > "$BACKUP_DIR/packages/pacman-aur.txt"
+    log_info "Saved AUR packages list (GPU drivers excluded)"
+
+    # All packages with versions (excluding GPU drivers)
+    pacman -Q | grep -vE "$gpu_pattern" > "$BACKUP_DIR/packages/pacman-all-versions.txt"
+    log_info "Saved all packages with versions (GPU drivers excluded)"
 }
 
 # Backup enabled systemd services
