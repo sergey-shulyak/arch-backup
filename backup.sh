@@ -382,7 +382,8 @@ backup_systemd() {
             esac
 
             # Get fragment path to determine if custom or package
-            local fragment_path=$(systemctl --user show -p FragmentPath "$unit" | cut -d= -f2)
+            # Suppress errors for template units that can't be queried directly
+            local fragment_path=$(systemctl --user show -p FragmentPath "$unit" 2>/dev/null | cut -d= -f2)
 
             # Determine type based on path
             local type="package"
@@ -417,7 +418,8 @@ backup_systemd() {
                     ;;
             esac
 
-            local fragment_path=$(systemctl show -p FragmentPath "$unit" | cut -d= -f2)
+            # Suppress errors for template units that can't be queried directly
+            local fragment_path=$(systemctl show -p FragmentPath "$unit" 2>/dev/null | cut -d= -f2)
             echo "$unit|$state|package|$fragment_path"
         done
     } > "$systemd_dir/system-services-state.txt"
