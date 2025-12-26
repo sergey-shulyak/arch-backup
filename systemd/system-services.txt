@@ -8,6 +8,7 @@ nvidia-hibernate.service
 nvidia-resume.service
 nvidia-suspend-then-hibernate.service
 nvidia-suspend.service
+openrgb.service
 seatd.service
 systemd-timesyncd.service
 tlp.service
