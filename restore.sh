@@ -473,6 +473,12 @@ restore_systemd() {
                     [[ "$service" =~ ^#.*$ ]] && continue
                     [[ -z "$service" ]] && continue
 
+                    # Check if service is explicitly in HARDWARE_MAPPING
+                    if [ -z "${hardware_map[$service]}" ]; then
+                        # Service not in HARDWARE_MAPPING - skip
+                        continue
+                    fi
+
                     # Skip if not applicable
                     if ! service_applies_to_machine "$service"; then
                         continue
@@ -483,8 +489,16 @@ restore_systemd() {
                         continue
                     fi
 
-                    # Apply the state
-                    if [ "$backup_state" = "enabled" ]; then
+                    # Determine what action to take (same logic as display)
+                    local action="$backup_state"
+                    local applicable_to="${hardware_map[$service]}"
+                    if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                        # Hardware-specific service - always enable it
+                        action="enabled"
+                    fi
+
+                    # Apply the action
+                    if [ "$action" = "enabled" ]; then
                         apply_user_service "$service" "enable"
                     else
                         apply_user_service "$service" "disable"
@@ -683,6 +697,12 @@ restore_systemd() {
                     [[ "$service" =~ ^#.*$ ]] && continue
                     [[ -z "$service" ]] && continue
 
+                    # Check if service is explicitly in HARDWARE_MAPPING
+                    if [ -z "${hardware_map[$service]}" ]; then
+                        # Service not in HARDWARE_MAPPING - skip
+                        continue
+                    fi
+
                     # Skip if not applicable
                     if ! service_applies_to_machine "$service"; then
                         continue
@@ -693,8 +713,16 @@ restore_systemd() {
                         continue
                     fi
 
-                    # Apply the state
-                    if [ "$backup_state" = "enabled" ]; then
+                    # Determine what action to take (same logic as display)
+                    local action="$backup_state"
+                    local applicable_to="${hardware_map[$service]}"
+                    if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                        # Hardware-specific service - always enable it
+                        action="enabled"
+                    fi
+
+                    # Apply the action
+                    if [ "$action" = "enabled" ]; then
                         apply_system_service "$service" "enable"
                     else
                         apply_system_service "$service" "disable"
