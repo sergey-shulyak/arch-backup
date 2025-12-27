@@ -36,6 +36,7 @@ hyprpaper
 hyprshot
 imv
 inetutils
+inter-font
 iwd
 jq
 kitty
@@ -51,7 +52,6 @@ man-pages
 mise
 mpd
 nano
-nautilus
 ncdu
 ncmpcpp
 neovim
@@ -87,12 +87,16 @@ starship
 steam
 telegram-desktop
 testdisk
+thunar
+thunar-archive-plugin
+thunar-media-tags-plugin
+thunar-volman
 tlp
 tlp-rdw
 trash-cli
 ttf-dejavu
+ttf-droid
 ttf-jetbrains-mono
-ttf-jetbrains-mono-nerd
 ttf-liberation
 udiskie
 ufw
