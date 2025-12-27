@@ -197,40 +197,7 @@ if [ -d "$CONFIG_DIR/etc" ]; then
     fi
 fi
 
-# Step 7: Enable systemd services
-log_section "Enabling Systemd Services"
-
-SYSTEMD_DIR="$BACKUP_DIR/systemd"
-
-# User services
-if [ -f "$SYSTEMD_DIR/user-services.txt" ]; then
-    log_info "Enabling user services..."
-    while read -r service; do
-        if [ -n "$service" ] && [ "${service:0:1}" != "#" ]; then
-            systemctl --user enable "$service" 2>/dev/null && \
-                log_info "Enabled: $service" || \
-                log_warn "Could not enable: $service"
-        fi
-    done < "$SYSTEMD_DIR/user-services.txt"
-fi
-
-# System services
-if [ -f "$SYSTEMD_DIR/system-services.txt" ]; then
-    log_info "Enabling system services..."
-    read -p "Enable system services? (y/N): " confirm
-
-    if [[ "$confirm" =~ ^[Yy]$ ]]; then
-        while read -r service; do
-            if [ -n "$service" ] && [ "${service:0:1}" != "#" ]; then
-                sudo systemctl enable "$service" 2>/dev/null && \
-                    log_info "Enabled: $service" || \
-                    log_warn "Could not enable: $service"
-            fi
-        done < "$SYSTEMD_DIR/system-services.txt"
-    fi
-fi
-
-# Step 8: Set up fish shell
+# Step 7: Set up fish shell
 log_section "Setting Up Fish Shell"
 
 if ! command -v fish &>/dev/null; then
@@ -260,7 +227,7 @@ else
     log_warn "Could not find fish executable"
 fi
 
-# Step 9: Set up firewall
+# Step 8: Set up firewall
 log_section "Setting Up Firewall (UFW)"
 
 if ! command -v ufw &>/dev/null; then
@@ -289,18 +256,6 @@ log_info "Enabling firewall..."
 sudo ufw enable
 
 log_info "Firewall configuration complete"
-
-# Step 10: Install the backup service
-log_section "Installing Backup Service"
-
-read -p "Install automatic backup service (runs before shutdown)? (y/N): " confirm
-if [[ "$confirm" =~ ^[Yy]$ ]]; then
-    if [ -f "$BACKUP_DIR/install-service.sh" ]; then
-        sudo "$BACKUP_DIR/install-service.sh"
-    else
-        log_warn "install-service.sh not found"
-    fi
-fi
 
 # Done!
 log_section "Bootstrap Complete!"

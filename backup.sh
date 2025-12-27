@@ -6,18 +6,13 @@
 
 set -e
 
-# Support running as different user (for systemd service)
-if [ -n "$BACKUP_USER" ]; then
-    USER_HOME=$(getent passwd "$BACKUP_USER" | cut -d: -f6)
-else
-    USER_HOME="$HOME"
-fi
+USER_HOME="$HOME"
 
 BACKUP_DIR="$USER_HOME/Documents/arch-backup"
 CONFIG_DIR="$BACKUP_DIR/configs"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Non-interactive mode (for systemd service)
+# Non-interactive mode
 NON_INTERACTIVE="${NON_INTERACTIVE:-false}"
 
 # Colors for output
@@ -89,7 +84,6 @@ init_git_repo() {
 create_dirs() {
     mkdir -p "$CONFIG_DIR"
     mkdir -p "$BACKUP_DIR/packages"
-    mkdir -p "$BACKUP_DIR/systemd"
     mkdir -p "$BACKUP_DIR/scripts"
     mkdir -p "$BACKUP_DIR/local-bin"
 }
@@ -360,107 +354,6 @@ backup_packages() {
     log_info "Saved all packages with versions (GPU drivers excluded)"
 }
 
-# Backup systemd services with detailed state information
-backup_systemd() {
-    log_info "Backing up systemd service state..."
-
-    local systemd_dir="$BACKUP_DIR/systemd"
-    local hardware_map="$systemd_dir/HARDWARE_MAPPING.conf"
-
-    # Load hardware mapping into associative array
-    declare -A hardware_map_data
-    if [ -f "$hardware_map" ]; then
-        while IFS='|' read -r service machines desc; do
-            # Skip comments and empty lines
-            [[ "$service" =~ ^#.*$ ]] && continue
-            [[ -z "$service" ]] && continue
-            hardware_map_data["$service"]="$machines"
-        done < "$hardware_map"
-    fi
-
-    # Helper function to get applicability for a service
-    get_applicability() {
-        local service=$1
-        local machines="${hardware_map_data[$service]:-all}"
-        echo "$machines"
-    }
-
-    # Backup user services with state
-    log_info "Collecting user service states..."
-    {
-        echo "# Format: service_name|state|type|fragment_path|applicable_machines"
-        echo "# state: enabled, disabled, masked, indirect"
-        echo "# type: custom (in ~/.config/systemd/user) or package (in /usr/lib/systemd/user)"
-        echo "# applicable_machines: all, rig, thinkpad, or comma-separated machine names"
-        echo ""
-
-        # Get all services and sockets (excluding transient, generated, static, alias)
-        systemctl --user list-unit-files --type=service,socket --no-legend | \
-        while read -r unit state preset; do
-            # Skip unwanted states
-            case "$state" in
-                static|generated|transient|alias)
-                    continue
-                    ;;
-            esac
-
-            # Get fragment path to determine if custom or package
-            # Suppress errors for template units that can't be queried directly
-            local fragment_path=$(systemctl --user show -p FragmentPath "$unit" 2>/dev/null | cut -d= -f2)
-
-            # Determine type based on path
-            local type="package"
-            if [[ "$fragment_path" == "$USER_HOME/.config/systemd/user/"* ]]; then
-                type="custom"
-            fi
-
-            # Get applicability
-            local applicability=$(get_applicability "$unit")
-
-            # Output: service|state|type|path|applicability
-            echo "$unit|$state|$type|$fragment_path|$applicability"
-        done
-    } > "$systemd_dir/user-services-state.txt"
-
-    log_info "Saved user systemd service states"
-
-    # Keep old format for backward compatibility (enabled services only)
-    systemctl --user list-unit-files --state=enabled --no-legend | \
-        awk '{print $1}' > "$systemd_dir/user-services.txt"
-
-    # Backup system services with state
-    log_info "Collecting system service states..."
-    {
-        echo "# Format: service_name|state|type|fragment_path|applicable_machines"
-        echo "# state: enabled, disabled, masked, indirect"
-        echo "# type: always 'package' for system services"
-        echo "# applicable_machines: all, rig, thinkpad, or comma-separated machine names"
-        echo ""
-
-        systemctl list-unit-files --type=service,socket --no-legend | \
-        while read -r unit state preset; do
-            case "$state" in
-                static|generated|transient|alias)
-                    continue
-                    ;;
-            esac
-
-            # Suppress errors for template units that can't be queried directly
-            local fragment_path=$(systemctl show -p FragmentPath "$unit" 2>/dev/null | cut -d= -f2)
-
-            # Get applicability
-            local applicability=$(get_applicability "$unit")
-
-            echo "$unit|$state|package|$fragment_path|$applicability"
-        done
-    } > "$systemd_dir/system-services-state.txt"
-
-    log_info "Saved system systemd service states"
-
-    # Keep old format for backward compatibility
-    systemctl list-unit-files --state=enabled --no-legend | \
-        awk '{print $1}' > "$systemd_dir/system-services.txt"
-}
 
 # Show summary of changed files
 show_changed_files() {
@@ -569,7 +462,6 @@ main() {
     backup_configs
     backup_local_bin
     backup_packages
-    backup_systemd
     commit_and_push
 
     log_info "Backup completed!"
