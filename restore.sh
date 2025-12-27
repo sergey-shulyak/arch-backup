@@ -352,15 +352,16 @@ show_menu() {
     log_section "Arch Linux Configuration Restore"
 
     echo "What would you like to restore?"
-    echo "1) Full bootstrap (packages -> configs -> theme) [recommended for fresh install]"
-    echo "2) Everything (configs -> packages -> theme)"
+    echo "1) Full bootstrap (packages -> configs -> services -> theme) [recommended for fresh install]"
+    echo "2) Everything (configs -> packages -> services -> theme)"
     echo "3) Home directory configs and scripts only"
     echo "4) System configs only (/etc)"
     echo "5) Packages only"
-    echo "6) Generate theme only (run hyprstyle)"
-    echo "7) Exit"
+    echo "6) Systemd services only (enable and start)"
+    echo "7) Generate theme only (run hyprstyle)"
+    echo "8) Exit"
     echo ""
-    read -p "Enter choice [1-7]: " choice
+    read -p "Enter choice [1-8]: " choice
 
     case $choice in
         1)
@@ -385,7 +386,6 @@ show_menu() {
         3)
             restore_home_configs
             restore_local_bin
-            enable_services
             ;;
         4)
             restore_system_configs
@@ -394,9 +394,12 @@ show_menu() {
             restore_packages
             ;;
         6)
-            generate_theme
+            enable_services
             ;;
         7)
+            generate_theme
+            ;;
+        8)
             log_info "Exiting"
             exit 0
             ;;
