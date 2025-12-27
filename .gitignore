@@ -172,6 +172,7 @@ configs/home/.config/unity3d/
 
 # Niche tools
 configs/home/.config/rncbc.org/
+configs/home/.config/OpenRGB/
 
 # Temp/backup files
 configs/home/.config/yazi/*.toml-*

@@ -60,6 +60,7 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+gtk-4.0/
 
 # Browser data (large, contains sensitive info)
 .mozilla/
@@ -84,6 +85,7 @@ mozilla/
 .var/
 .local/share/flatpak/
 snap/
+OpenRGB/
 
 # IDE/Editor data and extensions
 .vscode/extensions/
