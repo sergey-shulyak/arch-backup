@@ -6,7 +6,7 @@
 
   "modules-left": ["hyprland/workspaces","cpu", "memory", "custom/network-speed", "temperature"],
   "modules-center": ["clock"],
-  "modules-right": ["tray", "hyprland/language", "pulseaudio", "bluetooth", "network", "backlight", "battery"],
+  "modules-right": ["tray", "hyprland/language", "pulseaudio", "bluetooth", "network", "backlight", "custom/tlp-profile", "battery"],
 
   "hyprland/workspaces": {
     "format": "{id}",
@@ -112,6 +112,14 @@
     "on-click": "kitty nmtui"
   },
 
+  "custom/tlp-profile": {
+    "exec": "tlp-stat -s 2>/dev/null | grep 'Power profile' | awk -F'= ' '{print $2}' | sed 's|/.*||' | sed 's/^./\\U&/'",
+    "interval": 2,
+    "format": "⚡ {}",
+    "tooltip-format": "TLP Profile\nRight-click to switch",
+    "on-click-right": "~/.config/waybar/scripts/tlp-switcher.sh"
+  },
+
   "battery": {
     "states": {
       "good": 80,
@@ -124,8 +132,7 @@
     "format-alt": "🔋 {time}",
     "tooltip-format": "{timeTo} - {power}W",
     "interval": 1,
-    "format-alt-click": "click",
-    "on-click-right": "~/.config/waybar/scripts/tlp-switcher.sh"
+    "format-alt-click": "click"
   },
 
   "tray": {
