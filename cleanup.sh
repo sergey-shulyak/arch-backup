@@ -147,7 +147,7 @@ find_gitignored_files() {
 
         count=$((count + 1))
     done < <(find . -type f -not -path './.git/*' 2>/dev/null | while read -r file; do
-        if git check-ignore "$file" 2>/dev/null; then
+        if git check-ignore -q "$file" 2>/dev/null; then
             echo "$file"
         fi
     done)

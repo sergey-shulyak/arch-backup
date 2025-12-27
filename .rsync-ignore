@@ -147,3 +147,15 @@ pulse/
 
 # Systemd user secrets
 systemd/user-secrets/
+
+# MPD state files
+mpd/mpdstate
+
+# Calendar/calcure data
+calcure/
+
+# Hyprpaper wallpaper config (regenerable)
+hyprpaper/
+
+# Game save data (large, not config)
+unity3d/
