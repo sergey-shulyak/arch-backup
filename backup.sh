@@ -296,6 +296,9 @@ backup_configs() {
     if [ -d "/etc/environment.d" ]; then
         backup_item "/etc/environment.d" "$CONFIG_DIR/etc/environment.d"
     fi
+    if [ -r "/etc/tlp.conf" ]; then
+        backup_item "/etc/tlp.conf" "$CONFIG_DIR/etc/tlp.conf"
+    fi
 }
 
 # GPU driver packages to exclude from backup/restore
