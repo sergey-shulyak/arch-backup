@@ -1,32 +1,19 @@
 #!/bin/bash
-# Display Switcher for Hyprland
-# Provides wofi menu for switching between different display configurations
-# Usage: display-switch [config_name]
-# Supported configs: laptop, laptop-external, external, mirror
+# Display Switcher for Hyprland + hmonitor
+# Provides wofi menu for switching between hmonitor profiles
+# Usage: display-switch [profile_name]
 
 set -euo pipefail
 
 # Color output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# Configuration: Define your monitor names here
-# Run 'hyprctl monitors -j' to discover monitor names
-EXTERNAL_MONITOR="${EXTERNAL_MONITOR:-DP-2}"      # Primary external display
-INTERNAL_MONITOR="${INTERNAL_MONITOR:-eDP-1}"     # Laptop internal display
-EXTERNAL_REFRESH="${EXTERNAL_REFRESH:-highrr}"    # External display refresh rate
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
 
 log_msg() {
     local msg="$1"
     echo -e "${BLUE}[display-switch]${NC} $msg" >&2
-}
-
-error_msg() {
-    local msg="$1"
-    echo -e "${RED}[display-switch]${NC} $msg" >&2
 }
 
 success_msg() {
@@ -34,129 +21,47 @@ success_msg() {
     echo -e "${GREEN}[display-switch]${NC} $msg" >&2
 }
 
-notify() {
-    local title="$1"
-    local msg="$2"
-    notify-send -u normal "$title" "$msg" 2>/dev/null || true
+error_msg() {
+    local msg="$1"
+    echo -e "${RED}[display-switch]${NC} $msg" >&2
 }
 
-# Get list of connected monitors
-get_connected_monitors() {
-    hyprctl monitors -j 2>/dev/null | jq -r '.[].name' 2>/dev/null || echo ""
+# Switch to a profile
+switch_profile() {
+    local profile="$1"
+    log_msg "Switching to profile: $profile"
+
+    if hmonitor profile switch "$profile" 2>/dev/null; then
+        success_msg "Switched to profile: $profile"
+        notify-send -u normal "Display" "📺 Switched to profile: $profile" 2>/dev/null || true
+        return 0
+    else
+        error_msg "Failed to switch to profile: $profile"
+        notify-send -u critical "Display" "⚠️ Failed to switch to profile: $profile" 2>/dev/null || true
+        return 1
+    fi
 }
 
-# Check if a monitor is connected
-is_monitor_connected() {
-    local monitor="$1"
-    get_connected_monitors | grep -q "^${monitor}$"
-}
-
-# Apply monitor configuration
-apply_config() {
-    local config="$1"
-
-    case "$config" in
-        laptop)
-            log_msg "Switching to laptop-only mode..."
-            if is_monitor_connected "$EXTERNAL_MONITOR"; then
-                hyprctl keyword monitor "$EXTERNAL_MONITOR,disable" 2>/dev/null || true
-            fi
-            if is_monitor_connected "$INTERNAL_MONITOR"; then
-                hyprctl keyword monitor "$INTERNAL_MONITOR,preferred,auto,1" 2>/dev/null || true
-            fi
-            success_msg "Switched to laptop display"
-            notify "Display" "💻 Switched to Laptop Only"
-            ;;
-
-        laptop-external)
-            log_msg "Switching to laptop + external mode..."
-            if is_monitor_connected "$EXTERNAL_MONITOR"; then
-                hyprctl keyword monitor "$EXTERNAL_MONITOR,$EXTERNAL_REFRESH,auto,1" 2>/dev/null || true
-            fi
-            if is_monitor_connected "$INTERNAL_MONITOR"; then
-                hyprctl keyword monitor "$INTERNAL_MONITOR,preferred,auto,1" 2>/dev/null || true
-            fi
-            success_msg "Switched to laptop + external display"
-            notify "Display" "🖥️ Switched to Laptop + External"
-            ;;
-
-        external)
-            log_msg "Switching to external-only mode..."
-            if is_monitor_connected "$EXTERNAL_MONITOR"; then
-                hyprctl keyword monitor "$EXTERNAL_MONITOR,$EXTERNAL_REFRESH,auto,1" 2>/dev/null || true
-                if is_monitor_connected "$INTERNAL_MONITOR"; then
-                    hyprctl keyword monitor "$INTERNAL_MONITOR,disable" 2>/dev/null || true
-                fi
-                success_msg "Switched to external display"
-                notify "Display" "🖥️ Switched to External Only"
-            else
-                error_msg "External monitor not connected"
-                notify "Display" "⚠️ External monitor not connected"
-                return 1
-            fi
-            ;;
-
-        mirror)
-            log_msg "Switching to mirror mode..."
-            if is_monitor_connected "$EXTERNAL_MONITOR" && is_monitor_connected "$INTERNAL_MONITOR"; then
-                # Mirror by positioning external at same location as internal
-                hyprctl keyword monitor "$EXTERNAL_MONITOR,$EXTERNAL_REFRESH,0x0,1" 2>/dev/null || true
-                hyprctl keyword monitor "$INTERNAL_MONITOR,preferred,0x0,1" 2>/dev/null || true
-                success_msg "Switched to mirror mode"
-                notify "Display" "🔄 Switched to Mirror Mode"
-            else
-                error_msg "Both monitors required for mirror mode"
-                notify "Display" "⚠️ Both monitors required for mirror mode"
-                return 1
-            fi
-            ;;
-
-        *)
-            error_msg "Unknown configuration: $config"
-            return 1
-            ;;
-    esac
-}
-
-# Show wofi menu for display switching
+# Show wofi menu for profile switching
 show_menu() {
-    local options=()
+    # Get list of available profiles
+    local profiles=$(hmonitor profile list 2>/dev/null | grep -E '^\s+' | awk '{print $1}' || echo "")
 
-    # Always available
-    options+=("💻  Laptop Only")
-
-    # Only show if external is connected
-    if is_monitor_connected "$EXTERNAL_MONITOR"; then
-        options+=("🖥️  Laptop + External")
-        options+=("🖥️  External Only")
+    if [ -z "$profiles" ]; then
+        error_msg "No profiles found. Run 'hmonitor wizard' to create profiles."
+        notify-send -u critical "Display" "⚠️ No profiles configured. Run 'hmonitor wizard'" 2>/dev/null || true
+        return 1
     fi
 
-    # Only show mirror if both are connected
-    if is_monitor_connected "$EXTERNAL_MONITOR" && is_monitor_connected "$INTERNAL_MONITOR"; then
-        options+=("🔄  Mirror")
+    # Show wofi menu with profiles
+    local selection=$(echo "$profiles" | wofi --dmenu -p "Display Profile" 2>/dev/null)
+
+    if [ -n "$selection" ]; then
+        switch_profile "$selection"
+    else
+        log_msg "No profile selected"
+        return 1
     fi
-
-    # Show wofi menu
-    local selection=$(printf '%s\n' "${options[@]}" | wofi --dmenu -p "Display Mode" 2>/dev/null)
-
-    case "$selection" in
-        *"Laptop Only")
-            apply_config "laptop"
-            ;;
-        *"Laptop + External")
-            apply_config "laptop-external"
-            ;;
-        *"External Only")
-            apply_config "external"
-            ;;
-        *"Mirror")
-            apply_config "mirror"
-            ;;
-        *)
-            log_msg "No selection made"
-            return 1
-            ;;
-    esac
 }
 
 # Main logic
@@ -164,6 +69,6 @@ if [ -z "${1:-}" ]; then
     # No argument: show wofi menu
     show_menu
 else
-    # Argument provided: apply directly
-    apply_config "$1"
+    # Argument provided: switch directly
+    switch_profile "$1"
 fi
