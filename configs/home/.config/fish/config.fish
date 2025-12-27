@@ -20,6 +20,7 @@ alias music='ncmpcpp'
 alias rm='rm -i'
 alias caffeine='systemctl --user stop hypridle'
 alias decaf='systemctl --user start hypridle'
+alias theme='cd ~/Documents/arch-backup/hyprstyle && ./hyprstyle.sh $argv && cd -'
 
 ###################
 ### ABBREVIATIONS ###
