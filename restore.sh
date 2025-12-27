@@ -373,15 +373,25 @@ restore_systemd() {
         done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
 
         # Check for non-applicable services that are currently enabled (cleanup)
+        # Use applicable field from state file, default to "all" if not specified
         declare -a services_to_disable
         while IFS='|' read -r service backup_state service_type fragment_path applicable; do
             [[ "$service" =~ ^#.*$ ]] && continue
             [[ -z "$service" ]] && continue
 
-            # Skip if applicable to this machine
-            if service_applies_to_machine "$service"; then
+            # Default to "all" if applicable field is empty
+            applicable="${applicable:-all}"
+
+            # Check if service is applicable to current machine using backed-up applicability
+            if [ "$applicable" = "all" ]; then
+                # Applies to all machines
+                continue
+            elif [[ ",$applicable," == *",$current_hostname,"* ]]; then
+                # Applies to current machine
                 continue
             fi
+
+            # Service is not applicable to this machine
 
             # Skip if package not installed
             if [ ! -e "$fragment_path" ]; then
@@ -391,7 +401,7 @@ restore_systemd() {
             # Check if service is currently enabled on this machine
             local current_state=$(systemctl --user list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
             if [ "$current_state" = "enabled" ]; then
-                services_to_disable+=("$service (not applicable to $current_hostname)")
+                services_to_disable+=("$service (not applicable to $current_hostname: applicable to $applicable)")
             fi
 
         done < <(grep -v "^#" "$systemd_dir/user-services-state.txt" | grep -v "^$")
@@ -550,15 +560,25 @@ restore_systemd() {
         done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
 
         # Check for non-applicable services that are currently enabled (cleanup)
+        # Use applicable field from state file, default to "all" if not specified
         declare -a sys_services_to_disable
         while IFS='|' read -r service backup_state service_type fragment_path applicable; do
             [[ "$service" =~ ^#.*$ ]] && continue
             [[ -z "$service" ]] && continue
 
-            # Skip if applicable to this machine
-            if service_applies_to_machine "$service"; then
+            # Default to "all" if applicable field is empty
+            applicable="${applicable:-all}"
+
+            # Check if service is applicable to current machine using backed-up applicability
+            if [ "$applicable" = "all" ]; then
+                # Applies to all machines
+                continue
+            elif [[ ",$applicable," == *",$current_hostname,"* ]]; then
+                # Applies to current machine
                 continue
             fi
+
+            # Service is not applicable to this machine
 
             # Skip if package not installed
             if [ ! -e "$fragment_path" ]; then
@@ -568,7 +588,7 @@ restore_systemd() {
             # Check if service is currently enabled on this machine
             local current_state=$(systemctl list-unit-files --no-legend "$service" 2>/dev/null | awk '{print $2}')
             if [ "$current_state" = "enabled" ]; then
-                sys_services_to_disable+=("$service (not applicable to $current_hostname)")
+                sys_services_to_disable+=("$service (not applicable to $current_hostname: applicable to $applicable)")
             fi
 
         done < <(grep -v "^#" "$systemd_dir/system-services-state.txt" | grep -v "^$")
