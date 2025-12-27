@@ -15,9 +15,5 @@ elif [ "$1" = "window" ]; then
 fi
 
 # Take screenshot and show notification
-if hyprshot -m "$MODE" -o "$HYPRSHOT_DIR" 2>/dev/null; then
-    notify-send -u normal "Screenshot" "📸 Screenshot saved to Pictures/Screenshots" --app-name="Hyprshot"
-else
-    notify-send -u critical "Screenshot" "❌ Failed to take screenshot" --app-name="Hyprshot"
-    exit 1
-fi
+hyprshot -m "$MODE" -o "$HYPRSHOT_DIR"
+#notify-send -u normal "Screenshot" "📸 Screenshot saved to Pictures/Screenshots" --app-name="Hyprshot"

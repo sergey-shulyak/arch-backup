@@ -14,7 +14,6 @@ cliphist
 dkms
 dosfstools
 efibootmgr
-evince
 exfatprogs
 fastfetch
 feh
