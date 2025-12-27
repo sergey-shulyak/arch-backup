@@ -163,11 +163,13 @@ execute_network() {
 execute_caffeine() {
     case "$1" in
         *"Caffeinate")
-            systemctl --user stop hypridle
+            # Pause hypridle process (launched via Hyprland exec-once)
+            pkill -STOP hypridle 2>/dev/null || notify-send "⚠️ Hypridle not running"
             notify-send "☕ Caffeinated" "Screen will stay awake"
             ;;
         *"Decaffeinate")
-            systemctl --user start hypridle
+            # Resume hypridle process
+            pkill -CONT hypridle 2>/dev/null || notify-send "⚠️ Hypridle not running"
             notify-send "😴 Decaffeinated" "Screen will lock on idle"
             ;;
     esac
@@ -193,8 +195,8 @@ execute_search() {
         *"Brightness Down") brightnessctl -e4 -n2 set 5%- ;;
         *"Toggle WiFi") nmcli radio wifi off && notify-send "WiFi disabled" || (nmcli radio wifi on && notify-send "WiFi enabled") ;;
         *"Toggle Bluetooth") rfkill list bluetooth | grep -q "Soft blocked: yes" && rfkill unblock bluetooth && notify-send "Bluetooth enabled" || (rfkill block bluetooth && notify-send "Bluetooth disabled") ;;
-        *"Caffeinate") systemctl --user stop hypridle; notify-send "☕ Caffeinated" "Screen will stay awake" ;;
-        *"Decaffeinate") systemctl --user start hypridle; notify-send "😴 Decaffeinated" "Screen will lock on idle" ;;
+        *"Caffeinate") pkill -STOP hypridle 2>/dev/null || true; notify-send "☕ Caffeinated" "Screen will stay awake" ;;
+        *"Decaffeinate") pkill -CONT hypridle 2>/dev/null || true; notify-send "😴 Decaffeinated" "Screen will lock on idle" ;;
         *"1Password") 1password & ;;
         *"Telegram") Telegram & ;;
         *"Firefox") firefox & ;;
