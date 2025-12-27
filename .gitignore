@@ -172,3 +172,6 @@ configs/home/.config/rncbc.org/
 
 # Temp/backup files
 configs/home/.config/yazi/*.toml-*
+
+packages/pacman-all-versions.txt
+configs/home/.config/hypr/monitors.conf
