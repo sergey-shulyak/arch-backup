@@ -34,7 +34,6 @@ git
 glow
 gnome-disk-utility
 gnome-keyring
-gparted
 grim
 grub
 gst-plugin-pipewire
@@ -78,8 +77,6 @@ pipewire-alsa
 pipewire-jack
 pipewire-pulse
 polkit-gnome
-polkit-kde-agent
-psensor
 pulsemixer
 python-pywal
 qt5-wayland
@@ -123,14 +120,15 @@ wget
 wireless_tools
 wireplumber
 wl-clip-persist
-wl-clipboard
 woff2-font-awesome
 wofi
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
+xdg-user-dirs
 xdg-utils
 xorg-server
 xorg-xinit
 yay
+yay-debug
 yazi
 zram-generator

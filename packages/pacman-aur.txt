@@ -8,3 +8,4 @@ cursor-bin
 speedtest-go
 tela-icon-theme
 yay
+yay-debug

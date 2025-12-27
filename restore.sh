@@ -351,9 +351,18 @@ restore_systemd() {
             [[ "$service" =~ ^#.*$ ]] && continue
             [[ -z "$service" ]] && continue
 
+            # Check if service is explicitly in HARDWARE_MAPPING
+            # Only apply services that have explicit machine mappings
+            # This prevents applying random services from the backup that might not be appropriate
+            if [ -z "${hardware_map[$service]}" ]; then
+                # Service not in HARDWARE_MAPPING - skip by default (safe option)
+                services_to_skip+=("$service (not in hardware mapping - skipped for safety)")
+                continue
+            fi
+
             # Check if service applies to current machine
             if ! service_applies_to_machine "$service"; then
-                services_to_skip+=("$service (for $applicable)")
+                services_to_skip+=("$service (for ${hardware_map[$service]})")
                 continue
             fi
 
@@ -538,9 +547,18 @@ restore_systemd() {
             [[ "$service" =~ ^#.*$ ]] && continue
             [[ -z "$service" ]] && continue
 
+            # Check if service is explicitly in HARDWARE_MAPPING
+            # Only apply services that have explicit machine mappings
+            # This prevents applying random services from the backup that might not be appropriate
+            if [ -z "${hardware_map[$service]}" ]; then
+                # Service not in HARDWARE_MAPPING - skip by default (safe option)
+                sys_services_to_skip+=("$service (not in hardware mapping - skipped for safety)")
+                continue
+            fi
+
             # Check if service applies to current machine
             if ! service_applies_to_machine "$service"; then
-                sys_services_to_skip+=("$service (for $applicable)")
+                sys_services_to_skip+=("$service (for ${hardware_map[$service]})")
                 continue
             fi
 
