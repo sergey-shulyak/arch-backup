@@ -1,21 +1,23 @@
 #!/bin/bash
-# Screenshot tool that saves to file and copies to clipboard
+# Hyprshot wrapper for Hyprland screenshots
+# Saves to Pictures/Screenshots and uses mako for notifications
 
-SCREENSHOT_DIR="$HOME/Pictures"
-mkdir -p "$SCREENSHOT_DIR"
+# Set screenshot directory
+export HYPRSHOT_DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$HYPRSHOT_DIR"
 
-FILENAME="screenshot-$(date +%s).png"
-FILEPATH="$SCREENSHOT_DIR/$FILENAME"
-
-# Take screenshot based on argument
-if [[ "$1" == "region" ]]; then
-    grim -g "$(slurp)" "$FILEPATH"
-else
-    grim "$FILEPATH"
+# Determine screenshot mode
+MODE="output"  # Default: full screenshot
+if [ "$1" = "region" ]; then
+    MODE="region"
+elif [ "$1" = "window" ]; then
+    MODE="window"
 fi
 
-# Copy to clipboard if successful
-if [[ $? -eq 0 ]]; then
-    cat "$FILEPATH" | wl-copy
-    echo "Screenshot saved to $FILEPATH and copied to clipboard"
+# Take screenshot and show notification
+if hyprshot -m "$MODE" -o "$HYPRSHOT_DIR" 2>/dev/null; then
+    notify-send -u normal "Screenshot" "📸 Screenshot saved to Pictures/Screenshots" --app-name="Hyprshot"
+else
+    notify-send -u critical "Screenshot" "❌ Failed to take screenshot" --app-name="Hyprshot"
+    exit 1
 fi
