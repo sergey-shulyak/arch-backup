@@ -1,0 +1,126 @@
+# Rsync exclusion patterns for backup script
+# These patterns are applied when backing up from source directories (~/.config, etc.)
+# Patterns are relative to the source directory being backed up
+
+# Hyperstyle-generated files (will be regenerated on restore)
+hypr/colors.conf
+hypr/hyprlock.conf
+hypr/hyprpaper.conf
+kitty/kitty.conf
+mako/config
+waybar/style.css
+wofi/style.css
+nvim/lua/nvim-colors.lua
+
+# Sensitive data - SSH keys and credentials
+.ssh/id_*
+.ssh/*.pub
+.ssh/known_hosts
+.ssh/authorized_keys
+.gnupg
+
+# Credentials and secrets
+*credentials*
+*secrets*
+.env
+*token*
+*auth*
+*key*.json
+*secret*
+*.pem
+*.key
+
+# Password managers
+1Password
+Bitwarden
+KeePassXC
+
+# Cache and temporary files
+.cache
+.local/share/Trash
+Cache
+cache
+CacheStorage
+GPUCache
+Code\ Cache
+CachedData
+*.log
+logs
+.npm
+.cargo/registry
+.rustup
+node_modules
+__pycache__
+*.pyc
+venv
+.venv
+
+# Browser data (large, contains sensitive info)
+.mozilla
+google-chrome
+google-chrome-beta
+google-chrome-unstable
+chromium
+BraveSoftware
+firefox
+vivaldi
+Microsoft
+mozilla-firefox
+
+# Application data (large/regenerable)
+.local/share/Steam
+.steam
+.wine
+.local/share/lutris
+.var
+.local/share/flatpak
+snap
+
+# IDE/Editor data and extensions
+.vscode/extensions
+.local/share/JetBrains
+.config/Code/CachedData
+.config/Code/CachedExtensions
+.config/Code/User/workspaceStorage
+.config/Code/logs
+
+# History files (can contain sensitive commands)
+.bash_history
+.zsh_history
+.histfile
+.python_history
+.lesshst
+.wget-hsts
+fish_history
+
+# Database files
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+leveldb
+IndexedDB
+Local\ Storage
+Session\ Storage
+
+# Backup files
+*.backup
+*.bak
+*~
+.*.swp
+*~.swp
+
+# NativeMessagingHosts
+NativeMessagingHosts
+
+# Cookies and auth
+cookies
+cookie
+.credentials
+
+# Misc
+Cursor
+dconf
+op
+aichat
+rncbc.org
+yazi/*.toml-*
