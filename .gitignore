@@ -1,4 +1,4 @@
-# Backup files created during restore
+ # Backup files created during restore
 *.bak.*
 
 # Temporary files
@@ -111,6 +111,9 @@ configs/home/.config/nvim/lua/nvim-colors.lua
 
 # Pulse audio cookie
 configs/home/.config/pulse/
+
+# Monitor manager configs
+configs/home/.config/hypr/monitor-configs/profiles/.current
 
 # Neomutt sensitive data
 configs/home/.config/neomutt/neomuttrc.local

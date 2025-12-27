@@ -17,6 +17,7 @@ efibootmgr
 evince
 exfatprogs
 fastfetch
+feh
 firefox
 fish
 flatpak
@@ -34,6 +35,7 @@ hyprlock
 hyprpaper
 hyprshot
 imv
+inetutils
 iwd
 jq
 kitty
