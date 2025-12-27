@@ -28,6 +28,12 @@ gnome-keyring
 grim
 grub
 gst-plugin-pipewire
+gvfs
+gvfs-afc
+gvfs-gphoto2
+gvfs-mtp
+gvfs-nfs
+gvfs-smb
 hypridle
 hyprland
 hyprlock
@@ -92,6 +98,8 @@ thunar-media-tags-plugin
 thunar-volman
 tlp
 tlp-rdw
+tmux
+traceroute
 trash-cli
 ttf-dejavu
 ttf-droid
