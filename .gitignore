@@ -53,8 +53,19 @@ configs/home/.config/mpd/mpdstate
 **/CacheStorage/
 **/GPUCache/
 **/Code Cache/
+**/CachedData/
+**/CachedProfilesData/
+**/DawnGraphiteCache/
+**/DawnWebGPUCache/
+**/Crashpad/
 **/*.log
 **/logs/
+
+# Editor backup files
+*.backup
+*.backup.*
+*~.swp
+.*.swp
 
 # Database files that may contain sensitive data
 *.sqlite
@@ -79,6 +90,9 @@ configs/home/.config/unity3d/
 # Telemetry and usage data
 **/telemetry/
 configs/home/.config/go/
+
+# Consolidated to hypr/ - no separate hyprpaper directory
+configs/home/.config/hyprpaper/
 
 # Pulse audio cookie
 configs/home/.config/pulse/
