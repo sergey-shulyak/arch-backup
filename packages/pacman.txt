@@ -88,6 +88,7 @@ tlp
 tlp-rdw
 trash-cli
 ttf-dejavu
+ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 ttf-liberation
 udiskie
