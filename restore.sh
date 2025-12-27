@@ -297,6 +297,56 @@ generate_theme() {
     cd "$BACKUP_DIR"
 }
 
+# Enable and start systemd services from services.conf
+enable_services() {
+    log_section "Enabling Systemd Services"
+
+    local services_file="$BACKUP_DIR/services.conf"
+    local current_hostname=$(hostname 2>/dev/null || echo "unknown")
+
+    if [ ! -f "$services_file" ]; then
+        log_warn "Services configuration file not found: $services_file"
+        return
+    fi
+
+    # Parse and process each service line
+    while IFS= read -r line; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "$line" ]] && continue
+
+        # Parse service definition: service_name@type[@machine_filter]
+        local service_name=$(echo "$line" | awk '{print $1}' | cut -d@ -f1)
+        local service_type=$(echo "$line" | awk '{print $1}' | cut -d@ -f2)
+        local service_filter=$(echo "$line" | awk '{print $1}' | cut -d@ -f3)
+
+        # Check if service should run on this machine
+        if [ -n "$service_filter" ] && [ "$service_filter" != "$current_hostname" ]; then
+            log_warn "Skipping $service_name (not for this machine)"
+            continue
+        fi
+
+        # Check if service exists
+        if [ "$service_type" = "system" ]; then
+            systemctl list-unit-files "$service_name" &>/dev/null || {
+                log_warn "Service not found: $service_name (will be installed with packages)"
+                continue
+            }
+            log_info "Enabling system service: $service_name"
+            sudo systemctl enable --now "$service_name" || log_warn "Failed to enable $service_name"
+        elif [ "$service_type" = "user" ]; then
+            systemctl --user list-unit-files "$service_name" &>/dev/null || {
+                log_warn "User service not found: $service_name (will be installed with packages)"
+                continue
+            }
+            log_info "Enabling user service: $service_name"
+            systemctl --user enable --now "$service_name" || log_warn "Failed to enable $service_name"
+        fi
+    done < "$services_file"
+
+    log_info "Service enablement complete"
+}
+
 # Interactive menu
 show_menu() {
     log_section "Arch Linux Configuration Restore"
@@ -314,13 +364,14 @@ show_menu() {
 
     case $choice in
         1)
-            # Bootstrap order: packages first, then configs, then theme
+            # Bootstrap order: packages first, then configs, then services, then theme
             log_section "Full Bootstrap"
             install_aur_helper
             restore_packages
             restore_home_configs
             restore_local_bin
             restore_system_configs
+            enable_services
             generate_theme
             ;;
         2)
@@ -328,11 +379,13 @@ show_menu() {
             restore_local_bin
             restore_system_configs
             restore_packages
+            enable_services
             generate_theme
             ;;
         3)
             restore_home_configs
             restore_local_bin
+            enable_services
             ;;
         4)
             restore_system_configs
