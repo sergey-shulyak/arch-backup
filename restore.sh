@@ -104,36 +104,6 @@ restore_home_configs() {
     done
 }
 
-# Setup Hyprland monitors config for current machine
-setup_hyprland_monitors() {
-    local current_hostname=$(cat /etc/hostname 2>/dev/null || echo "unknown")
-    local hypr_config="$HOME/.config/hypr"
-    local monitors_specific="$hypr_config/monitors-$current_hostname.conf"
-    local monitors_main="$hypr_config/monitors.conf"
-
-    # Only run if hyprland config exists
-    if [ ! -d "$hypr_config" ]; then
-        return
-    fi
-
-    log_info "Setting up Hyprland monitors for hostname: $current_hostname"
-
-    if [ -f "$monitors_specific" ]; then
-        # Copy machine-specific config to monitors.conf
-        cp "$monitors_specific" "$monitors_main"
-        log_info "Created $monitors_main from $monitors_specific"
-    elif [ -f "$hypr_config/monitors-default.conf" ]; then
-        # Fallback to default
-        cp "$hypr_config/monitors-default.conf" "$monitors_main"
-        log_warn "Using default monitors config (machine-specific not found)"
-    else
-        # Create a basic fallback
-        echo "# Default monitor setup - please customize with: hyprctl monitors all" > "$monitors_main"
-        echo "monitor=,preferred,auto,1" >> "$monitors_main"
-        log_warn "Created basic monitors.conf - please customize for your system"
-    fi
-}
-
 # Restore system configuration files
 restore_system_configs() {
     log_section "Restoring System Configs"
@@ -349,14 +319,12 @@ show_menu() {
             install_aur_helper
             restore_packages
             restore_home_configs
-            setup_hyprland_monitors
             restore_local_bin
             restore_system_configs
             generate_theme
             ;;
         2)
             restore_home_configs
-            setup_hyprland_monitors
             restore_local_bin
             restore_system_configs
             restore_packages
@@ -364,7 +332,6 @@ show_menu() {
             ;;
         3)
             restore_home_configs
-            setup_hyprland_monitors
             restore_local_bin
             ;;
         4)
