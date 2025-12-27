@@ -140,9 +140,7 @@
     "format": "🖥️",
     "tooltip": true,
     "tooltip-format": "Click to switch displays",
-    "on-click": "display-switch",
-    "exec": "~/.config/waybar/scripts/display-monitor.sh",
-    "interval": 2
+    "on-click": "display-switch"
   },
 
   "tray": {
