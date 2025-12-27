@@ -79,10 +79,12 @@
   },
 
   "bluetooth": {
-    "format": "📡 {status}",
-    "format-connected": "📡 {num_connections}",
-    "tooltip-format": "{controller_alias}",
-    "tooltip-format-connected": "{controller_alias}\n{num_connections} connected",
+    "format": "📡 Off",
+    "format-on": "📡 On",
+    "format-connected": "📡 {device_alias}",
+    "tooltip-format": "Bluetooth Off",
+    "tooltip-format-on": "Bluetooth On",
+    "tooltip-format-connected": "{device_alias}\nConnected",
     "on-click": "kitty bluetuith"
   },
 
