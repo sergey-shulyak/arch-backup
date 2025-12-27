@@ -219,12 +219,12 @@ restore_packages() {
     fi
 
     # Restore native packages (official repos)
-    if [ -f "$pkg_dir/pacman-native.txt" ]; then
+    if [ -f "$pkg_dir/pacman.txt" ]; then
         log_info "Installing native packages from official repositories..."
         read -p "Install native packages? (y/N): " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
             # Filter out GPU drivers and already installed packages
-            local to_install=$(grep -vE "$gpu_pattern" "$pkg_dir/pacman-native.txt" | comm -23 <(sort) <(pacman -Qqn | sort) | tr '\n' ' ')
+            local to_install=$(grep -vE "$gpu_pattern" "$pkg_dir/pacman.txt" | comm -23 <(sort) <(pacman -Qqn | sort) | tr '\n' ' ')
             if [ -n "$to_install" ]; then
                 sudo pacman -S --needed $to_install
             else
@@ -234,17 +234,17 @@ restore_packages() {
     fi
 
     # Restore AUR packages
-    if [ -f "$pkg_dir/pacman-aur.txt" ]; then
+    if [ -f "$pkg_dir/aur.txt" ]; then
         log_info "Installing AUR packages..."
         read -p "Install AUR packages? (y/N): " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
             if [ -z "$aur_helper" ]; then
                 log_warn "No AUR helper (yay/paru) found"
                 log_info "Install yay or paru first, then run this again"
-                log_info "AUR packages to install are listed in: $pkg_dir/pacman-aur.txt"
+                log_info "AUR packages to install are listed in: $pkg_dir/aur.txt"
             else
                 # Filter out GPU drivers and already installed packages
-                local to_install=$(grep -vE "$gpu_pattern" "$pkg_dir/pacman-aur.txt" | comm -23 <(sort) <(pacman -Qqm | sort) | tr '\n' ' ')
+                local to_install=$(grep -vE "$gpu_pattern" "$pkg_dir/aur.txt" | comm -23 <(sort) <(pacman -Qqm | sort) | tr '\n' ' ')
                 if [ -n "$to_install" ]; then
                     $aur_helper -S --needed $to_install
                 else
@@ -303,23 +303,48 @@ install_aur_helper() {
     log_info "$aur_helper installed"
 }
 
+# Generate theme using hyprstyle submodule
+generate_theme() {
+    log_section "Generating Theme with Hyprstyle"
+
+    local hyprstyle_dir="$BACKUP_DIR/hyprstyle"
+
+    # Ensure submodule is initialized
+    cd "$BACKUP_DIR"
+    git submodule update --init --recursive
+
+    if [ -f "$hyprstyle_dir/hyprstyle.sh" ]; then
+        log_info "Running hyprstyle theme generator..."
+        cd "$hyprstyle_dir"
+        chmod +x hyprstyle.sh
+        ./hyprstyle.sh || log_warn "Theme generation had issues - check hyprstyle output"
+        log_info "Theme generated successfully"
+    else
+        log_error "Hyprstyle not found - submodule may not be initialized"
+        log_info "Try: git submodule update --init --recursive"
+    fi
+
+    cd "$BACKUP_DIR"
+}
+
 # Interactive menu
 show_menu() {
     log_section "Arch Linux Configuration Restore"
 
     echo "What would you like to restore?"
-    echo "1) Full bootstrap (packages -> configs) [recommended for fresh install]"
-    echo "2) Everything (configs -> packages)"
+    echo "1) Full bootstrap (packages -> configs -> theme) [recommended for fresh install]"
+    echo "2) Everything (configs -> packages -> theme)"
     echo "3) Home directory configs and scripts only"
     echo "4) System configs only (/etc)"
     echo "5) Packages only"
-    echo "6) Exit"
+    echo "6) Generate theme only (run hyprstyle)"
+    echo "7) Exit"
     echo ""
-    read -p "Enter choice [1-6]: " choice
+    read -p "Enter choice [1-7]: " choice
 
     case $choice in
         1)
-            # Bootstrap order: packages first, then configs
+            # Bootstrap order: packages first, then configs, then theme
             log_section "Full Bootstrap"
             install_aur_helper
             restore_packages
@@ -327,6 +352,7 @@ show_menu() {
             setup_hyprland_monitors
             restore_local_bin
             restore_system_configs
+            generate_theme
             ;;
         2)
             restore_home_configs
@@ -334,6 +360,7 @@ show_menu() {
             restore_local_bin
             restore_system_configs
             restore_packages
+            generate_theme
             ;;
         3)
             restore_home_configs
@@ -347,6 +374,9 @@ show_menu() {
             restore_packages
             ;;
         6)
+            generate_theme
+            ;;
+        7)
             log_info "Exiting"
             exit 0
             ;;

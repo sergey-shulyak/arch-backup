@@ -1,0 +1,3 @@
+[submodule "hyprstyle"]
+	path = hyprstyle
+	url = https://github.com/sergey-shulyak/hyprstyle

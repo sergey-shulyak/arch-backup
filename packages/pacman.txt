@@ -13,12 +13,10 @@ cava
 cliphist
 dkms
 dosfstools
-dunst
 efibootmgr
 evince
 exfatprogs
 fastfetch
-feh
 firefox
 fish
 flatpak
@@ -30,7 +28,6 @@ gnome-keyring
 grim
 grub
 gst-plugin-pipewire
-htop
 hypridle
 hyprland
 hyprlock
@@ -63,8 +60,6 @@ noto-fonts-emoji
 ntfs-3g
 nvtop
 openrgb
-pamixer
-papirus-icon-theme
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -93,7 +88,6 @@ tlp
 tlp-rdw
 trash-cli
 ttf-dejavu
-ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 ttf-liberation
 udiskie
@@ -101,7 +95,6 @@ ufw
 unrar
 unzip
 uwsm
-vim
 vlc
 vlc-plugin-ffmpeg
 w3m
@@ -118,7 +111,5 @@ xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
 xdg-user-dirs
 xdg-utils
-xorg-server
-xorg-xinit
 yazi
 zram-generator

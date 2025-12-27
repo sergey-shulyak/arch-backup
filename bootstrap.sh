@@ -82,8 +82,9 @@ if [ -d "$BACKUP_DIR" ]; then
     log_warn "Backup directory already exists, pulling latest..."
     cd "$BACKUP_DIR"
     git pull
+    git submodule update --init --recursive
 else
-    git clone "$REPO_URL" "$BACKUP_DIR"
+    git clone --recursive "$REPO_URL" "$BACKUP_DIR"
 fi
 
 cd "$BACKUP_DIR"
@@ -115,11 +116,11 @@ log_section "Installing Packages"
 
 PKG_DIR="$BACKUP_DIR/packages"
 
-if [ -f "$PKG_DIR/pacman-native.txt" ]; then
+if [ -f "$PKG_DIR/pacman.txt" ]; then
     log_info "Installing native packages from official repositories..."
 
     # Read packages, filter comments and empty lines
-    packages=$(grep -v '^#' "$PKG_DIR/pacman-native.txt" 2>/dev/null | grep -v '^$' | tr '\n' ' ')
+    packages=$(grep -v '^#' "$PKG_DIR/pacman.txt" 2>/dev/null | grep -v '^$' | tr '\n' ' ')
 
     if [ -n "$packages" ]; then
         # Install in batches to handle any unavailable packages gracefully
@@ -136,10 +137,10 @@ else
     log_warn "No native package list found"
 fi
 
-if [ -f "$PKG_DIR/pacman-aur.txt" ]; then
+if [ -f "$PKG_DIR/aur.txt" ]; then
     log_info "Installing AUR packages..."
 
-    packages=$(grep -v '^#' "$PKG_DIR/pacman-aur.txt" 2>/dev/null | grep -v '^$' | tr '\n' ' ')
+    packages=$(grep -v '^#' "$PKG_DIR/aur.txt" 2>/dev/null | grep -v '^$' | tr '\n' ' ')
 
     if [ -n "$packages" ]; then
         $AUR_HELPER -S --needed --noconfirm $packages || {
@@ -257,6 +258,29 @@ sudo ufw enable
 
 log_info "Firewall configuration complete"
 
+# Step 9: Initialize hyprstyle submodule and generate theme
+log_section "Setting Up Hyprstyle Theme Generator"
+
+HYPRSTYLE_DIR="$BACKUP_DIR/hyprstyle"
+
+# Initialize and update git submodule
+log_info "Initializing hyprstyle submodule..."
+cd "$BACKUP_DIR"
+git submodule update --init --recursive
+
+# Generate default theme
+if [ -f "$HYPRSTYLE_DIR/hyprstyle.sh" ]; then
+    log_info "Generating default theme with hyprstyle..."
+    cd "$HYPRSTYLE_DIR"
+    chmod +x hyprstyle.sh
+    ./hyprstyle.sh || log_warn "Hyprstyle theme generation had issues - run manually later"
+    log_info "Theme generated successfully"
+else
+    log_error "Hyprstyle script not found - submodule may not have initialized properly"
+fi
+
+cd "$BACKUP_DIR"
+
 # Done!
 log_section "Bootstrap Complete!"
 
@@ -267,8 +291,10 @@ log_warn "Next steps:"
 echo "  1. Review any warnings above for packages that couldn't be installed"
 echo "  2. Log out and log back in for fish shell to take effect"
 echo "  3. If using a display manager, you may need to reboot"
+echo "  4. To change theme: ~/Documents/arch-backup/hyprstyle/hyprstyle.sh <wallpaper>"
 echo ""
 echo "Useful commands:"
-echo "  - Run backup manually:  ~/Documents/arch-backup/backup.sh"
-echo "  - Restore specific items: ~/Documents/arch-backup/restore.sh"
+echo "  - Run backup:     ~/Documents/arch-backup/backup.sh"
+echo "  - Restore items:  ~/Documents/arch-backup/restore.sh"
+echo "  - Change theme:   ~/Documents/arch-backup/hyprstyle/hyprstyle.sh <image>"
 echo ""

@@ -1,8 +1,58 @@
 # Arch Linux Configuration Backup
 
-Backup and restore scripts for Arch Linux system configuration.
+Minimal, hardware-independent backup and restore scripts for Arch Linux + Hyprland.
+
+## Philosophy
+
+This repository provides a lightweight bootstrap system that:
+- Installs packages for Hyprland desktop environment
+- Restores user configs to `~/.config`
+- Uses [hyprstyle](https://github.com/sergey-shulyak/hyprstyle) submodule for theming
+
+**Theming is handled entirely by hyprstyle** - no theme configs are stored in this repo to avoid conflicts between machines with different themes.
+
+## Repository Structure
+
+```
+arch-backup/
+├── backup.sh           # Backup configs and package lists
+├── restore.sh          # Interactive restore menu
+├── bootstrap.sh        # Fresh install bootstrap
+├── configs/
+│   ├── home/.config/   # User configuration files
+│   └── etc/            # System configuration files
+├── packages/
+│   ├── pacman.txt      # Explicitly installed native packages
+│   └── aur.txt         # Explicitly installed AUR packages
+├── local-bin/          # User scripts (~/.local/bin)
+└── hyprstyle/          # Git submodule for theming
+```
 
 ## Usage
+
+### Fresh Install (Bootstrap)
+
+On a fresh Arch installation (after archinstall):
+
+```bash
+# Install git
+sudo pacman -Sy git
+
+# Clone with submodules
+git clone --recursive <your-repo-url> ~/Documents/arch-backup
+
+# Run bootstrap
+~/Documents/arch-backup/bootstrap.sh
+```
+
+The bootstrap will:
+1. Create XDG home directory structure
+2. Install yay (AUR helper)
+3. Install all packages from `packages/pacman.txt` and `packages/aur.txt`
+4. Restore `~/.config` and `~/.local/bin`
+5. Set fish as default shell
+6. Configure UFW firewall
+7. Initialize hyprstyle and generate default theme
 
 ### Backup
 
@@ -10,15 +60,12 @@ Backup and restore scripts for Arch Linux system configuration.
 ./backup.sh
 ```
 
-This will:
-1. Initialize git repository if not present (prompts for remote URL)
-2. Backup entire `~/.config` directory (with smart exclusions)
-3. Backup home directory dotfiles
-4. Backup user scripts in `~/.local/bin`
-5. Backup system configs from `/etc`
-6. Export package lists (native, AUR, all with versions)
-7. Export enabled systemd services (user and system)
-8. Commit and push changes to git
+Backs up:
+- `~/.config/` (excluding theme files and sensitive data)
+- Home dotfiles (`.bashrc`, `.gitconfig`, etc.)
+- User scripts (`~/.local/bin`)
+- System configs (`/etc/pacman.conf`, `/etc/locale.conf`, etc.)
+- Package lists (explicitly installed only)
 
 ### Restore
 
@@ -26,161 +73,80 @@ This will:
 ./restore.sh
 ```
 
-Interactive menu to restore:
-1. Everything (full restore)
-2. Home directory configs only
-3. System configs only (/etc)
-4. Packages only
-5. Systemd services only
+Interactive menu:
+1. Full bootstrap (packages → configs → theme)
+2. Everything (configs → packages → theme)
+3. Home directory configs and scripts only
+4. System configs only (/etc)
+5. Packages only
+6. Generate theme only (run hyprstyle)
 
-### Fresh Install / Bootstrap
+## Theming with Hyprstyle
 
-On a fresh Arch installation, you have two options:
+Theme generation is handled by the [hyprstyle](https://github.com/sergey-shulyak/hyprstyle) submodule.
 
-#### Option 1: One-liner bootstrap (recommended)
-
-After installing base Arch and logging in as your user:
-
+### Generate theme from wallpaper:
 ```bash
-# Install git first (only thing you need)
-sudo pacman -Sy git
-
-# Clone and run bootstrap
-git clone <your-repo-url> ~/Documents/arch-backup
-~/Documents/arch-backup/bootstrap.sh
+~/Documents/arch-backup/hyprstyle/hyprstyle.sh ~/Pictures/wallpaper.png
 ```
 
-Or use curl if the repo is public:
-
+### Use default theme:
 ```bash
-curl -sL https://raw.githubusercontent.com/<user>/<repo>/main/bootstrap.sh | bash -s <repo-url>
+~/Documents/arch-backup/hyprstyle/hyprstyle.sh
 ```
 
-#### Option 2: Manual restore
-
-```bash
-sudo pacman -Sy git
-git clone <your-repo-url> ~/Documents/arch-backup
-cd ~/Documents/arch-backup
-./restore.sh
-# Select option 1 "Full bootstrap"
-```
-
-The bootstrap process will:
-1. Install essential packages (git, base-devel)
-2. Install AUR helper (yay)
-3. Install all native packages from official repos
-4. Install all AUR packages
-5. Restore `~/.config`, dotfiles, and user scripts (`~/.local/bin`)
-6. Restore system configs (optional)
-7. Enable and start systemd services (services start immediately without logout)
-8. Optionally install the automatic backup service
-
-## Automatic Backup on Shutdown
-
-Install the systemd service to automatically backup before shutdown/reboot:
-
-```bash
-# First, run backup manually to set up git repository
-./backup.sh
-
-# Then install the systemd service
-sudo ./install-service.sh
-```
-
-### Service Management
-
-```bash
-# Check status
-systemctl status arch-backup.service
-
-# View logs
-journalctl -u arch-backup.service
-
-# Disable automatic backup
-sudo systemctl disable arch-backup.service
-
-# Uninstall service
-sudo rm /etc/systemd/system/arch-backup.service
-sudo systemctl daemon-reload
-```
+Hyprstyle generates:
+- `~/.config/hypr/colors.conf` - Hyprland colors
+- `~/.config/hypr/hyprlock.conf` - Lock screen
+- `~/.config/hypr/hyprpaper.conf` - Wallpaper
+- `~/.config/kitty/kitty.conf` - Terminal colors
+- `~/.config/mako/config` - Notification styling
+- `~/.config/waybar/style.css` - Status bar CSS
+- `~/.config/wofi/style.css` - Launcher CSS
+- `~/.config/nvim/lua/nvim-colors.lua` - Editor colors
 
 ## What Gets Backed Up
 
-### Configuration Files
+### Configs (theme files excluded)
+- Hyprland: `settings.conf`, `keybinds.conf`, `programs.conf`, `window-rules.conf`, `monitors*.conf`, `hypridle.conf`
+- Waybar: `config.jsonc` (structure only, not CSS)
+- Wofi: `config` (not style.css)
+- Fish shell, Neovim, Starship, Yazi, and other applications
 
-The entire `~/.config` directory is backed up using rsync, with smart exclusions for:
-- Sensitive data (credentials, secrets, tokens)
-- Cache directories
-- Browser data
-- Large application data (Steam, Wine, Flatpak)
-- IDE cache and extensions
+### Packages
+- `pacman.txt` - Native packages from official repos
+- `aur.txt` - AUR packages
 
-### Home Directory Dotfiles
-- `.bashrc`, `.zshrc`, `.profile`, etc.
-- `.gitconfig`, `.gitignore_global`
-- `.vimrc`, `.tmux.conf`
-- `.xinitrc`, `.Xresources`, `.xprofile`
-- `.ssh/config` (not keys)
-
-### User Scripts
-- `~/.local/bin` - Custom user scripts and executables
+GPU drivers are automatically excluded (hardware-specific).
 
 ### System Configs
 - `/etc/pacman.conf`
 - `/etc/makepkg.conf`
-- `/etc/fstab`
-- `/etc/hostname`
 - `/etc/locale.conf`
 - `/etc/vconsole.conf`
-- `/etc/X11/xorg.conf.d/`
-- `/etc/environment.d/`
-
-### Package Lists
-- `pacman-explicit.txt` - Explicitly installed packages
-- `pacman-native.txt` - Native packages (official repos)
-- `pacman-aur.txt` - AUR packages
-- `pacman-all-versions.txt` - All packages with versions
-
-### Systemd Services
-- `user-services.txt` - Enabled user services
-- `system-services.txt` - Enabled system services
-
-When restoring, services are both enabled (for auto-start on next boot) and started immediately in the current session, so they're active right away without requiring a logout/login.
+- `/etc/tlp.conf` (laptop power management)
 
 ## Excluded from Backup
 
-The following are automatically excluded:
+- **Hyprstyle-generated files** (theme configs)
 - SSH keys and GPG keys
 - Credentials and secrets
-- Cache directories
 - Browser profiles
-- Steam, Wine, Lutris data
-- Flatpak and Snap data
-- Node modules, Python venvs
+- Cache directories
+- Steam, Wine, Flatpak data
 - IDE extensions and cache
-- Shell history files
+- Shell history
 
-## Customization
+## Multi-Machine Support
 
-### Adding Exclusions
+Monitor configurations are machine-specific:
+- `monitors-rig.conf` - Desktop monitor layout
+- `monitors-thinkpad.conf` - Laptop monitor layout
+- `monitors.conf` - Active config (auto-selected by hostname)
 
-Edit `backup.sh` and add patterns to `EXCLUDE_PATTERNS` array:
-
-```bash
-EXCLUDE_PATTERNS=(
-    # ... existing patterns ...
-    ".config/myapp/cache"
-)
-```
-
-### Adding Dotfiles
-
-Add to the `dotfiles` array in `backup_home_dotfiles()`:
+## Updating Hyprstyle
 
 ```bash
-local dotfiles=(
-    # ... existing files ...
-    ".myconfig"
-)
+cd ~/Documents/arch-backup
+git submodule update --remote hyprstyle
 ```
