@@ -282,6 +282,18 @@ restore_systemd() {
         done < "$hardware_map_file"
     fi
 
+    # Load core services (always enabled regardless of backup state)
+    declare -A core_services
+    local core_services_file="$systemd_dir/CORE_SERVICES.conf"
+    if [ -f "$core_services_file" ]; then
+        while IFS='|' read -r service desc; do
+            # Skip comments and empty lines
+            [[ "$service" =~ ^#.*$ ]] && continue
+            [[ -z "$service" ]] && continue
+            core_services["$service"]=1
+        done < "$core_services_file"
+    fi
+
     # Helper to check if service applies to current machine
     service_applies_to_machine() {
         local service=$1
@@ -375,14 +387,19 @@ restore_systemd() {
             # Determine what action to take
             local action="$backup_state"
 
-            # For hardware-specific services (marked for only one machine):
-            # Always enable them on their applicable machine, don't apply backup state
-            # This is because the backup state is from a different machine without that hardware
-            local applicable_to="${hardware_map[$service]}"
-            if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
-                # This service is hardware-specific (marked for only one machine)
-                # On that machine, always enable it
+            # Check if this is a core service (always enabled regardless of backup state)
+            if [ "${core_services[$service]}" = "1" ]; then
                 action="enabled"
+            else
+                # For hardware-specific services (marked for only one machine):
+                # Always enable them on their applicable machine, don't apply backup state
+                # This is because the backup state is from a different machine without that hardware
+                local applicable_to="${hardware_map[$service]}"
+                if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                    # This service is hardware-specific (marked for only one machine)
+                    # On that machine, always enable it
+                    action="enabled"
+                fi
             fi
 
             # Add to apply list with action
@@ -491,10 +508,16 @@ restore_systemd() {
 
                     # Determine what action to take (same logic as display)
                     local action="$backup_state"
-                    local applicable_to="${hardware_map[$service]}"
-                    if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
-                        # Hardware-specific service - always enable it
+
+                    # Check if this is a core service (always enabled regardless of backup state)
+                    if [ "${core_services[$service]}" = "1" ]; then
                         action="enabled"
+                    else
+                        local applicable_to="${hardware_map[$service]}"
+                        if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                            # Hardware-specific service - always enable it
+                            action="enabled"
+                        fi
                     fi
 
                     # Apply the action
@@ -598,14 +621,19 @@ restore_systemd() {
             # Determine what action to take
             local action="$backup_state"
 
-            # For hardware-specific services (marked for only one machine):
-            # Always enable them on their applicable machine, don't apply backup state
-            # This is because the backup state is from a different machine without that hardware
-            local applicable_to="${hardware_map[$service]}"
-            if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
-                # This service is hardware-specific (marked for only one machine)
-                # On that machine, always enable it
+            # Check if this is a core service (always enabled regardless of backup state)
+            if [ "${core_services[$service]}" = "1" ]; then
                 action="enabled"
+            else
+                # For hardware-specific services (marked for only one machine):
+                # Always enable them on their applicable machine, don't apply backup state
+                # This is because the backup state is from a different machine without that hardware
+                local applicable_to="${hardware_map[$service]}"
+                if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                    # This service is hardware-specific (marked for only one machine)
+                    # On that machine, always enable it
+                    action="enabled"
+                fi
             fi
 
             # Add to apply list with action
@@ -715,10 +743,16 @@ restore_systemd() {
 
                     # Determine what action to take (same logic as display)
                     local action="$backup_state"
-                    local applicable_to="${hardware_map[$service]}"
-                    if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
-                        # Hardware-specific service - always enable it
+
+                    # Check if this is a core service (always enabled regardless of backup state)
+                    if [ "${core_services[$service]}" = "1" ]; then
                         action="enabled"
+                    else
+                        local applicable_to="${hardware_map[$service]}"
+                        if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                            # Hardware-specific service - always enable it
+                            action="enabled"
+                        fi
                     fi
 
                     # Apply the action
