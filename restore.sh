@@ -372,8 +372,21 @@ restore_systemd() {
                 continue
             fi
 
+            # Determine what action to take
+            local action="$backup_state"
+
+            # For hardware-specific services (marked for only one machine):
+            # Always enable them on their applicable machine, don't apply backup state
+            # This is because the backup state is from a different machine without that hardware
+            local applicable_to="${hardware_map[$service]}"
+            if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                # This service is hardware-specific (marked for only one machine)
+                # On that machine, always enable it
+                action="enabled"
+            fi
+
             # Add to apply list with action
-            if [ "$backup_state" = "enabled" ]; then
+            if [ "$action" = "enabled" ]; then
                 services_to_apply+=("$service (enable)")
             else
                 services_to_apply+=("$service (disable)")
@@ -568,8 +581,21 @@ restore_systemd() {
                 continue
             fi
 
+            # Determine what action to take
+            local action="$backup_state"
+
+            # For hardware-specific services (marked for only one machine):
+            # Always enable them on their applicable machine, don't apply backup state
+            # This is because the backup state is from a different machine without that hardware
+            local applicable_to="${hardware_map[$service]}"
+            if [[ "$applicable_to" != "all" ]] && [[ ! "$applicable_to" =~ "," ]]; then
+                # This service is hardware-specific (marked for only one machine)
+                # On that machine, always enable it
+                action="enabled"
+            fi
+
             # Add to apply list with action
-            if [ "$backup_state" = "enabled" ]; then
+            if [ "$action" = "enabled" ]; then
                 sys_services_to_apply+=("$service (enable)")
             else
                 sys_services_to_apply+=("$service (disable)")
