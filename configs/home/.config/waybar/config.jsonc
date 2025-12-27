@@ -6,7 +6,7 @@
 
   "modules-left": ["hyprland/workspaces","cpu", "memory", "custom/network-speed", "temperature"],
   "modules-center": ["clock"],
-  "modules-right": ["tray", "hyprland/language", "pulseaudio", "bluetooth", "network", "backlight", "battery"],
+  "modules-right": ["tray", "hyprland/language", "pulseaudio", "bluetooth", "network", "backlight", "custom/display", "battery"],
 
   "hyprland/workspaces": {
     "format": "{id}",
@@ -134,6 +134,15 @@
     "interval": 1,
     "format-alt-click": "click",
     "on-click-right": "bash ~/.config/waybar/scripts/tlp-switcher.sh"
+  },
+
+  "custom/display": {
+    "format": "🖥️",
+    "tooltip": true,
+    "tooltip-format": "Click to switch displays",
+    "on-click": "display-switch",
+    "exec": "~/.config/waybar/scripts/display-monitor.sh",
+    "interval": 2
   },
 
   "tray": {
