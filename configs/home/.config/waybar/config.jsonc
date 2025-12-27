@@ -99,7 +99,7 @@
   },
 
   "custom/tlp-profile": {
-    "exec": "tlp-stat -s 2>/dev/null | grep 'Power profile' | awk -F'= ' '{print $2}' | sed 's|/.*||' | sed 's/^./\\U&/'",
+    "exec": "~/.config/waybar/scripts/tlp-profile.sh",
     "interval": 2,
     "format": "⚡ {}",
     "tooltip-format": "TLP Profile\nRight-click to switch",

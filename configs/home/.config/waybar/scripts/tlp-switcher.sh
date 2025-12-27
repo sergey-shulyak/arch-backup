@@ -1,18 +1,21 @@
 #!/bin/bash
 
-# Show menu using wofi to select TLP mode
-MODE=$(echo -e "AC\nBattery" | wofi -dmenu -p "TLP Mode:")
+# Show menu using wofi to select TLP power profile
+PROFILE=$(echo -e "performance\nbalanced\npower-saver" | wofi -dmenu -p "TLP Profile:")
 
-if [ -z "$MODE" ]; then
+if [ -z "$PROFILE" ]; then
     exit 0
 fi
 
-# Execute selected mode with sudo
-case "$MODE" in
-    "AC")
-        sudo tlp ac
+# Set power profile
+case "$PROFILE" in
+    "performance")
+        sudo tlp set-powermanagementprofiles performance
         ;;
-    "Battery")
-        sudo tlp bat
+    "balanced")
+        sudo tlp set-powermanagementprofiles balanced
+        ;;
+    "power-saver")
+        sudo tlp set-powermanagementprofiles powersaver
         ;;
 esac
