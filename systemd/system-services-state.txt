@@ -4,6 +4,7 @@
 # applicable_machines: all, rig, thinkpad, or comma-separated machine names
 
 acpid.service|enabled|package|/usr/lib/systemd/system/acpid.service|all
+arch-backup.service|disabled|package|/etc/systemd/system/arch-backup.service|all
 audit-rules.service|disabled|package|/usr/lib/systemd/system/audit-rules.service|all
 auditd.service|disabled|package|/usr/lib/systemd/system/auditd.service|all
 avahi-daemon.service|disabled|package|/usr/lib/systemd/system/avahi-daemon.service|all
@@ -37,12 +38,12 @@ NetworkManager-initrd.service|disabled|package|/usr/lib/systemd/system/NetworkMa
 NetworkManager-wait-online-initrd.service|disabled|package|/usr/lib/systemd/system/NetworkManager-wait-online-initrd.service|all
 NetworkManager-wait-online.service|enabled|package|/usr/lib/systemd/system/NetworkManager-wait-online.service|all
 NetworkManager.service|enabled|package|/usr/lib/systemd/system/NetworkManager.service|all
-nvidia-hibernate.service|enabled|package|/usr/lib/systemd/system/nvidia-hibernate.service|all
-nvidia-persistenced.service|disabled|package|/usr/lib/systemd/system/nvidia-persistenced.service|all
-nvidia-powerd.service|disabled|package|/usr/lib/systemd/system/nvidia-powerd.service|all
-nvidia-resume.service|enabled|package|/usr/lib/systemd/system/nvidia-resume.service|all
-nvidia-suspend-then-hibernate.service|enabled|package|/usr/lib/systemd/system/nvidia-suspend-then-hibernate.service|all
-nvidia-suspend.service|enabled|package|/usr/lib/systemd/system/nvidia-suspend.service|all
+nvidia-hibernate.service|enabled|package|/usr/lib/systemd/system/nvidia-hibernate.service|rig
+nvidia-persistenced.service|disabled|package|/usr/lib/systemd/system/nvidia-persistenced.service|rig
+nvidia-powerd.service|disabled|package|/usr/lib/systemd/system/nvidia-powerd.service|rig
+nvidia-resume.service|enabled|package|/usr/lib/systemd/system/nvidia-resume.service|rig
+nvidia-suspend-then-hibernate.service|enabled|package|/usr/lib/systemd/system/nvidia-suspend-then-hibernate.service|rig
+nvidia-suspend.service|enabled|package|/usr/lib/systemd/system/nvidia-suspend.service|rig
 openrgb.service|enabled|package|/usr/lib/systemd/system/openrgb.service|rig
 ostree-remount.service|disabled|package|/usr/lib/systemd/system/ostree-remount.service|all
 ostree-state-overlay@.service|disabled|package||all
@@ -100,7 +101,7 @@ systemd-udev-load-credentials.service|disabled|package|/usr/lib/systemd/system/s
 systemd-userdb-load-credentials.service|disabled|package|/usr/lib/systemd/system/systemd-userdb-load-credentials.service|all
 systemd-userdbd.service|indirect|package|/usr/lib/systemd/system/systemd-userdbd.service|all
 systemd-vmspawn@.service|disabled|package||all
-tlp.service|disabled|package|/usr/lib/systemd/system/tlp.service|thinkpad
+tlp.service|enabled|package|/usr/lib/systemd/system/tlp.service|thinkpad
 udisks2.service|disabled|package|/usr/lib/systemd/system/udisks2.service|all
 ufw.service|enabled|package|/usr/lib/systemd/system/ufw.service|all
 upower.service|disabled|package|/usr/lib/systemd/system/upower.service|all

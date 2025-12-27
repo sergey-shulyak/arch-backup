@@ -1,4 +1,5 @@
 acpid.service
+arch-backup.service
 bluetooth.service
 getty@.service
 NetworkManager-dispatcher.service
@@ -12,6 +13,7 @@ openrgb.service
 seatd.service
 sshd.service
 systemd-timesyncd.service
+tlp.service
 ufw.service
 polkit-agent-helper.socket
 systemd-userdbd.socket

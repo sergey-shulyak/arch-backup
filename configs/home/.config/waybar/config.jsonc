@@ -102,8 +102,8 @@
     "exec": "~/.config/waybar/scripts/tlp-profile.sh",
     "interval": 2,
     "format": "⚡ {}",
-    "tooltip-format": "TLP Profile\nRight-click to switch",
-    "on-click-right": "~/.config/waybar/scripts/tlp-switcher.sh"
+    "tooltip-format": "TLP Profile\nClick to switch",
+    "on-click": "~/.config/waybar/scripts/tlp-switcher.sh"
   },
 
   "network": {
