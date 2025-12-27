@@ -1,6 +1,7 @@
 # Rsync exclusion patterns for backup script
 # These patterns are applied when backing up from source directories (~/.config, etc.)
 # Patterns are relative to the source directory being backed up
+# Derived from .gitignore but with rsync-compatible syntax
 
 # Hyperstyle-generated files (will be regenerated on restore)
 hypr/colors.conf
@@ -17,11 +18,11 @@ nvim/lua/nvim-colors.lua
 .ssh/*.pub
 .ssh/known_hosts
 .ssh/authorized_keys
-.gnupg
+.gnupg/
 
 # Credentials and secrets
-*credentials*
-*secrets*
+credentials*
+secrets*
 .env
 *token*
 *auth*
@@ -31,58 +32,66 @@ nvim/lua/nvim-colors.lua
 *.key
 
 # Password managers
-1Password
-Bitwarden
-KeePassXC
+1Password/
+Bitwarden/
+KeePassXC/
 
 # Cache and temporary files
-.cache
-.local/share/Trash
-Cache
-cache
-CacheStorage
-GPUCache
-Code\ Cache
-CachedData
+.cache/
+.local/share/Trash/
+Cache/
+cache/
+CacheStorage/
+GPUCache/
+Code\ Cache/
+CachedData/
+CachedProfilesData/
+CachedExtensions/
+DawnGraphiteCache/
+DawnWebGPUCache/
+Crashpad/
 *.log
-logs
-.npm
-.cargo/registry
-.rustup
-node_modules
-__pycache__
+logs/
+.npm/
+.cargo/registry/
+.rustup/
+node_modules/
+__pycache__/
 *.pyc
-venv
-.venv
+venv/
+.venv/
 
 # Browser data (large, contains sensitive info)
-.mozilla
-google-chrome
-google-chrome-beta
-google-chrome-unstable
-chromium
-BraveSoftware
-firefox
-vivaldi
-Microsoft
-mozilla-firefox
+.mozilla/
+google-chrome/
+google-chrome-beta/
+google-chrome-unstable/
+chromium/
+BraveSoftware/
+firefox/
+vivaldi/
+vivaldi-snapshot/
+Microsoft/
+microsoft-edge-dev/
+mozilla-firefox/
+mozilla/
 
 # Application data (large/regenerable)
-.local/share/Steam
-.steam
-.wine
-.local/share/lutris
-.var
-.local/share/flatpak
-snap
+.local/share/Steam/
+.steam/
+.wine/
+.local/share/lutris/
+.var/
+.local/share/flatpak/
+snap/
 
 # IDE/Editor data and extensions
-.vscode/extensions
-.local/share/JetBrains
-.config/Code/CachedData
-.config/Code/CachedExtensions
-.config/Code/User/workspaceStorage
-.config/Code/logs
+.vscode/extensions/
+.local/share/JetBrains/
+Code/CachedData/
+Code/CachedExtensions/
+Code/User/workspaceStorage/
+Code/logs/
 
 # History files (can contain sensitive commands)
 .bash_history
@@ -93,34 +102,48 @@ snap
 .wget-hsts
 fish_history
 
-# Database files
+# Database files and storage
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
-leveldb
-IndexedDB
-Local\ Storage
-Session\ Storage
+leveldb/
+IndexedDB/
+Local\ Storage/
+Session\ Storage/
 
-# Backup files
+# Backup and temp files
 *.backup
+*.backup.*
 *.bak
 *~
 .*.swp
 *~.swp
 
-# NativeMessagingHosts
-NativeMessagingHosts
-
-# Cookies and auth
+# Native messaging and cookies
+NativeMessagingHosts/
 cookies
 cookie
 .credentials
 
-# Misc
-Cursor
-dconf
-op
-aichat
-rncbc.org
+# Go telemetry and config
+go/
+gopass/
+
+# Telemetry data
+telemetry/
+
+# Mail configuration
+neomutt/neomuttrc.local
+.neomutt_cache/
+
+# Misc sensitive/large directories
+Cursor/
+dconf/
+op/
+aichat/
+rncbc.org/
 yazi/*.toml-*
+pulse/
+
+# Systemd user secrets
+systemd/user-secrets/
