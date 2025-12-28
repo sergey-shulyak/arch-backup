@@ -12,16 +12,52 @@ fi
 # Get all windows in current workspace, excluding special workspaces and hyprwhenthen
 WINDOWS=$(hyprctl clients -j | jq -r ".[] | select(.workspace.id == $WORKSPACE_ID) | select(.workspace.name | startswith(\"special\") | not) | select(.class | startswith(\"hyprwhenthen\") | not) | .address" | tr -d ' ')
 
-# Count user windows
+# Count total windows (for existence check)
 WINDOW_COUNT=$(echo "$WINDOWS" | grep -c "0x" || echo 0)
 
 if [ "$WINDOW_COUNT" -eq 0 ]; then
     exit 0
 fi
 
-if [ "$WINDOW_COUNT" -eq 1 ]; then
-    # Float the single window
-    WINDOW=$(echo "$WINDOWS" | head -n1 | tr -d ' ')
+# Count non-TUI windows only (for tiling decision)
+NON_TUI_COUNT=0
+while IFS= read -r WINDOW; do
+    WINDOW=$(echo "$WINDOW" | tr -d ' ')
+    if [ -z "$WINDOW" ]; then
+        continue
+    fi
+
+    WINDOW_TITLE=$(hyprctl clients -j | jq -r ".[] | select(.address == \"$WINDOW\") | .title" 2>/dev/null)
+
+    # Skip TUI apps from the count
+    if [[ "$WINDOW_TITLE" =~ ^(btop|nmtui|bluetuith|pulsemixer)$ ]]; then
+        continue
+    fi
+
+    ((NON_TUI_COUNT++))
+done <<< "$WINDOWS"
+
+if [ "$NON_TUI_COUNT" -eq 0 ]; then
+    # Only TUI windows exist, don't tile them
+    exit 0
+fi
+
+if [ "$NON_TUI_COUNT" -eq 1 ]; then
+    # Float the single non-TUI window
+    # Find the first non-TUI window
+    WINDOW=""
+    while IFS= read -r W; do
+        W=$(echo "$W" | tr -d ' ')
+        if [ -z "$W" ]; then
+            continue
+        fi
+
+        W_TITLE=$(hyprctl clients -j | jq -r ".[] | select(.address == \"$W\") | .title" 2>/dev/null)
+        if ! [[ "$W_TITLE" =~ ^(btop|nmtui|bluetuith|pulsemixer)$ ]]; then
+            WINDOW=$W
+            break
+        fi
+    done <<< "$WINDOWS"
 
     if [ -z "$WINDOW" ] || [ "$WINDOW" == "null" ]; then
         exit 0
@@ -72,11 +108,19 @@ if [ "$WINDOW_COUNT" -eq 1 ]; then
         hyprctl dispatch movewindowpixel exact $X_OFFSET $Y_OFFSET address:$WINDOW > /dev/null 2>&1
     fi
 
-elif [ "$WINDOW_COUNT" -gt 1 ]; then
-    # Tile all windows when multiple exist
+elif [ "$NON_TUI_COUNT" -gt 1 ]; then
+    # Tile non-TUI windows when 2+ non-TUI windows exist (TUI windows always float)
     while IFS= read -r WINDOW; do
         WINDOW=$(echo "$WINDOW" | tr -d ' ')
         if [ -z "$WINDOW" ]; then
+            continue
+        fi
+
+        # Get window title to check if it's a TUI app that should stay floating
+        WINDOW_TITLE=$(hyprctl clients -j | jq -r ".[] | select(.address == \"$WINDOW\") | .title" 2>/dev/null)
+
+        # Skip tiling for TUI apps that should always stay floating
+        if [[ "$WINDOW_TITLE" =~ ^(btop|nmtui|bluetuith|pulsemixer)$ ]]; then
             continue
         fi
 

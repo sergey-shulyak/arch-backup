@@ -297,6 +297,24 @@ generate_theme() {
     cd "$BACKUP_DIR"
 }
 
+# Setup Hyprland window sizes based on current screen resolution
+setup_hyprland_sizes() {
+    log_section "Setting Up Hyprland Window Sizes"
+
+    local setup_script="$HOME/.config/hypr/scripts/setup-screen-size.sh"
+
+    if [ ! -f "$setup_script" ]; then
+        log_warn "Hyprland setup script not found: $setup_script"
+        log_info "Make sure to restore home configs first"
+        return
+    fi
+
+    log_info "Running screen size auto-detection..."
+    chmod +x "$setup_script"
+    "$setup_script" || log_warn "Screen size setup had issues"
+    log_info "Hyprland window sizes configured"
+}
+
 # Enable and start systemd services from services.conf
 enable_services() {
     log_section "Enabling Systemd Services"
@@ -359,9 +377,10 @@ show_menu() {
     echo "5) Packages only"
     echo "6) Systemd services only (enable and start)"
     echo "7) Generate theme only (run hyprstyle)"
-    echo "8) Exit"
+    echo "8) Setup Hyprland window sizes only"
+    echo "9) Exit"
     echo ""
-    read -p "Enter choice [1-8]: " choice
+    read -p "Enter choice [1-9]: " choice
 
     case $choice in
         1)
@@ -371,6 +390,7 @@ show_menu() {
             restore_packages
             restore_home_configs
             restore_local_bin
+            setup_hyprland_sizes
             restore_system_configs
             enable_services
             generate_theme
@@ -378,6 +398,7 @@ show_menu() {
         2)
             restore_home_configs
             restore_local_bin
+            setup_hyprland_sizes
             restore_system_configs
             restore_packages
             enable_services
@@ -386,6 +407,7 @@ show_menu() {
         3)
             restore_home_configs
             restore_local_bin
+            setup_hyprland_sizes
             ;;
         4)
             restore_system_configs
@@ -400,6 +422,9 @@ show_menu() {
             generate_theme
             ;;
         8)
+            setup_hyprland_sizes
+            ;;
+        9)
             log_info "Exiting"
             exit 0
             ;;
