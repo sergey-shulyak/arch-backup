@@ -17,6 +17,10 @@ set -gx BAT_THEME "Hyprstyle"
 set -gx LESSOPEN "| /usr/bin/pygmentize -f 256 -o - %s"
 set -gx LESS " -R"
 
+# === FZF Options with Bat Preview ===
+set -gx FZF_CTRL_T_OPTS "--preview 'bat --color=always --line-range :500 {}'"
+set -gx FZF_ALT_C_OPTS "--preview 'ls -lah {}'"
+
 ###################
 ### ALIASES ###
 ###################
@@ -26,12 +30,10 @@ alias reload-hyprland='hyprctl reload'
 alias reload-waybar='pkill waybar; nohup waybar >/dev/null 2>&1 & disown'
 alias glow='glow -p'
 alias music='ncmpcpp'
-alias rm='rm -i'
 alias caffeine='systemctl --user stop hypridle'
 alias decaf='systemctl --user start hypridle'
-alias theme='cd ~/Documents/arch-backup/hyprstyle && ./hyprstyle.sh $argv && cd -'
+alias theme='cd ~/Documents/arch-backup/hyprstyle && ./hyperstyle.sh $argv && cd -'
 alias feh='feh --scale-down --auto-zoom $argv'
-alias v='bat'  # Quick syntax-highlighted view (uses BAT_OPTS and BAT_THEME)
 
 ###################
 ### FUNCTIONS ###
@@ -77,6 +79,10 @@ abbr -a mv mv -i
 abbr -a rm rm -i
 abbr -a mkdir mkdir -p
 
+###################
+### INTERACTIVE ###
+###################
+
 if status is-interactive
     # Disable greeting message for cleaner shell
     set fish_greeting
@@ -86,5 +92,22 @@ if status is-interactive
 
     # Initialize Starship prompt
     starship init fish | source
+
+    # === FZF Shell Integration ===
+    # Disable default fzf keybindings and set custom ones
+    set -gx FZF_CTRL_T_COMMAND ''  # Disable default CTRL+T
+    set -gx FZF_CTRL_R_COMMAND ''  # Disable default CTRL+R
+    set -gx FZF_ALT_C_COMMAND ''   # Disable default ALT+C
+    fzf --fish | source
+
+    # Custom FZF keybindings
+    bind \co fzf-file-widget        # CTRL+O: Open files
+    bind -M insert \co fzf-file-widget
+
+    # === Nvim keybinding ===
+    bind \ce 'nvim'                 # CTRL+E: Open nvim
+    bind -M insert \ce 'nvim'
+
+    # === Mise (tool version manager) ===
+    mise activate fish | source
 end
-mise activate fish | source
