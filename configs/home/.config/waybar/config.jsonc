@@ -4,7 +4,7 @@
   "height": 36,
   "spacing": 8,
 
-  "modules-left": ["hyprland/workspaces","cpu","memory","temperature","custom/network-speed"],
+  "modules-left": ["hyprland/workspaces","cpu","memory","custom/cpu-temp","custom/gpu-temp","custom/network-speed"],
   "modules-center": ["clock"],
   "modules-right": ["tray","hyprland/language","pulseaudio","bluetooth","network","backlight","battery"],
 
@@ -62,13 +62,12 @@
     "on-click": "kfloat btop"
   },
 
-  "temperature": {
-    "thermal-zone": 0,
-    "critical-threshold": 80,
-    "format-critical": "🔥 {temperatureC}°C",
-    "format": "🌡️ {temperatureC}°C",
+  "custom/cpu-temp": {
+    "exec": "~/.config/waybar/scripts/cpu-temp.sh",
+    "format": "🌡️ {0}°C",
     "interval": 1,
-    "on-click": "kfloat btop"
+    "on-click": "kfloat btop",
+    "tooltip-format": "CPU Temperature"
   },
 
   "pulseaudio": {
@@ -106,6 +105,14 @@
     "format": "⚡ {}",
     "tooltip-format": "TLP Profile\nClick to switch",
     "on-click": "~/.config/waybar/scripts/tlp-switcher.sh"
+  },
+
+  "custom/gpu-temp": {
+    "exec": "~/.config/waybar/scripts/gpu-temp.sh",
+    "format": "🎬 {0}°C",
+    "interval": 1,
+    "on-click": "kfloat btop",
+    "tooltip-format": "GPU Temperature"
   },
 
   "network": {
