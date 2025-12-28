@@ -14,9 +14,3 @@ then = "~/.config/hypr/scripts/float-tile-manager.sh"
 on = "closewindow"
 when = ".*"
 then = "~/.config/hypr/scripts/float-tile-manager.sh"
-
-# Trigger on workspace change (format: workspace_id)
-[[handler]]
-on = "workspace"
-when = ".*"
-then = "~/.config/hypr/scripts/float-tile-manager.sh"
