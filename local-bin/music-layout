@@ -1,0 +1,36 @@
+#!/bin/bash
+# Music dashboard layout: ncmpcpp (playlist + media_library), cava, pulsemixer
+# Dwindle layout with controlled splits and ratios
+# Bind: Super+Shift+M
+
+# === CONFIG ===
+WORKSPACE=5
+LAYOUT="dwindle"
+MASTER_RATIO=0.65
+WINDOW_DELAY=0.3
+
+# === FUNCTIONS ===
+open_window() {
+    local title="$1"
+    local command="$2"
+    local split_dir="$3"
+
+    [ -n "$split_dir" ] && hyprctl dispatch layoutmsg preselect "$split_dir"
+    kitty --title "$title" sh -c "$command" &
+    sleep "$WINDOW_DELAY"
+}
+
+# === MAIN ===
+hyprctl dispatch workspace "$WORKSPACE"
+hyprctl --batch "dispatch togglelayout $LAYOUT"
+sleep 0.2
+
+# Open windows with preselected splits
+open_window "ncmpcpp-playlist"      "ncmpcpp -s playlist"         # Root (left)
+open_window "ncmpcpp-media_library" "ncmpcpp -s media_library" "r" # Right
+open_window "cava"                  "cava"                     "d" # Down
+open_window "pulsemixer"            "pulsemixer"               "d" # Down
+
+# Set master window ratio
+hyprctl dispatch focuswindow "ncmpcpp-playlist"
+hyprctl dispatch layoutmsg mfact "$MASTER_RATIO"

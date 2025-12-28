@@ -4,6 +4,7 @@
 # Derived from .gitignore but with rsync-compatible syntax
 
 # Hyperstyle-generated files (will be regenerated on restore)
+bat/themes/Hyprstyle.tmTheme
 hypr/colors.conf
 hypr/hyprlock.conf
 hypr/hyprpaper.conf

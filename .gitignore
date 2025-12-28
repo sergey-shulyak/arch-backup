@@ -100,6 +100,7 @@ configs/home/.config/hyprpaper/
 # from https://github.com/sergey-shulyak/hyprstyle
 # Do not backup - they will be regenerated on restore
 # ============================================
+configs/home/.config/bat/themes/Hyprstyle.tmTheme
 configs/home/.config/hypr/colors.conf
 configs/home/.config/hypr/hyprlock.conf
 configs/home/.config/hypr/hyprpaper.conf

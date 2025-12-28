@@ -27,7 +27,6 @@ format_bytes() {
 INTERFACE=$(get_interface)
 
 if [ -z "$INTERFACE" ]; then
-    echo "{\"text\":\"📡 N/A\",\"class\":\"disconnected\"}"
     exit 0
 fi
 
@@ -37,7 +36,6 @@ TX_FILE="/sys/class/net/$INTERFACE/statistics/tx_bytes"
 
 # Check if interface stats are available
 if [ ! -f "$RX_FILE" ] || [ ! -f "$TX_FILE" ]; then
-    echo "{\"text\":\"📡 N/A\",\"class\":\"disconnected\"}"
     exit 0
 fi
 

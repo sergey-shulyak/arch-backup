@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ $# -eq 0 ]; then
+    echo "Usage: kfloat <command> [args...]"
+    echo "Examples: kfloat btop, kfloat pulsemixer"
+    exit 1
+fi
+
+cmd="$1"
+shift
+kitty --title "$cmd" "$cmd" "$@"

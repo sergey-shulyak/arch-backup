@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Maximum window dimensions
+MAX_WIDTH=1280
+MAX_HEIGHT=720
+
+# Get first image file (handle multiple files)
+image_file="${1:-}"
+
+if [[ -z "$image_file" ]]; then
+    exec feh --scale-down "$@"
+fi
+
+# Get image dimensions using identify (ImageMagick)
+if command -v identify &> /dev/null && [[ -f "$image_file" ]]; then
+    dimensions=$(identify -format "%w %h" "$image_file" 2>/dev/null)
+
+    if [[ -n "$dimensions" ]]; then
+        read img_width img_height <<< "$dimensions"
+
+        # Calculate scale factor to fit within max dimensions while preserving aspect ratio
+        scale_w=$(echo "scale=4; $MAX_WIDTH / $img_width" | bc)
+        scale_h=$(echo "scale=4; $MAX_HEIGHT / $img_height" | bc)
+
+        # Use the smaller scale factor to maintain aspect ratio
+        if (( $(echo "$scale_w < $scale_h" | bc -l) )); then
+            scale=$scale_w
+        else
+            scale=$scale_h
+        fi
+
+        # Calculate final dimensions (capped at MAX_WIDTH x MAX_HEIGHT)
+        final_width=$(echo "$img_width * $scale" | bc | cut -d. -f1)
+        final_height=$(echo "$img_height * $scale" | bc | cut -d. -f1)
+
+        # Ensure we never exceed max dimensions
+        if [[ $final_width -gt $MAX_WIDTH ]]; then
+            final_width=$MAX_WIDTH
+        fi
+        if [[ $final_height -gt $MAX_HEIGHT ]]; then
+            final_height=$MAX_HEIGHT
+        fi
+
+        # Open feh with fixed geometry and scale-down
+        exec feh --geometry "${final_width}x${final_height}" --scale-down "$@"
+    fi
+fi
+
+# Fallback to default if identify fails or image file not found
+exec feh --scale-down "$@"
