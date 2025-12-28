@@ -29,6 +29,7 @@ gnome-keyring
 grim
 grub
 gst-plugin-pipewire
+gvfs
 gvfs-afc
 gvfs-gphoto2
 gvfs-mtp
@@ -69,6 +70,9 @@ noto-fonts-emoji
 ntfs-3g
 nvtop
 openrgb
+perl-archive-zip
+perl-image-exiftool
+perl-io-compress-brotli
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -101,6 +105,7 @@ thunar-archive-plugin
 thunar-media-tags-plugin
 thunar-volman
 tlp
+tlp-rdw
 tmux
 traceroute
 trash-cli
@@ -122,11 +127,11 @@ wget
 wireless_tools
 wireplumber
 wl-clip-persist
+wl-clipboard
 woff2-font-awesome
 wofi
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
-xdg-user-dirs
 xdg-utils
 yazi
 zram-generator
