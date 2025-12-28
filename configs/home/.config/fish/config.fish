@@ -32,8 +32,11 @@ alias glow='glow -p'
 alias music='ncmpcpp'
 alias caffeine='systemctl --user stop hypridle'
 alias decaf='systemctl --user start hypridle'
-alias theme='cd ~/Documents/arch-backup/hyprstyle && ./hyperstyle.sh $argv && cd -'
+alias theme='cd ~/Documents/arch-backup/hyprstyle && ./hyprstyle.sh $argv && cd -'
 alias feh='feh --scale-down --auto-zoom $argv'
+alias cdb='cd ~/Documents/arch-backup'
+alias cds='cd ~/Documents/arch-backup/hyprstyle'
+
 
 ###################
 ### FUNCTIONS ###
@@ -105,8 +108,8 @@ if status is-interactive
     bind -M insert \co fzf-file-widget
 
     # === Nvim keybinding ===
-    bind \ce 'nvim'                 # CTRL+E: Open nvim
-    bind -M insert \ce 'nvim'
+    bind \cn 'nvim'                 # CTRL+E: Open nvim
+    bind -M insert \cn 'nvim'
 
     # === Mise (tool version manager) ===
     mise activate fish | source
