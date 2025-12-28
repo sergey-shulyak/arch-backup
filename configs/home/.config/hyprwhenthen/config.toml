@@ -1,0 +1,22 @@
+# Float first window in workspace, tile when multiple windows exist
+
+[general]
+timeout = "5s"
+
+# Trigger on window open (format: address,workspace,class,title)
+[[handler]]
+on = "openwindow"
+when = ".*"
+then = "~/.config/hypr/scripts/float-tile-manager.sh"
+
+# Trigger on window close (format: address)
+[[handler]]
+on = "closewindow"
+when = ".*"
+then = "~/.config/hypr/scripts/float-tile-manager.sh"
+
+# Trigger on workspace change (format: workspace_id)
+[[handler]]
+on = "workspace"
+when = ".*"
+then = "~/.config/hypr/scripts/float-tile-manager.sh"

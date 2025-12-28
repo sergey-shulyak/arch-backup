@@ -6,6 +6,7 @@ catppuccin-gtk-theme-mocha
 claude-code
 cursor-bin
 hyprland-monitor-manager
+hyprwhenthen-bin
 speedtest-go
 tela-icon-theme
 yay

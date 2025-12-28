@@ -74,6 +74,8 @@ pipewire-alsa
 pipewire-jack
 pipewire-pulse
 polkit-gnome
+power-profiles-daemon
+powertop
 pulsemixer
 python-pygments
 python-pywal
@@ -99,8 +101,6 @@ thunar-archive-plugin
 thunar-media-tags-plugin
 thunar-volman
 tlp
-tlp-pd
-tlp-rdw
 tmux
 traceroute
 trash-cli
