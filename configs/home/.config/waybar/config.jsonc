@@ -15,7 +15,15 @@
   },
 
   "hyprland/workspaces": {
-    "format": "{id}",
+    "format": "{id} {icon}",
+    "format-icons": {
+      "1": "👥",
+      "2": "🌐",
+      "3": "🔧",
+      "4": "⌨️",
+      "5": "🎵",
+      "default": "◆"
+    },
     "persistent-workspaces": {
       "1": [],
       "2": [],
