@@ -1,19 +1,17 @@
 #!/bin/bash
 # Hierarchical system menu for Hyprland
 
-# Lock file to prevent multiple instances
-LOCK_FILE="/tmp/system-menu.lock"
-
-# Check if menu is already running
-if [ -f "$LOCK_FILE" ]; then
-    exit 0
+# Parse location parameter (default: center)
+LOCATION="${1:---location center}"
+if [[ "$1" == "--location" ]]; then
+    LOCATION="--location $2"
 fi
 
-# Create lock file
-touch "$LOCK_FILE"
-
-# Trap to cleanup lock file on exit
-trap "rm -f '$LOCK_FILE'" EXIT
+# Check if menu is already running using hyprctl
+if hyprctl clients | grep -q "class: wofi"; then
+    # Menu already open, exit
+    exit 0
+fi
 
 # Function to show main menu
 show_main_menu() {
@@ -212,10 +210,10 @@ current_menu="main"
 while true; do
     case "$current_menu" in
         "main")
-            selected=$(show_main_menu | wofi --dmenu --prompt "System" -i)
+            selected=$(show_main_menu | wofi --dmenu --prompt "System" -i $LOCATION)
             case "$selected" in
                 *"Run")
-                    command=$(wofi --show run)
+                    command=$(wofi --show run $LOCATION)
                     if [ -z "$command" ]; then
                         current_menu="main"
                     else
@@ -224,7 +222,7 @@ while true; do
                     fi
                     ;;
                 *"Applications")
-                    app=$(wofi --show drun)
+                    app=$(wofi --show drun $LOCATION)
                     if [ -z "$app" ]; then
                         current_menu="main"
                     else
@@ -258,7 +256,7 @@ while true; do
             esac
             ;;
         "power")
-            selected=$(show_power_menu | wofi --dmenu --prompt "Power" -i)
+            selected=$(show_power_menu | wofi --dmenu --prompt "Power" -i $LOCATION)
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -267,7 +265,7 @@ while true; do
             fi
             ;;
         "screenshot")
-            selected=$(show_screenshot_menu | wofi --dmenu --prompt "Screenshots" -i)
+            selected=$(show_screenshot_menu | wofi --dmenu --prompt "Screenshots" -i $LOCATION)
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -276,7 +274,7 @@ while true; do
             fi
             ;;
         "audio")
-            selected=$(show_audio_menu | wofi --dmenu --prompt "Audio" -i)
+            selected=$(show_audio_menu | wofi --dmenu --prompt "Audio" -i $LOCATION)
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -285,7 +283,7 @@ while true; do
             fi
             ;;
         "display")
-            selected=$(show_display_menu | wofi --dmenu --prompt "Display" -i)
+            selected=$(show_display_menu | wofi --dmenu --prompt "Display" -i $LOCATION)
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -294,7 +292,7 @@ while true; do
             fi
             ;;
         "sysinfo")
-            selected=$(show_system_info_menu | wofi --dmenu --prompt "System Info" -i)
+            selected=$(show_system_info_menu | wofi --dmenu --prompt "System Info" -i $LOCATION)
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -303,7 +301,7 @@ while true; do
             fi
             ;;
         "network")
-            selected=$(show_network_menu | wofi --dmenu --prompt "Network" -i)
+            selected=$(show_network_menu | wofi --dmenu --prompt "Network" -i $LOCATION)
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -312,7 +310,7 @@ while true; do
             fi
             ;;
         "caffeine")
-            selected=$(show_caffeine_menu | wofi --dmenu --prompt "Caffeine" -i)
+            selected=$(show_caffeine_menu | wofi --dmenu --prompt "Caffeine" -i $LOCATION)
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
