@@ -1,11 +1,27 @@
 #!/bin/bash
 
+# Optimal delay for smooth brightness transitions (in seconds)
+# 0.03s provides smooth, imperceptible fading
+STEP=1
+STEPS=5
+DELAY=0.03
+
 case "$1" in
-  increase) brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+
-  ;;
-  decrease) brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%-
-  ;;
-  *) echo "Usage: brightness increase | decrease"
-  ;;
+  increase)
+    for ((i = 0; i < STEPS; i++)); do
+      brightnessctl set "${STEP}%+"
+      sleep "$DELAY"
+    done
+    ;;
+  decrease)
+    for ((i = 0; i < STEPS; i++)); do
+      brightnessctl set "${STEP}%-"
+      sleep "$DELAY"
+    done
+    ;;
+  *)
+    echo "Usage: brightness increase | decrease"
+    exit 1
+    ;;
 esac
 

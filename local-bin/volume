@@ -1,0 +1,129 @@
+#!/bin/bash
+
+# Optimal delay for volume adjustments (in seconds)
+# 0.02s provides responsive control with minimal latency
+DELAY=0.02
+
+# Volume control increments
+STEP=5
+STEP_REPEAT=1
+
+# Mute fade control - smooth but responsive
+FADE_STEPS=8
+FADE_DELAY=0.015
+
+# File to store pre-mute volume
+MUTE_STATE="/tmp/volume_mute_state"
+
+case "$1" in
+  increase)
+    for ((i = 0; i < STEP_REPEAT; i++)); do
+      wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ "${STEP}%+"
+      sleep "$DELAY"
+    done
+    ;;
+  decrease)
+    for ((i = 0; i < STEP_REPEAT; i++)); do
+      wpctl set-volume @DEFAULT_AUDIO_SINK@ "${STEP}%-"
+      sleep "$DELAY"
+    done
+    ;;
+  mute)
+    # Check if already muted
+    if wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q '\[MUTED\]'; then
+      exit 0
+    fi
+
+    # Save current volume before muting
+    CURRENT_VOL=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2}' | sed 's/[^0-9.]//g')
+    echo "$CURRENT_VOL" > "$MUTE_STATE"
+
+    # Smooth fade out
+    for ((i = 0; i < FADE_STEPS; i++)); do
+      wpctl set-volume @DEFAULT_AUDIO_SINK@ "5%-"
+      sleep "$FADE_DELAY"
+    done
+
+    # Final mute
+    wpctl set-mute @DEFAULT_AUDIO_SINK@ 1
+    ;;
+  unmute)
+    # Check if already unmuted
+    if ! wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q '\[MUTED\]'; then
+      exit 0
+    fi
+
+    # Get the saved volume or use default
+    if [ -f "$MUTE_STATE" ]; then
+      SAVED_VOL=$(cat "$MUTE_STATE")
+      rm -f "$MUTE_STATE"
+    else
+      SAVED_VOL="0.5"
+    fi
+
+    # Unmute first
+    wpctl set-mute @DEFAULT_AUDIO_SINK@ 0
+    wpctl set-volume @DEFAULT_AUDIO_SINK@ "0%"
+
+    # Smooth fade in
+    for ((i = 0; i < FADE_STEPS; i++)); do
+      wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ "5%+"
+      sleep "$FADE_DELAY"
+    done
+
+    # Fine-tune to exact saved volume
+    wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ "${SAVED_VOL}"
+    ;;
+  toggle-mute)
+    if wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q '\[MUTED\]'; then
+      "$0" unmute
+    else
+      "$0" mute
+    fi
+    ;;
+  input-mute)
+    # Check if already muted
+    if wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q '\[MUTED\]'; then
+      exit 0
+    fi
+
+    # Smooth fade out
+    for ((i = 0; i < FADE_STEPS; i++)); do
+      wpctl set-volume @DEFAULT_AUDIO_SOURCE@ "5%-"
+      sleep "$FADE_DELAY"
+    done
+
+    # Final mute
+    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 1
+    ;;
+  input-unmute)
+    # Check if already unmuted
+    if ! wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q '\[MUTED\]'; then
+      exit 0
+    fi
+
+    # Unmute first
+    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 0
+    wpctl set-volume @DEFAULT_AUDIO_SOURCE@ "0%"
+
+    # Smooth fade in to 75%
+    for ((i = 0; i < FADE_STEPS; i++)); do
+      wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ "5%+"
+      sleep "$FADE_DELAY"
+    done
+
+    # Set to optimal 75% input gain
+    wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ "0.75"
+    ;;
+  input-toggle-mute)
+    if wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q '\[MUTED\]'; then
+      "$0" input-unmute
+    else
+      "$0" input-mute
+    fi
+    ;;
+  *)
+    echo "Usage: volume {increase|decrease|mute|unmute|toggle-mute|input-mute|input-unmute|input-toggle-mute}"
+    exit 1
+    ;;
+esac
