@@ -13,6 +13,17 @@ if hyprctl clients | grep -q "class: wofi"; then
     exit 0
 fi
 
+# Function to build wofi positioning parameters
+get_wofi_positioning() {
+    if [[ "$LOCATION" == *"top_left"* ]]; then
+        # Use explicit pixel positioning: 8px from left, 8px from top
+        echo "-x 8 -y 8 --width 200 --height 360"
+    else
+        # Use default location (center)
+        echo "$LOCATION"
+    fi
+}
+
 # Function to show main menu
 show_main_menu() {
     echo -e "🏃 Run\n🚀 Applications\n📸 Screenshots\n🔊 Audio\n🖥️ Display\n🌐 Network\nℹ️ System Info\n☕ Caffeine\n🔴 Power"
@@ -210,10 +221,10 @@ current_menu="main"
 while true; do
     case "$current_menu" in
         "main")
-            selected=$(show_main_menu | wofi --dmenu --prompt "System" -i $LOCATION)
+            selected=$(show_main_menu | wofi --dmenu --hide-search --prompt "System" -i $(get_wofi_positioning))
             case "$selected" in
                 *"Run")
-                    command=$(wofi --show run $LOCATION)
+                    command=$(wofi --show run $(get_wofi_positioning))
                     if [ -z "$command" ]; then
                         current_menu="main"
                     else
@@ -222,7 +233,7 @@ while true; do
                     fi
                     ;;
                 *"Applications")
-                    app=$(wofi --show drun $LOCATION)
+                    app=$(wofi --show drun $(get_wofi_positioning))
                     if [ -z "$app" ]; then
                         current_menu="main"
                     else
@@ -256,7 +267,7 @@ while true; do
             esac
             ;;
         "power")
-            selected=$(show_power_menu | wofi --dmenu --prompt "Power" -i $LOCATION)
+            selected=$(show_power_menu | wofi --dmenu --hide-search --prompt "Power" -i $(get_wofi_positioning))
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -265,7 +276,7 @@ while true; do
             fi
             ;;
         "screenshot")
-            selected=$(show_screenshot_menu | wofi --dmenu --prompt "Screenshots" -i $LOCATION)
+            selected=$(show_screenshot_menu | wofi --dmenu --hide-search --prompt "Screenshots" -i $(get_wofi_positioning))
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -274,7 +285,7 @@ while true; do
             fi
             ;;
         "audio")
-            selected=$(show_audio_menu | wofi --dmenu --prompt "Audio" -i $LOCATION)
+            selected=$(show_audio_menu | wofi --dmenu --hide-search --prompt "Audio" -i $(get_wofi_positioning))
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -283,7 +294,7 @@ while true; do
             fi
             ;;
         "display")
-            selected=$(show_display_menu | wofi --dmenu --prompt "Display" -i $LOCATION)
+            selected=$(show_display_menu | wofi --dmenu --hide-search --prompt "Display" -i $(get_wofi_positioning))
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -292,7 +303,7 @@ while true; do
             fi
             ;;
         "sysinfo")
-            selected=$(show_system_info_menu | wofi --dmenu --prompt "System Info" -i $LOCATION)
+            selected=$(show_system_info_menu | wofi --dmenu --hide-search --prompt "System Info" -i $(get_wofi_positioning))
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -301,7 +312,7 @@ while true; do
             fi
             ;;
         "network")
-            selected=$(show_network_menu | wofi --dmenu --prompt "Network" -i $LOCATION)
+            selected=$(show_network_menu | wofi --dmenu --hide-search --prompt "Network" -i $(get_wofi_positioning))
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else
@@ -310,7 +321,7 @@ while true; do
             fi
             ;;
         "caffeine")
-            selected=$(show_caffeine_menu | wofi --dmenu --prompt "Caffeine" -i $LOCATION)
+            selected=$(show_caffeine_menu | wofi --dmenu --hide-search --prompt "Caffeine" -i $(get_wofi_positioning))
             if [[ "$selected" == *"Back"* ]] || [ -z "$selected" ]; then
                 current_menu="main"
             else

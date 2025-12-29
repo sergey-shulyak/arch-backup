@@ -1,8 +1,8 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 36,
-  "spacing": 8,
+  "height": 54,
+  "spacing": 10,
 
   "modules-left": ["custom/arch-menu","hyprland/workspaces","cpu","memory","custom/cpu-temp","custom/gpu-temp","custom/network-speed"],
   "modules-center": ["clock"],
