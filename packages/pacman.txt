@@ -57,6 +57,7 @@ man-db
 man-pages
 mise
 mpd
+mpd-mpris
 nano
 ncdu
 ncmpcpp
@@ -107,6 +108,7 @@ trash-cli
 ttf-dejavu
 ttf-droid
 ttf-jetbrains-mono
+ttf-jetbrains-mono-nerd
 ttf-liberation
 udiskie
 ufw
