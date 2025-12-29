@@ -1,0 +1,11 @@
+#!/bin/bash
+
+case "$1" in
+  increase) brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+ && sleep 0.01 && brightnessctl set 2%+
+  ;;
+  decrease) brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%- && sleep 0.01 && brightnessctl set 2%-
+  ;;
+  *) echo "Usage: brightness increase | decrease"
+  ;;
+esac
+
