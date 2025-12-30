@@ -29,6 +29,7 @@ gnome-keyring
 grim
 grub
 gst-plugin-pipewire
+gvfs
 gvfs-afc
 gvfs-gphoto2
 gvfs-mtp
@@ -67,6 +68,7 @@ network-manager-applet
 networkmanager
 noto-fonts
 noto-fonts-cjk
+noto-fonts-emoji
 ntfs-3g
 nvtop
 openrgb
@@ -120,11 +122,11 @@ wget
 wireless_tools
 wireplumber
 wl-clip-persist
+wl-clipboard
 woff2-font-awesome
 wofi
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
-xdg-user-dirs
 xdg-utils
 yazi
 zram-generator
