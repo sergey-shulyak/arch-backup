@@ -3,10 +3,12 @@
   "position": "top",
   "height": 54,
   "spacing": 10,
+  "reload_style_on_change": true,
 
   "modules-left": ["custom/arch-menu","hyprland/workspaces","group/hardware"],
   "modules-center": ["clock"],
   "modules-right": ["tray","hyprland/language","keyboard-state","group/audio","network","backlight","battery"],
+
 
   "custom/arch-menu": {
     "format": "󰣇",
@@ -90,9 +92,9 @@
     "orientation": "horizontal",
     "modules": [
       "temperature",
+      "custom/gpu-temp",
       "cpu",
       "memory",
-      "custom/gpu-temp",
       "disk"
     ],
     "drawer": {
