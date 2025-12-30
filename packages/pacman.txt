@@ -2,6 +2,7 @@
 acpi
 acpid
 aichat
+bandwhich
 base
 base-devel
 bat
@@ -9,6 +10,7 @@ bluez
 bluez-utils
 brightnessctl
 btop
+btrfs-progs
 capitaine-cursors
 cava
 cliphist
@@ -46,6 +48,7 @@ inter-font
 iwd
 jq
 kitty
+kmon
 lazydocker
 lazygit
 libpulse
@@ -84,12 +87,16 @@ powertop
 progress
 pulsemixer
 python-pygments
+python-pystray
 python-pywal
+qt5-wayland
 qt6-wayland
 reflector
 rsync
+rust
 satty
 secrets
+sl
 slurp
 smartmontools
 socat
@@ -97,6 +104,7 @@ sof-firmware
 sshfs
 starship
 steam
+stress
 telegram-desktop
 testdisk
 thunar
@@ -129,6 +137,7 @@ woff2-font-awesome
 wofi
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
+xdg-user-dirs
 xdg-utils
 yazi
 zram-generator

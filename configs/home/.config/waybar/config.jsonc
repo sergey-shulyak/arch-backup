@@ -4,9 +4,9 @@
   "height": 54,
   "spacing": 10,
 
-  "modules-left": ["custom/arch-menu","hyprland/workspaces","cpu","memory","custom/cpu-temp","custom/gpu-temp"],
+  "modules-left": ["custom/arch-menu","hyprland/workspaces","group/hardware"],
   "modules-center": ["clock"],
-  "modules-right": ["tray","hyprland/language","pulseaudio","bluetooth","network","backlight","battery"],
+  "modules-right": ["tray","hyprland/language","keyboard-state","group/audio","network","backlight","battery"],
 
   "custom/arch-menu": {
     "format": "󰣇",
@@ -78,12 +78,46 @@
     "on-click": "kitty btop"
   },
 
-  "custom/cpu-temp": {
-    "exec": "~/.config/waybar/scripts/cpu-temp.sh",
-    "format": "󰸁 {0}°C",
+  "temperature": {
+    "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
+    "format": "󰸁 {temperatureC}°C",
+    "critical-threshold": 90,
     "interval": 1,
-    "on-click": "kitty btop",
-    "tooltip-format": "CPU Temperature"
+    "on-click": "kitty btop"
+  },
+
+  "group/hardware": {
+    "orientation": "horizontal",
+    "modules": [
+      "cpu",
+      "memory",
+      "temperature",
+      "custom/gpu-temp",
+      "disk"
+    ]
+  },
+
+  "group/audio": {
+    "orientation": "inherit",
+    "modules": [
+      "pulseaudio",
+      "bluetooth"
+    ]
+  },
+
+  "disk": {
+    "interval": 30,
+    "format": "󰋊 {percentage_used}%",
+    "tooltip-format": "Used: {used} / {total}\n{path}",
+    "path": "/"
+  },
+
+  "custom/gpu-temp": {
+    "exec": "~/.config/waybar/scripts/gpu-temp.sh",
+    "format": "󰢮 {0}°C",
+    "interval": 1,
+    "on-click": "kitty nvtop",
+    "tooltip-format": "GPU Temperature"
   },
 
   "pulseaudio": {
@@ -123,13 +157,6 @@
     "on-click": "~/.config/waybar/scripts/tlp-switcher.sh"
   },
 
-  "custom/gpu-temp": {
-    "exec": "~/.config/waybar/scripts/gpu-temp.sh",
-    "format": "󰢮 {0}°C",
-    "interval": 1,
-    "on-click": "kitty btop",
-    "tooltip-format": "GPU Temperature"
-  },
 
   "network": {
     "format": "{icon} {essid}",

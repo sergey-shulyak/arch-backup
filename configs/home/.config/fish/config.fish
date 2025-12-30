@@ -7,6 +7,7 @@ set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx SYSTEMD_EDITOR nvim
 set -gx XDG_DATA_DIRS $XDG_DATA_DIRS /var/lib/flatpak/exports/share /home/$USER/.local/share/flatpak/exports/share
+set -gx WEBKIT_DISABLE_COMPOSITING_MODE 1
 
 # === Syntax Highlighting ===
 # bat: modern cat replacement (uses dynamically generated Hyprstyle theme)
@@ -99,4 +100,7 @@ if status is-interactive
 
     # === Mise (tool version manager) ===
     mise activate fish | source
+
+    # === Glow (markdown viewer) ===
+    glow completion fish | source
 end
