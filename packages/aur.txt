@@ -9,8 +9,6 @@ cursor-bin
 hypremoji
 hyprland-monitor-manager
 pyradio
-silo-youtube-music
-so
 speedtest-go
 tela-icon-theme
 tg
