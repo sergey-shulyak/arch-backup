@@ -21,7 +21,8 @@
       "2": "🌐",
       "3": "🔧",
       "4": "⌨️",
-      "5": "🎵", "6": "🎬",
+      "5": "🎵",
+      "6": "🎬",
       "7": "🎮",
       "default": "✨"
     },
@@ -88,12 +89,16 @@
   "group/hardware": {
     "orientation": "horizontal",
     "modules": [
+      "temperature",
       "cpu",
       "memory",
-      "temperature",
       "custom/gpu-temp",
       "disk"
-    ]
+    ],
+    "drawer": {
+      "transition-duration": 300,
+      "transition-left-to-right": true
+    }
   },
 
   "group/audio": {
