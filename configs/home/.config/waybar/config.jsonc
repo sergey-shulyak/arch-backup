@@ -21,8 +21,7 @@
       "2": "🌐",
       "3": "🔧",
       "4": "⌨️",
-      "5": "🎵",
-      "6": "🎬",
+      "5": "🎵", "6": "🎬",
       "7": "🎮",
       "default": "✨"
     },
@@ -163,7 +162,7 @@
     "format-ethernet": "{icon} Wire",
     "format-disconnected": "{icon} Offline",
     "format-disabled": "󱚦 Disabled",
-    "format-alt": "󰞒 {bandwidthDownBytes} | 󰞔 {bandwidthUpBytes}",
+    "format-alt": "↓ {bandwidthDown} | ↑ {bandwidthUp}",
     "format-alt-click": "click-right",
     "format-icons": {
       "wifi": "󰤨",
