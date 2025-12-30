@@ -53,7 +53,7 @@
       "on-scroll-down": "shift_down",
       "on-click-right": "mode",
     },
-    "on-click": "kitty calcure"
+    "on-click": "kitty -e sh -c 'wego; echo \"Press Enter to exit\"; read'"
   },
 
   "hyprland/language": {
