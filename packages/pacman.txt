@@ -53,6 +53,7 @@ linux-firmware
 linux-zen
 linux-zen-headers
 luarocks
+ly
 mako
 man-db
 man-pages
@@ -71,6 +72,7 @@ noto-fonts-cjk
 noto-fonts-emoji
 ntfs-3g
 nvtop
+nwg-look
 openrgb
 pipewire
 pipewire-alsa

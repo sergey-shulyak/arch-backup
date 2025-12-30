@@ -2,6 +2,7 @@
 1password-cli
 bluetuith
 calcure
+catppuccin-cursors-mocha
 catppuccin-gtk-theme-mocha
 claude-code
 cursor-bin
