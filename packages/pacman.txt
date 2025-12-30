@@ -58,6 +58,7 @@ man-pages
 mise
 mpd
 mpd-mpris
+mpv
 nano
 ncdu
 ncmpcpp
@@ -66,7 +67,6 @@ network-manager-applet
 networkmanager
 noto-fonts
 noto-fonts-cjk
-noto-fonts-emoji
 ntfs-3g
 nvtop
 openrgb
@@ -81,10 +81,7 @@ progress
 pulsemixer
 python-pygments
 python-pywal
-qt5-wayland
-qt5ct
 qt6-wayland
-qt6ct
 reflector
 rsync
 satty
@@ -115,7 +112,6 @@ ufw
 unrar
 unzip
 uwsm
-vlc
 vlc-plugin-ffmpeg
 w3m
 waybar

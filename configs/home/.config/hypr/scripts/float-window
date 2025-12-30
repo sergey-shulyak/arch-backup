@@ -24,5 +24,9 @@ fi
 X_OFFSET=$(( (SCREEN_WIDTH - WINDOW_WIDTH) / 2 ))
 Y_OFFSET=$(( (SCREEN_HEIGHT - WINDOW_HEIGHT) / 2 ))
 
-# Apply changes
-hyprctl --batch "dispatch togglefloating active ; dispatch resizewindowpixel exact $WINDOW_WIDTH $WINDOW_HEIGHT active ; dispatch movewindowpixel exact $X_OFFSET $Y_OFFSET active" > /dev/null 2>&1
+# Toggle floating mode and immediately resize/move
+hyprctl dispatch togglefloating active > /dev/null 2>&1
+
+# Resize and move (NO SPACE after comma - critical!)
+hyprctl dispatch resizewindowpixel exact $WINDOW_WIDTH $WINDOW_HEIGHT,active > /dev/null 2>&1
+hyprctl dispatch movewindowpixel exact $X_OFFSET $Y_OFFSET,active > /dev/null 2>&1

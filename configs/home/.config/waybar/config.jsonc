@@ -4,7 +4,7 @@
   "height": 54,
   "spacing": 10,
 
-  "modules-left": ["custom/arch-menu","hyprland/workspaces","cpu","memory","custom/cpu-temp"],
+  "modules-left": ["custom/arch-menu","hyprland/workspaces","cpu","memory","custom/cpu-temp","custom/gpu-temp"],
   "modules-center": ["clock"],
   "modules-right": ["tray","hyprland/language","pulseaudio","bluetooth","network","backlight","battery"],
 
@@ -22,7 +22,9 @@
       "3": "🔧",
       "4": "⌨️",
       "5": "🎵",
-      "default": "◆"
+      "6": "🎬",
+      "7": "🎮",
+      "default": "✨"
     },
     "persistent-workspaces": {
       "1": [],
@@ -62,47 +64,47 @@
   },
 
   "cpu": {
-    "format": "🫀 {usage}%",
+    "format": "󰘚 {usage}%",
     "tooltip": true,
     "interval": 1,
-    "on-click": "kfloat btop"
+    "on-click": "kitty btop"
   },
 
   "memory": {
-    "format": "🧠 {percentage}%",
+    "format": "󰍛 {percentage}%",
     "tooltip": true,
     "interval": 1,
     "tooltip-format": "Used: {used:0.1f}G\nTotal: {total:0.1f}G",
-    "on-click": "kfloat btop"
+    "on-click": "kitty btop"
   },
 
   "custom/cpu-temp": {
     "exec": "~/.config/waybar/scripts/cpu-temp.sh",
-    "format": "🌡️ {0}°C",
+    "format": "󰸁 {0}°C",
     "interval": 1,
-    "on-click": "kfloat btop",
+    "on-click": "kitty btop",
     "tooltip-format": "CPU Temperature"
   },
 
   "pulseaudio": {
-    "format": "🔊 {volume}%",
-    "format-muted": "🔇 Muted",
+    "format": "󰕾 {volume}%",
+    "format-muted": "󰖁 Muted",
     "scroll-step": 5,
-    "on-click": "kfloat pulsemixer"
+    "on-click": "kitty pulsemixer"
   },
 
   "bluetooth": {
-    "format": "🎧 Off",
-    "format-on": "🎧 On",
-    "format-connected": "🎧 {device_alias}",
+    "format": "󰂲 Off",
+    "format-on": "󰂯 On",
+    "format-connected": "󰂯 {device_alias}",
     "tooltip-format": "Bluetooth Off",
     "tooltip-format-on": "Bluetooth On",
     "tooltip-format-connected": "{device_alias}\nConnected",
-    "on-click": "kfloat bluetuith"
+    "on-click": "kitty bluetuith"
   },
 
   "backlight": {
-    "format": "☀️ {percent}%",
+    "format": "󱎖 {percent}%",
     "interval": 1,
     "on-scroll-up": "brightnessctl s +5%",
     "on-scroll-down": "brightnessctl s 5%-"
@@ -116,16 +118,16 @@
   "custom/tlp-profile": {
     "exec": "~/.config/waybar/scripts/tlp-profile.sh",
     "interval": 2,
-    "format": "⚡ {}",
+    "format": "󰓅 {}",
     "tooltip-format": "TLP Profile\nClick to switch",
     "on-click": "~/.config/waybar/scripts/tlp-switcher.sh"
   },
 
   "custom/gpu-temp": {
     "exec": "~/.config/waybar/scripts/gpu-temp.sh",
-    "format": "🎬 {0}°C",
+    "format": "󰢮 {0}°C",
     "interval": 1,
-    "on-click": "kfloat btop",
+    "on-click": "kitty btop",
     "tooltip-format": "GPU Temperature"
   },
 
@@ -133,17 +135,17 @@
     "format": "{icon} {essid}",
     "format-ethernet": "{icon} Wire",
     "format-disconnected": "{icon} Offline",
-    "format-disabled": "⚠️ Disabled",
-    "format-alt": "⬇️ {bandwidthDownBytes} | ⬆️ {bandwidthUpBytes}",
+    "format-disabled": "󱚦 Disabled",
+    "format-alt": "󰞒 {bandwidthDownBytes} | 󰞔 {bandwidthUpBytes}",
     "format-alt-click": "click-right",
     "format-icons": {
-      "wifi": "🛜",
-      "ethernet": "🔗",
-      "disconnected": "🦖"
+      "wifi": "󰤨",
+      "ethernet": "󰌚",
+      "disconnected": "󱚦"
     },
     "tooltip-format": "{ifname}\nIP: {ipaddr}\nSignal: {signalStrength}%\nFreq: {frequency}",
     "interval": 1,
-    "on-click": "kfloat nmtui"
+    "on-click": "kitty nmtui"
   },
 
   "battery": {
@@ -152,10 +154,10 @@
       "warning": 30,
       "critical": 10
     },
-    "format": "🔋 {capacity}%",
-    "format-charging": "⚡ {capacity}%",
-    "format-plugged": "🔌 {capacity}%",
-    "format-alt": "🔋 {time}",
+    "format": "󰁹 {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰂅 {capacity}%",
+    "format-alt": "󰁹 {time}",
     "tooltip-format": "{timeTo} - {power}W",
     "interval": 1,
     "format-alt-click": "click",

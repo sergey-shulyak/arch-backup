@@ -36,23 +36,9 @@ alias theme='cd ~/Documents/arch-backup/hyprstyle && ./hyprstyle.sh $argv && cd 
 alias feh='feh --scale-down --auto-zoom $argv'
 alias cdb='cd ~/Documents/arch-backup'
 alias cds='cd ~/Documents/arch-backup/hyprstyle'
+alias cdc='cd ~/.config'
+alias cdlb='cd ~/.local/bin'
 
-
-###################
-### FUNCTIONS ###
-###################
-
-# Open kitty TUI applications as floating windows (for Waybar)
-function kfloat
-    if test (count $argv) -eq 0
-        echo "Usage: kfloat <command> [args...]"
-        echo "Examples: kfloat btop, kfloat pulsemixer"
-        return 1
-    end
-
-    set cmd $argv[1]
-    kitty --title $cmd $cmd $argv[2..]
-end
 
 ###################
 ### ABBREVIATIONS ###
