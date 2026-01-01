@@ -16,6 +16,7 @@ cava
 cliphist
 dkms
 dosfstools
+dust
 efibootmgr
 exfatprogs
 fastfetch
@@ -31,6 +32,7 @@ gnome-keyring
 grim
 grub
 gst-plugin-pipewire
+gvfs
 gvfs-afc
 gvfs-gphoto2
 gvfs-mtp
@@ -71,10 +73,14 @@ network-manager-applet
 networkmanager
 noto-fonts
 noto-fonts-cjk
+noto-fonts-emoji
 ntfs-3g
 nvtop
 nwg-look
 openrgb
+perl-archive-zip
+perl-image-exiftool
+perl-io-compress-brotli
 pipewire
 pipewire-alsa
 pipewire-jack
@@ -109,6 +115,9 @@ thunar
 thunar-archive-plugin
 thunar-media-tags-plugin
 thunar-volman
+tlp
+tlp-pd
+tlp-rdw
 tmux
 traceroute
 trash-cli
@@ -130,11 +139,11 @@ wget
 wireless_tools
 wireplumber
 wl-clip-persist
+wl-clipboard
 woff2-font-awesome
 wofi
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
-xdg-user-dirs
 xdg-utils
 yazi
 zram-generator

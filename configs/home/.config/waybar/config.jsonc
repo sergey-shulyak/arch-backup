@@ -190,7 +190,7 @@
     "format": "󰁹 {capacity}%",
     "format-charging": "󰂄 {capacity}%",
     "format-plugged": "󰂅 {capacity}%",
-    "format-alt": "󰁹 {time}",
+    "format-alt": "󰁹 {time} | {power}W",
     "tooltip-format": "{timeTo} - {power}W",
     "interval": 1,
     "format-alt-click": "click",
