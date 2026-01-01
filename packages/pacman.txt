@@ -53,6 +53,7 @@ kmon
 lazydocker
 lazygit
 libpulse
+libreoffice-fresh
 linux-firmware
 linux-zen
 linux-zen-headers
@@ -71,6 +72,7 @@ ncmpcpp
 neovim
 network-manager-applet
 networkmanager
+newsboat
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
@@ -118,6 +120,7 @@ thunar-volman
 tlp
 tlp-pd
 tlp-rdw
+thunderbird
 tmux
 traceroute
 trash-cli

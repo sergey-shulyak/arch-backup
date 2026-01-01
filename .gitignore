@@ -179,3 +179,4 @@ configs/home/.config/OpenRGB/
 configs/home/.config/yazi/*.toml-*
 
 packages/pacman-all-versions.txt
+configs/home/.config/libreoffice/

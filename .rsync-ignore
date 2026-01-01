@@ -162,3 +162,5 @@ hyprpaper/
 
 # Game save data (large, not config)
 unity3d/
+
+configs/home/.config/libreoffice/
