@@ -34,6 +34,7 @@ x-scheme-handler/webcal=userapp-Thunderbird-UVCMI3.desktop
 text/calendar=userapp-Thunderbird-UVCMI3.desktop
 application/x-extension-ics=userapp-Thunderbird-UVCMI3.desktop
 x-scheme-handler/webcals=userapp-Thunderbird-UVCMI3.desktop
+text/plain=userapp-kitty nvim-32D9H3.desktop
 
 [Added Associations]
 text/x-log=userapp-kitty nvim-32D9H3.desktop;
@@ -47,3 +48,4 @@ application/rss+xml=userapp-Thunderbird-F7OQI3.desktop;
 application/x-extension-rss=userapp-Thunderbird-F7OQI3.desktop;
 x-scheme-handler/webcal=userapp-Thunderbird-UVCMI3.desktop;
 x-scheme-handler/webcals=userapp-Thunderbird-UVCMI3.desktop;
+text/plain=userapp-kitty nvim-32D9H3.desktop;

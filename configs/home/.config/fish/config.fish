@@ -8,6 +8,7 @@ set -gx VISUAL nvim
 set -gx SYSTEMD_EDITOR nvim
 set -gx XDG_DATA_DIRS $XDG_DATA_DIRS /var/lib/flatpak/exports/share /home/$USER/.local/share/flatpak/exports/share
 set -gx WEBKIT_DISABLE_COMPOSITING_MODE 1
+set -gx DOCKER_HOST "unix:///run/user/$(id -u)/podman/podman.sock"
 
 # === Syntax Highlighting ===
 # bat: modern cat replacement (uses dynamically generated Hyprstyle theme)
@@ -39,7 +40,7 @@ alias cdb='cd ~/Documents/arch-backup'
 alias cds='cd ~/Documents/arch-backup/hyprstyle'
 alias cdc='cd ~/.config'
 alias cdlb='cd ~/.local/bin'
-
+alias docker='podman'
 
 ###################
 ### ABBREVIATIONS ###
@@ -103,4 +104,9 @@ if status is-interactive
 
     # === Glow (markdown viewer) ===
     glow completion fish | source
+
+    if set -q SSH_CONNECTION
+      set -gx TERM xterm-256color
+      fastfetch
+    end
 end
