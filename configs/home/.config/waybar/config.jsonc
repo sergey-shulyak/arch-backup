@@ -81,7 +81,7 @@
   },
 
   "temperature": {
-    "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
+    "hwmon-path": "/etc/hwmon-cputemp/temp1_input",
     "format": "󰸁 {temperatureC}°C",
     "critical-threshold": 90,
     "interval": 1,
@@ -190,7 +190,7 @@
     "format": "󰁹 {capacity}%",
     "format-charging": "󰂄 {capacity}%",
     "format-plugged": "󰂅 {capacity}%",
-    "format-alt": "󰁹 {time} | {power}W",
+    "format-alt": "󰁹 {time}",
     "tooltip-format": "{timeTo} - {power}W",
     "interval": 1,
     "format-alt-click": "click",

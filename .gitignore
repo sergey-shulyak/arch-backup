@@ -180,3 +180,18 @@ configs/home/.config/yazi/*.toml-*
 
 packages/pacman-all-versions.txt
 configs/home/.config/libreoffice/
+
+# Monitor manager (machine-specific)
+configs/home/.config/monitors/
+
+# Session manager (machine-specific)
+configs/home/.config/session/
+
+# KDE file search index
+configs/home/.config/baloofileinformationrc
+
+# Qt theme selector (GUI, not portable)
+configs/home/.config/QtProject.conf
+
+# Timer app (ephemeral)
+configs/home/.config/tg-timer.ini
