@@ -2,17 +2,11 @@
 1password-cli
 bluetuith
 calcure
-catppuccin-cursors-mocha
-catppuccin-gtk-theme-mocha
 claude-code
-cursor-bin
 hypremoji
 hyprland-monitor-manager
-openrgb-plugin-effects-git
 pyradio
 speedtest-go
-tela-icon-theme
-tg
 wego
 yaru-colors-gtk-theme
 yaru-colors-icon-theme
