@@ -1,3 +1,3 @@
-if test -z $DISPLAY; and test (tty) = /dev/tty1
-  exec start-hyprland
-end
+#if test -z $DISPLAY; and test (tty) = /dev/tty1
+#  exec start-hyprland
+#end

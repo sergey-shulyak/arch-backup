@@ -6,22 +6,12 @@ set -gx PATH $HOME/.local/bin $PATH
 set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx SYSTEMD_EDITOR nvim
-set -gx XDG_DATA_DIRS $XDG_DATA_DIRS /var/lib/flatpak/exports/share /home/$USER/.local/share/flatpak/exports/share
-set -gx WEBKIT_DISABLE_COMPOSITING_MODE 1
-set -gx DOCKER_HOST "unix:///run/user/$(id -u)/podman/podman.sock"
+#set -gx XDG_DATA_DIRS $XDG_DATA_DIRS /var/lib/flatpak/exports/share /home/$USER/.local/share/flatpak/exports/share
+#set -gx WEBKIT_DISABLE_COMPOSITING_MODE 1
 
 # === Syntax Highlighting ===
 # bat: modern cat replacement (uses dynamically generated Hyprstyle theme)
-set -gx BAT_THEME "Hyprstyle"
-#set -gx BAT_OPTS "--number --style full"
-
-# less: syntax highlighting via pygmentize
-set -gx LESSOPEN "| /usr/bin/pygmentize -f 256 -o - %s"
-set -gx LESS " -R"
-
-# === FZF Options with Bat Preview ===
-set -gx FZF_CTRL_T_OPTS "--preview 'bat --color=always --line-range :500 {}'"
-set -gx FZF_ALT_C_OPTS "--preview 'ls -lah {}'"
+#set -gx BAT_THEME Hyprstyle
 
 ###################
 ### ALIASES ###
@@ -40,7 +30,24 @@ alias cdb='cd ~/Documents/arch-backup'
 alias cds='cd ~/Documents/arch-backup/hyprstyle'
 alias cdc='cd ~/.config'
 alias cdlb='cd ~/.local/bin'
-alias docker='podman'
+
+# Tools
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -lh --icons --grid --group-directories-first'
+alias la='eza -lah --icons --group-directories-first'
+alias tree='eza --tree --icons'
+
+alias cat='bat --paging=never'
+
+alias grep='rg'
+
+alias find='fd'
+
+alias df='duf'
+
+alias du='dust'
+
+alias top='btop'
 
 ###################
 ### ABBREVIATIONS ###
@@ -57,10 +64,10 @@ abbr -a gl git log --oneline
 abbr -a gco git checkout
 
 # Common directories
-abbr -a doc cd ~/Documents
-abbr -a dev cd ~/Developer
-abbr -a down cd ~/Downloads
-abbr -a cfg cd ~/.config
+#abbr -a doc cd ~/Documents
+#abbr -a dev cd ~/Developer
+#abbr -a down cd ~/Downloads
+#abbr -a cfg cd ~/.config
 
 # Useful shortcuts
 abbr -a ll ls -lah
@@ -84,20 +91,11 @@ if status is-interactive
     # Initialize Starship prompt
     starship init fish | source
 
-    # === FZF Shell Integration ===
-    # Disable default fzf keybindings and set custom ones
-    set -gx FZF_CTRL_T_COMMAND ''  # Disable default CTRL+T
-    set -gx FZF_CTRL_R_COMMAND ''  # Disable default CTRL+R
-    set -gx FZF_ALT_C_COMMAND ''   # Disable default ALT+C
+    # Fzf
     fzf --fish | source
 
-    # Custom FZF keybindings
-    bind \co fzf-file-widget        # CTRL+O: Open files
-    bind -M insert \co fzf-file-widget
-
-    # === Nvim keybinding ===
-    bind \cn 'nvim'                 # CTRL+E: Open nvim
-    bind -M insert \cn 'nvim'
+    # Zoxide
+    zoxide init fish --cmd cd | source
 
     # === Mise (tool version manager) ===
     mise activate fish | source
@@ -106,7 +104,7 @@ if status is-interactive
     glow completion fish | source
 
     if set -q SSH_CONNECTION
-      set -gx TERM xterm-256color
-      fastfetch
+        set -gx TERM xterm-256color
+        fastfetch
     end
 end

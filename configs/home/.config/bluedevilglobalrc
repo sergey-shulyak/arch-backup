@@ -1,0 +1,8 @@
+[Adapters]
+D8:B3:2F:BA:8D:08_powered=true
+
+[Devices]
+connectedDevices=
+
+[General]
+launchState=enable

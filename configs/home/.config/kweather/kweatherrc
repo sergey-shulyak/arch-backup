@@ -1,0 +1,9 @@
+[General]
+firstStartup=false
+
+[WeatherLocations][703448]
+index=0
+latitude=50.45465850830078
+locationName=Kyiv
+longitude=30.523799896240234
+timezone=Europe/Kiev

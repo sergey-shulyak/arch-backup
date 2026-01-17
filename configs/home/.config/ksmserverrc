@@ -1,0 +1,13 @@
+[General]
+loginMode=restoreSavedSession
+
+[LegacySession: saved at previous logout]
+count=0
+
+[Session: saved at previous logout]
+clientId1=107269670000176833433900000051730007
+count=1
+program1=firefox
+restartCommand1=/usr/lib/firefox/firefox,--sm-client-id,107269670000176833433900000051730007
+restartStyleHint1=0
+userId1=sshuliak

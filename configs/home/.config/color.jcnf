@@ -1,0 +1,10 @@
+{
+	"devices": {
+		"display": {
+			"1": {
+				"NAME": ":0.0",
+				"ICC_PROFILE": "/home/sshuliak/.config/color/icc/devices/display/MSI-calibrated.icc"
+			}
+		}
+	}
+}

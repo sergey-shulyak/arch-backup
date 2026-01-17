@@ -1,5 +1,5 @@
 width=500
-height=400
+height=500
 location=center
 show=drun
 prompt=Search
@@ -8,6 +8,7 @@ allow_markup=true
 insensitive=true
 hide_scroll=true
 normal_window=false
+auto_fit=true
 layer=overlay
 gtk_dark=true
 drun-sort_order=default

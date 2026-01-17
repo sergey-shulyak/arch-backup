@@ -1,0 +1,18 @@
+[Appearance]
+Fixed Font=Hack
+Sans Serif Font=Noto Sans
+Serif Font=Noto Sans
+Standard Font=Noto Sans
+
+[General]
+ArticleListFeedHeaders=
+ArticleListGroupHeaders=
+PreviousNewFeaturesMD5=rMGXcQMwFu7xghlAkh4bXg==
+SubscriptionListHeaders=AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAADBgAAAAIAAAACAAAAZAAAAAEAAAAxAAAA8wAAAAMBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAADzAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAPoAAAAAGQAAAAAAAAAAAAAAAAAAAAB
+
+[HTML Settings]
+Fonts=Noto Sans,Hack,Noto Sans,Noto Sans,0
+MediumFontSize=10
+
+[View]
+Splitter 1 Sizes=243,702

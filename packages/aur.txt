@@ -2,12 +2,7 @@
 1password-cli
 bluetuith
 calcure
-claude-code
-hypremoji
-hyprland-monitor-manager
-pyradio
+slack-desktop
 speedtest-go
 wego
-yaru-colors-gtk-theme
-yaru-colors-icon-theme
 yay

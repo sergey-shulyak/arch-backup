@@ -1,0 +1,12 @@
+[General]
+LastUsedVersion=210800
+
+[MainWindow]
+MenuBar=Disabled
+
+[Recent Files]
+File1[$e]=$HOME/Pictures/Screenshots/2025-12-29-054632_hyprshot.png
+Name1[$e]=2025-12-29-054632_hyprshot.png
+
+[SideBar]
+InformationSplitterSizes=0,0
