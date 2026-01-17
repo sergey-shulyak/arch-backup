@@ -1,0 +1,11 @@
+[Libinput][1267][128][Elan Touchpad]
+ClickMethod=2
+DisableWhileTyping=false
+NaturalScroll=true
+
+[Libinput][1267][128][Elan TrackPoint]
+PointerAcceleration=-0.200
+PointerAccelerationProfile=2
+
+[Mouse]
+cursorTheme=Breeze_Light

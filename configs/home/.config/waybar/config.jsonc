@@ -5,10 +5,13 @@
   "spacing": 10,
   "reload_style_on_change": true,
 
-  "modules-left": ["custom/arch-menu","hyprland/workspaces","group/hardware"],
+  "modules-left": ["custom/arch-menu", "hyprland/workspaces","group/hardware"],
   "modules-center": ["clock"],
   "modules-right": ["tray","hyprland/language","keyboard-state","group/audio","network","backlight","battery"],
 
+  "appearance": {
+    "enabled": false // This stops the 25s hang
+  },
 
   "custom/arch-menu": {
     "format": "󰣇",
@@ -53,14 +56,13 @@
       "on-scroll-down": "shift_down",
       "on-click-right": "mode",
     },
-    "on-click": "kitty calcure & kitty -e fish -c 'wego; echo \"Press Enter to exit\"; read' & kitty newsboat"
   },
 
   "hyprland/language": {
     "format": "{}",
-    "format-en": "🇺🇸",
-    "format-uk": "🇺🇦",
-    "format-ru": "🐷",
+    "format-en": "en",
+    "format-uk": "ua",
+    "format-ru": "ru",
     "tooltip": true,
     "on-click": "hyprctl switchxkblayout 'at-translated-set-2-keyboard' next"
   },
@@ -92,7 +94,7 @@
     "orientation": "horizontal",
     "modules": [
       "temperature",
-      "custom/gpu-temp",
+      // "custom/gpu-temp",
       "cpu",
       "memory",
       "disk"

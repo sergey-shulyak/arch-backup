@@ -1,0 +1,7 @@
+[General]
+Index=Rig
+
+[Rig]
+Port=22
+Type=Fish
+URL=sftp://sshuliak@rig:22/home/sshuliak

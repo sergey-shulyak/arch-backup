@@ -1,12 +1,12 @@
 width=500
-height=400
+height=500
 location=center
 show=drun
 prompt=Search
 allow_images=true
 allow_markup=true
 insensitive=true
-hide_scroll=true
+hide_scroll=false
 normal_window=false
 layer=overlay
 gtk_dark=true

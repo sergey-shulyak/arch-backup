@@ -1,0 +1,12 @@
+[Desktop Entry]
+FullScreen=false
+
+[General]
+LockSidebar=true
+ShowSidebar=true
+
+[Recent Files]
+File1[$e]=$HOME/Downloads/sample-local-pdf.pdf
+File2[$e]=$HOME/Downloads/sample-report.pdf
+Name1[$e]=sample-local-pdf.pdf
+Name2[$e]=sample-report.pdf
